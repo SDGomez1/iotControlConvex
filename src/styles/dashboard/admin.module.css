@@ -1,0 +1,35 @@
+.container {
+  height: 100vh;
+  max-height: 100vh;
+  background-color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.mainSection {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: 52px 112px 0px 152px;
+  max-height: calc(100vh - 112px);
+}
+
+.mainSection > h2 {
+  font-size: 42px;
+  font-weight: 400;
+}
+.mainSection > div {
+  overflow-y: scroll;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 140px;
+  row-gap: 92px;
+  height: 100%;
+  width: 100%;
+  margin-top: 40px;
+  padding-bottom: 40px;
+}
+.mainSection > div::-webkit-scrollbar {
+  display: none;
+}

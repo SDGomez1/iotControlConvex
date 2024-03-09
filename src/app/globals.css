@@ -1,0 +1,16 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --background-color: #f6f5fa;
+  --black: #131217;
+  --gray: #ebeaf0;
+  --inactive: #868686;
+}
+
+.cl-internal-zbjsj0 {
+  display: none !important;
+}

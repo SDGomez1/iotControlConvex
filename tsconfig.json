@@ -28,7 +28,11 @@
     ],
     "incremental": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "styles/*": ["./src/styles/*"],
+      "components/*" : ["./src/components/*"]
+    }
   },
   "include": [
     "./**/*",
@@ -36,5 +40,6 @@
   ],
   "exclude": [
     "./_generated"
-  ]
+  ],
+  
 }

@@ -15,11 +15,17 @@
   max-height: calc(100vh - 112px);
 }
 
-.mainSection > h2 {
+.linkContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.linkContainer > h2 {
   font-size: 42px;
   font-weight: 400;
 }
-.mainSection > div {
+
+.gridContainer {
   overflow-y: scroll;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -30,6 +36,6 @@
   margin-top: 40px;
   padding-bottom: 40px;
 }
-.mainSection > div::-webkit-scrollbar {
+.gridContainer::-webkit-scrollbar {
   display: none;
 }

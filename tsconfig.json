@@ -31,7 +31,9 @@
     "resolveJsonModule": true,
     "paths": {
       "styles/*": ["./src/styles/*"],
-      "components/*" : ["./src/components/*"]
+      "components/*" : ["./src/components/*"],
+      "convex/*": ["./convex/*"],
+      "lib/*": ["./src/lib/*"]
     }
   },
   "include": [

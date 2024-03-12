@@ -17,18 +17,14 @@
   color: rgba(0, 0, 0, 0.33);
   font-size: 24px;
 }
-.logoContainer > a {
+.logoContainer button {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--black);
   color: white;
-  height: 52px;
-  width: 168px;
-  font-size: 16px;
-  border-radius: 34px;
   font-weight: 300;
   gap: 22px;
+  background-color: var(--black);
 }
 .adminContainer {
   width: 300px;
@@ -36,11 +32,10 @@
   justify-content: center;
   align-items: center;
 }
-.adminContainer > a {
+.adminContainer button {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--gray);
   height: 52px;
   width: 168px;
   font-size: 16px;

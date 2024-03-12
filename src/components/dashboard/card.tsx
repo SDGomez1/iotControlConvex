@@ -1,13 +1,20 @@
+import Link from "next/link";
 import styles from "styles/components/card.module.css";
-export default function Card() {
+export default function Card(props: {
+  titulo: string;
+  descripcion: string;
+  url: string;
+}) {
   return (
     <div className={styles.container}>
       <div>
-        <h3>Bomba de microfluidos</h3>
-        <p> Controla flujos de alrededor 50uL en adelante</p>
+        <h3>{props.titulo}</h3>
+        <p> {props.descripcion}</p>
       </div>
 
-      <button> Conectar →</button>
+      <Link href={props.url}>
+        <button> Conectar →</button>
+      </Link>
     </div>
   );
 }

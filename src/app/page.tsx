@@ -1,6 +1,6 @@
 "use client";
-import styles from "../styles/app.module.css";
-import { SignIn, SignInButton } from "@clerk/nextjs";
+import styles from "styles/app.module.css";
+import { SignIn } from "@clerk/nextjs";
 
 export default function Home() {
   return (

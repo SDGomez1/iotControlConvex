@@ -9,7 +9,7 @@ export default authMiddleware({
     if (!auth.userId && !auth.isPublicRoute) {
       return NextResponse.redirect(new URL("/", req.url));
     }
-    if (auth.userId && req.nextUrl.pathname !== "/dashboard") {
+    if (auth.userId && req.nextUrl.pathname === "/") {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
     return NextResponse.next();

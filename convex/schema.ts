@@ -15,7 +15,7 @@ export default defineSchema({
     description: v.string(),
   }),
   deviceFunction: defineTable({
-    deviceId: v.optional(v.string()),
+    deviceId: v.id("device"),
     nombre: v.string(),
     descripcion: v.string(),
     command: v.optional(v.string()),

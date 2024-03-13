@@ -8,7 +8,8 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import { useRouter } from "next/navigation";
 import { formatUrl } from "lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import FunctionCard from "components/admin/functionCard";
 
 interface FunctionFormData {
   nombre: string;
@@ -22,22 +23,26 @@ export default function NewDevice() {
   const createNewFunction = useMutation(api.deviceFunction.createFunction);
 
   const [count, setCount] = useState(0);
+  const [isCreating, setCreating] = useState(false);
+  const [functionCards, setFunctionCards] = useState<JSX.Element[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(-1);
 
-  const newFunctions = () => {
-    const pannels = [];
-    for (let index = 0; index < count; index++) {
-      pannels.push(
-        <div>
-          <input placeholder="Nombre de la funcion" name={`nombreF${index}`} />
-          <h3> Informacion general</h3>
-          <input placeholder="Descripcion" name={`descripcionF${index}`} />
-          <h3>Inputs</h3>
-          <input placeholder="Comando de ejecucion" name={`comando${index}`} />
-        </div>
-      );
-    }
-    return pannels;
-  };
+  const nextFunctionCards = functionCards;
+  let ActualFunctionCard: JSX.Element[] = functionCards;
+  useEffect(() => {
+    console.log(currentIndex);
+    console.log(nextFunctionCards);
+    nextFunctionCards.splice(currentIndex, 1);
+    console.log(nextFunctionCards);
+    setFunctionCards(nextFunctionCards);
+  }, [currentIndex]);
+
+  useEffect(() => {
+    ActualFunctionCard = functionCards.map((card, index) => {
+      return <div key={index}>{card}</div>;
+    }); // TODO fix cardRendering
+  }, [functionCards]);
+
   return (
     <main className={style.container}>
       <Protect
@@ -103,23 +108,31 @@ export default function NewDevice() {
             ></input>
 
             <h2 className={style.funcionTitle}>Funciones del dispositivo</h2>
-            <button
-              type="button"
-              onClick={() => {
-                setCount(count + 1);
-              }}
-            >
-              add
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setCount(0);
-              }}
-            >
-              reset
-            </button>
-            <div>{newFunctions()}</div>
+            {ActualFunctionCard}
+            {isCreating ? (
+              <></>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setCount(count + 1);
+                  setCreating(true);
+
+                  nextFunctionCards.push(
+                    <FunctionCard
+                      isEditing={true}
+                      index={count}
+                      isCreating={setCreating}
+                      setCurrentIndex={setCurrentIndex}
+                    />
+                  );
+                  setFunctionCards(nextFunctionCards);
+                }}
+                className={style.addButton}
+              >
+                + Añadir nueva funcion
+              </button>
+            )}
           </form>
         </section>
       </Protect>

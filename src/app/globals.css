@@ -6,7 +6,9 @@
 a {
   text-decoration: none;
 }
-
+input {
+  font-family: inherit;
+}
 button {
   display: flex;
   justify-content: center;
@@ -19,6 +21,7 @@ button {
   border-radius: 34px;
   background-color: var(--gray);
   font-family: inherit;
+  cursor: pointer;
 }
 
 :root {

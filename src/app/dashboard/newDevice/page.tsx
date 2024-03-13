@@ -8,43 +8,121 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import { useRouter } from "next/navigation";
 import { formatUrl } from "lib/utils";
+import { useState } from "react";
+
+interface FunctionFormData {
+  nombre: string;
+  descripcion: string;
+  comando: string;
+}
 
 export default function NewDevice() {
   const router = useRouter();
   const createNewDevice = useMutation(api.device.createDevice);
+  const createNewFunction = useMutation(api.deviceFunction.createFunction);
+
+  const [count, setCount] = useState(0);
+
+  const newFunctions = () => {
+    const pannels = [];
+    for (let index = 0; index < count; index++) {
+      pannels.push(
+        <div>
+          <input placeholder="Nombre de la funcion" name={`nombreF${index}`} />
+          <h3> Informacion general</h3>
+          <input placeholder="Descripcion" name={`descripcionF${index}`} />
+          <h3>Inputs</h3>
+          <input placeholder="Comando de ejecucion" name={`comando${index}`} />
+        </div>
+      );
+    }
+    return pannels;
+  };
   return (
-    <Protect
-      fallback={<>No tienes permiso para acceder a esta funcionalidad</>}
-      permission="org:admin:usage"
-    >
-      <Navbar />
-      <section className={style.mainSection}>
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            const formdata = new FormData(e.currentTarget);
-            const titulo = formdata.get("titulo") as string;
-            const descripcion = formdata.get("descripcion") as string;
-            const deviceId = await createNewDevice({
-              nombre: titulo,
-              descripcion: descripcion,
-            });
-            const url = formatUrl(titulo, deviceId);
-            router.push(`/devices/${url}`);
-            const form = e.target as HTMLFormElement;
-            form.reset();
-          }}
-          autoComplete="off"
-        >
-          <div>
-            <label>Titulo:</label>
-            <input name="titulo" /> <button> Guardar</button>
-          </div>
-          <label>Descripcion</label>
-          <input name="descripcion"></input>
-        </form>
-        <h2>Funciones disponibles</h2>
-      </section>
-    </Protect>
+    <main className={style.container}>
+      <Protect
+        fallback={<>No tienes permiso para acceder a esta funcionalidad</>}
+        permission="org:admin:usage"
+      >
+        <Navbar />
+        <section className={style.mainSection}>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+
+              const form = e.target as HTMLFormElement;
+
+              const formdata = new FormData(e.currentTarget);
+              const titulo = formdata.get("titulo") as string;
+              const descripcion = formdata.get("descripcion") as string;
+
+              const deviceId = await createNewDevice({
+                nombre: titulo,
+                descripcion: descripcion,
+              });
+
+              const functionsarray: () => FunctionFormData[] = () => {
+                const data: FunctionFormData[] = [];
+
+                for (let index = 0; index < count; index++) {
+                  data.push({
+                    nombre: formdata.get(`nombreF${index}`) as string,
+                    descripcion: formdata.get(`descripcionF${index}`) as string,
+                    comando: formdata.get(`comando${index}`) as string,
+                  });
+                }
+
+                return data;
+              };
+
+              functionsarray().map((e) => {
+                createNewFunction({
+                  nombre: e.nombre,
+                  descripcion: e.descripcion,
+                  deviceId: deviceId,
+                });
+              });
+
+              const url = formatUrl(titulo, deviceId);
+
+              router.push(`/devices/${url}`);
+
+              form.reset();
+            }}
+            autoComplete="off"
+          >
+            <div className={style.titleContainer}>
+              <input name="titulo" placeholder="Nombre" />
+              <button type="submit"> Guardar</button>
+            </div>
+
+            <input
+              name="descripcion"
+              placeholder="Descripción"
+              className={style.deviceDescription}
+            ></input>
+
+            <h2 className={style.funcionTitle}>Funciones del dispositivo</h2>
+            <button
+              type="button"
+              onClick={() => {
+                setCount(count + 1);
+              }}
+            >
+              add
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setCount(0);
+              }}
+            >
+              reset
+            </button>
+            <div>{newFunctions()}</div>
+          </form>
+        </section>
+      </Protect>
+    </main>
   );
 }

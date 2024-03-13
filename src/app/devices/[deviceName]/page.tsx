@@ -15,11 +15,24 @@ export default function Device() {
   const device = useQuery(api.device.getdeviceById, {
     deviceId: deviceId as Id<"device">,
   });
+  const functions = useQuery(api.deviceFunction.getFunctionByDeviceId, {
+    deviceId: deviceId as Id<"device">,
+  });
+
+  const functionscom = functions?.map((e, i) => {
+    return (
+      <div>
+        <div>{e.nombre}</div>
+        <div>{e.descripcion}</div>
+      </div>
+    );
+  });
   return (
     <Protect>
       <Navbar />
       <div>{device?.nombre}</div>
       <div>{device?.description}</div>
+      <div>{functionscom}</div>
     </Protect>
   );
 }

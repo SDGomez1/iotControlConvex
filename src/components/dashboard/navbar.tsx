@@ -1,10 +1,35 @@
-import { SignOutButton } from "@clerk/nextjs";
+import { SignOutButton, useSession } from "@clerk/nextjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import styles from "styles/components/navbar.module.css";
 
 export default function Navbar() {
+  const session = useSession();
   const router = useRouter();
+  const userEmail = session.session?.user.primaryEmailAddress?.emailAddress;
+  const dropDownRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const pageClickEvent = (e: MouseEvent) => {
+      // If the active element exists and is clicked outside of
+      if (dropDownRef.current !== null) {
+        if (!dropDownRef.current.contains(e.target as Node)) {
+          const dropdownMenu = document.getElementById("dropDown");
+          dropdownMenu?.classList.remove(`${styles.show}`);
+
+          setIsOpen(false);
+        }
+      }
+    };
+    document.addEventListener("click", pageClickEvent);
+
+    return () => {
+      document.removeEventListener("click", pageClickEvent);
+    };
+  }, [isOpen]);
+
   return (
     <div className={styles.container}>
       <div className={styles.logoContainer}>
@@ -61,12 +86,27 @@ export default function Navbar() {
         </Link>
       </div>
       <div className={styles.profileContainer}>
-        <span className={styles.profile}></span>
-        <SignOutButton>
-          <Link className={styles.cerrarSesion} href={""}>
-            <button onClick={() => router.push("/")}>Cerrar Sesion</button>
-          </Link>
-        </SignOutButton>
+        <span
+          className={styles.profile}
+          onClick={() => {
+            const dropdownMenu = document.getElementById("dropDown");
+            if (dropdownMenu) {
+              dropdownMenu.classList.toggle(`${styles.show}`);
+              setIsOpen(!isOpen);
+            }
+          }}
+        >
+          {userEmail?.charAt(0).toUpperCase()}
+        </span>
+        <div className={styles.dropDownMenu} id="dropDown" ref={dropDownRef}>
+          <p>{userEmail}</p>
+          <span>Tu</span>
+          <SignOutButton>
+            <Link className={styles.cerrarSesion} href="/">
+              <button onClick={() => router.push("/")}>Cerrar Sesion</button>
+            </Link>
+          </SignOutButton>
+        </div>
       </div>
     </div>
   );

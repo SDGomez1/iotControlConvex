@@ -7,15 +7,10 @@ import Navbar from "components/dashboard/navbar";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import { useRouter } from "next/navigation";
-import { formatUrl } from "lib/utils";
-import { useEffect, useState } from "react";
+import { formatUrl, generateUUID } from "lib/utils";
+import { useState } from "react";
 import FunctionCard from "components/admin/functionCard";
-
-interface FunctionFormData {
-  nombre: string;
-  descripcion: string;
-  comando: string;
-}
+import { FunctionData } from "lib/types";
 
 export default function NewDevice() {
   const router = useRouter();
@@ -23,25 +18,47 @@ export default function NewDevice() {
   const createNewFunction = useMutation(api.deviceFunction.createFunction);
 
   const [count, setCount] = useState(0);
+  const [prevCount, setPrevCount] = useState(-1);
   const [isCreating, setCreating] = useState(false);
-  const [functionCards, setFunctionCards] = useState<JSX.Element[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(-1);
+  const [currentIndex, setCurrentIndex] = useState("");
+  const [currentData, setCurrentData] = useState<FunctionData>();
+  const [cards, setCards] = useState<JSX.Element[]>([]);
+  const [functionData, setFunctionData] = useState<FunctionData[]>([]);
 
-  const nextFunctionCards = functionCards;
-  let ActualFunctionCard: JSX.Element[] = functionCards;
-  useEffect(() => {
-    console.log(currentIndex);
-    console.log(nextFunctionCards);
-    nextFunctionCards.splice(currentIndex, 1);
-    console.log(nextFunctionCards);
-    setFunctionCards(nextFunctionCards);
-  }, [currentIndex]);
+  if (count > 0) {
+    if (prevCount !== count) {
+      const keygenerated = generateUUID();
+      setPrevCount(count);
+      setCards([
+        ...cards,
+        <FunctionCard
+          isEditing={true}
+          index={keygenerated}
+          isCreating={setCreating}
+          setCurrentIndex={setCurrentIndex}
+          key={keygenerated}
+          setData={setCurrentData}
+        />,
+      ]);
+    }
+  }
+  if (currentData !== undefined) {
+    setFunctionData([...functionData, currentData]);
+    setCurrentData(undefined);
+  }
 
-  useEffect(() => {
-    ActualFunctionCard = functionCards.map((card, index) => {
-      return <div key={index}>{card}</div>;
-    }); // TODO fix cardRendering
-  }, [functionCards]);
+  if (currentIndex !== "") {
+    const newArray = cards.filter((e) => !e.props.index.includes(currentIndex));
+    const newArrayData = functionData.filter(
+      (e) => !e.index.includes(currentIndex)
+    );
+    setCards(newArray);
+    setCurrentIndex("");
+    setFunctionData(newArrayData);
+
+    setCount(count - 1);
+    setPrevCount(count - 1);
+  }
 
   return (
     <main className={style.container}>
@@ -61,33 +78,27 @@ export default function NewDevice() {
               const titulo = formdata.get("titulo") as string;
               const descripcion = formdata.get("descripcion") as string;
 
+              if (
+                !titulo ||
+                !descripcion ||
+                !(cards.length === functionData.length)
+              ) {
+                alert("Llena todos los espacios");
+
+                return;
+              }
               const deviceId = await createNewDevice({
                 nombre: titulo,
                 descripcion: descripcion,
               });
 
-              const functionsarray: () => FunctionFormData[] = () => {
-                const data: FunctionFormData[] = [];
-
-                for (let index = 0; index < count; index++) {
-                  data.push({
-                    nombre: formdata.get(`nombreF${index}`) as string,
-                    descripcion: formdata.get(`descripcionF${index}`) as string,
-                    comando: formdata.get(`comando${index}`) as string,
-                  });
-                }
-
-                return data;
-              };
-
-              functionsarray().map((e) => {
+              functionData.map((data) => {
                 createNewFunction({
-                  nombre: e.nombre,
-                  descripcion: e.descripcion,
+                  nombre: data.nombre,
+                  descripcion: data.descripcion,
                   deviceId: deviceId,
                 });
               });
-
               const url = formatUrl(titulo, deviceId);
 
               router.push(`/devices/${url}`);
@@ -108,7 +119,8 @@ export default function NewDevice() {
             ></input>
 
             <h2 className={style.funcionTitle}>Funciones del dispositivo</h2>
-            {ActualFunctionCard}
+            {cards}
+
             {isCreating ? (
               <></>
             ) : (
@@ -117,16 +129,6 @@ export default function NewDevice() {
                 onClick={() => {
                   setCount(count + 1);
                   setCreating(true);
-
-                  nextFunctionCards.push(
-                    <FunctionCard
-                      isEditing={true}
-                      index={count}
-                      isCreating={setCreating}
-                      setCurrentIndex={setCurrentIndex}
-                    />
-                  );
-                  setFunctionCards(nextFunctionCards);
                 }}
                 className={style.addButton}
               >

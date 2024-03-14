@@ -4,3 +4,8 @@ export type FunctionData = {
   descripcion: string;
   comando: string;
 };
+
+export type conectedDeviceData = {
+  id: string;
+  device: SerialPort;
+};

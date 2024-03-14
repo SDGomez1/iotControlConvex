@@ -2,15 +2,19 @@
 
 import style from "styles/dashboard/newDevice/newDevice.module.css";
 
-import { Protect } from "@clerk/nextjs";
 import Navbar from "components/dashboard/navbar";
-import { useMutation, useQuery } from "convex/react";
-import { api } from "convex/_generated/api";
-import { useRouter } from "next/navigation";
-import { formatUrl, generateUUID } from "lib/utils";
-import { useState } from "react";
-import FunctionCard from "components/admin/functionCard";
+import FunctionCardEditing from "components/admin/functionCardEditing";
+
 import { FunctionData } from "lib/types";
+import { formatUrl, generateUUID } from "lib/utils";
+
+import { Protect } from "@clerk/nextjs";
+import { useMutation } from "convex/react";
+import { api } from "convex/_generated/api";
+
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { ConectedDeviceProvider } from "../../../context/conectedDeviceContext";
 
 export default function NewDevice() {
   const router = useRouter();
@@ -31,8 +35,7 @@ export default function NewDevice() {
       setPrevCount(count);
       setCards([
         ...cards,
-        <FunctionCard
-          isEditing={true}
+        <FunctionCardEditing
           index={keygenerated}
           isCreating={setCreating}
           setCurrentIndex={setCurrentIndex}
@@ -61,83 +64,85 @@ export default function NewDevice() {
   }
 
   return (
-    <main className={style.container}>
-      <Protect
-        fallback={<>No tienes permiso para acceder a esta funcionalidad</>}
-        permission="org:admin:usage"
-      >
-        <Navbar />
-        <section className={style.mainSection}>
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
+    <ConectedDeviceProvider>
+      <main className={style.container}>
+        <Protect
+          fallback={<>No tienes permiso para acceder a esta funcionalidad</>}
+          permission="org:admin:usage"
+        >
+          <Navbar />
+          <section className={style.mainSection}>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
 
-              const form = e.target as HTMLFormElement;
+                const form = e.target as HTMLFormElement;
 
-              const formdata = new FormData(e.currentTarget);
-              const titulo = formdata.get("titulo") as string;
-              const descripcion = formdata.get("descripcion") as string;
+                const formdata = new FormData(e.currentTarget);
+                const titulo = formdata.get("titulo") as string;
+                const descripcion = formdata.get("descripcion") as string;
 
-              if (
-                !titulo ||
-                !descripcion ||
-                !(cards.length === functionData.length)
-              ) {
-                alert("Llena todos los espacios");
+                if (
+                  !titulo ||
+                  !descripcion ||
+                  !(cards.length === functionData.length)
+                ) {
+                  alert("Llena todos los espacios");
 
-                return;
-              }
-              const deviceId = await createNewDevice({
-                nombre: titulo,
-                descripcion: descripcion,
-              });
-
-              functionData.map((data) => {
-                createNewFunction({
-                  nombre: data.nombre,
-                  descripcion: data.descripcion,
-                  deviceId: deviceId,
+                  return;
+                }
+                const deviceId = await createNewDevice({
+                  nombre: titulo,
+                  descripcion: descripcion,
                 });
-              });
-              const url = formatUrl(titulo, deviceId);
 
-              router.push(`/devices/${url}`);
+                functionData.map((data) => {
+                  createNewFunction({
+                    nombre: data.nombre,
+                    descripcion: data.descripcion,
+                    deviceId: deviceId,
+                  });
+                });
+                const url = formatUrl(titulo, deviceId);
 
-              form.reset();
-            }}
-            autoComplete="off"
-          >
-            <div className={style.titleContainer}>
-              <input name="titulo" placeholder="Nombre" />
-              <button type="submit"> Guardar</button>
-            </div>
+                router.push(`/devices/${url}`);
 
-            <input
-              name="descripcion"
-              placeholder="Descripción"
-              className={style.deviceDescription}
-            ></input>
+                form.reset();
+              }}
+              autoComplete="off"
+            >
+              <div className={style.titleContainer}>
+                <input name="titulo" placeholder="Nombre" />
+                <button type="submit"> Guardar</button>
+              </div>
 
-            <h2 className={style.funcionTitle}>Funciones del dispositivo</h2>
-            {cards}
+              <input
+                name="descripcion"
+                placeholder="Descripción"
+                className={style.deviceDescription}
+              ></input>
 
-            {isCreating ? (
-              <></>
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  setCount(count + 1);
-                  setCreating(true);
-                }}
-                className={style.addButton}
-              >
-                + Añadir nueva funcion
-              </button>
-            )}
-          </form>
-        </section>
-      </Protect>
-    </main>
+              <h2 className={style.funcionTitle}>Funciones del dispositivo</h2>
+              {cards}
+
+              {isCreating ? (
+                <></>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCount(count + 1);
+                    setCreating(true);
+                  }}
+                  className={style.addButton}
+                >
+                  + Añadir nueva funcion
+                </button>
+              )}
+            </form>
+          </section>
+        </Protect>
+      </main>
+    </ConectedDeviceProvider>
   );
 }

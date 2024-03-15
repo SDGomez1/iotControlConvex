@@ -39,3 +39,28 @@
 .gridContainer::-webkit-scrollbar {
   display: none;
 }
+@media only screen and (max-width: 768px) {
+  .container {
+    height: auto;
+    max-height: auto;
+    min-height: 100svh;
+  }
+  .mainSection {
+    height: auto;
+    max-height: auto;
+    min-height: 100svh;
+    padding: 0;
+  }
+  .gridContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .linkContainer > h2 {
+    width: 100%;
+
+    font-size: 28px;
+    text-align: center;
+  }
+}

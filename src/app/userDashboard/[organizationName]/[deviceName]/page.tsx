@@ -9,7 +9,6 @@ import { useQuery } from "convex/react";
 
 import { deFormatUrl } from "lib/utils";
 import { useParams } from "next/navigation";
-import FunctionCardView from "components/admin/functionCardView";
 import FunctionCardExecution from "components/user/FunctionCardsExecution";
 
 export default function Device() {
@@ -38,7 +37,7 @@ export default function Device() {
   return (
     <main className={styles.container}>
       <Protect>
-        <Navbar />
+        <Navbar admin={false} />
         <section className={styles.mainContainer}>
           <div className={styles.titleContainer}>
             <h2>{device?.nombre}</h2>

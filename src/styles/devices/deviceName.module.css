@@ -37,3 +37,16 @@
   font-size: 32px;
   margin-bottom: 24px;
 }
+@media only screen and (max-width: 768px) {
+  .container {
+    height: auto;
+    max-height: auto;
+    min-height: 100svh;
+  }
+  .mainContainer {
+    height: auto;
+    width: auto;
+    min-height: 100svh;
+    padding: 0px 20px;
+  }
+}

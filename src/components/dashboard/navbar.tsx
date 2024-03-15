@@ -33,8 +33,10 @@ export default function Navbar(props: { admin: boolean }) {
   return (
     <div className={styles.container}>
       <div className={styles.logoContainer}>
-        <p>LOGO</p>
-        <Link href={"/"}>
+        <Link href="/">
+          <p>LOGO</p>
+        </Link>
+        <Link href="/">
           <button>
             <svg
               width="20"

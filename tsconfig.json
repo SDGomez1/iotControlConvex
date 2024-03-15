@@ -33,7 +33,8 @@
       "styles/*": ["./src/styles/*"],
       "components/*" : ["./src/components/*"],
       "convex/*": ["./convex/*"],
-      "lib/*": ["./src/lib/*"]
+      "lib/*": ["./src/lib/*"],
+      "context/*": ["./src/context/*"]
     }
   },
   "include": [

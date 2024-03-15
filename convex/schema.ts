@@ -7,7 +7,8 @@ export default defineSchema({
     email: v.string(),
   }),
   command: defineTable({
-    value: v.string(),
+    deviceFunctionId: v.id("deviceFunction"),
+    status: v.optional(v.string()),
   }),
   device: defineTable({
     userId: v.optional(v.string()),
@@ -18,6 +19,12 @@ export default defineSchema({
     deviceId: v.id("device"),
     nombre: v.string(),
     descripcion: v.string(),
-    command: v.optional(v.string()),
+    command: v.string(),
+  }),
+  organization: defineTable({
+    adminId: v.string(),
+    userRegistered: v.array(v.string()),
+    name: v.string(),
+    description: v.string(),
   }),
 });

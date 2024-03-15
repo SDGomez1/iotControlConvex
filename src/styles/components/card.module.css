@@ -18,12 +18,14 @@
 .container p {
   font-size: 14px;
 }
+.container a {
+  align-self: flex-end;
+}
 
-.container > button {
+.container button {
   height: 34px;
   width: 120px;
   border: solid 2px #000000;
-  align-self: flex-end;
   background-color: white;
   border-radius: 18px;
   font-size: 14px;

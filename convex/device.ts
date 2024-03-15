@@ -22,12 +22,12 @@ export const getdevices = query({
   args: {},
   handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
-    if (!user) {
-      throw new Error("You dont have authorizacion");
-    }
+    // if (!user) {
+    //   throw new Error("You dont have authorizacion");
+    // }
     return await ctx.db
       .query("device")
-      .filter((q) => q.eq(q.field("userId"), user.subject))
+      .filter((q) => q.eq(q.field("userId"), user?.subject))
       .collect();
   },
 });
@@ -41,5 +41,19 @@ export const getdeviceById = query({
       throw new Error("No device Found");
     }
     return device;
+  },
+});
+
+export const getDeviceByOrganizationId = query({
+  args: { organizationId: v.id("organization") },
+  handler: async (ctx, args) => {
+    const organization = await ctx.db
+      .query("organization")
+      .filter((q) => q.eq(q.field("_id"), args.organizationId))
+      .take(1);
+    return await ctx.db
+      .query("device")
+      .filter((q) => q.eq(q.field("userId"), organization[0]?.adminId))
+      .collect();
   },
 });

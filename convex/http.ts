@@ -26,7 +26,6 @@ http.route({
           await ctx.runMutation(internal.user.createUser, {
             userId: result.data.id,
             email: result.data.email_addresses[0]?.email_address,
-            role: "user",
           });
       }
 

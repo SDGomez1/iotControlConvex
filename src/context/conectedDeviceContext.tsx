@@ -1,5 +1,6 @@
 import { conectedDeviceData } from "lib/types";
 import {
+  Dispatch,
   PropsWithChildren,
   createContext,
   useContext,
@@ -11,17 +12,19 @@ type actionType = {
   payload: conectedDeviceData;
 };
 
-const ConectedDeviceContext = createContext<conectedDeviceData[]>([]);
-const ConectedDeviceDispatchContext = createContext<any>(null);
+const conectedDeviceContext = createContext<conectedDeviceData[]>([]);
+const conectedDeviceDispatchContext = createContext<Dispatch<actionType>>(
+  () => {}
+);
 
 export function ConectedDeviceProvider({ children }: PropsWithChildren) {
   const [conectedDevice, dispatch] = useReducer(conectedDeviceReducer, []);
   return (
-    <ConectedDeviceContext.Provider value={conectedDevice}>
-      <ConectedDeviceDispatchContext.Provider value={dispatch}>
+    <conectedDeviceContext.Provider value={conectedDevice}>
+      <conectedDeviceDispatchContext.Provider value={dispatch}>
         {children}
-      </ConectedDeviceDispatchContext.Provider>
-    </ConectedDeviceContext.Provider>
+      </conectedDeviceDispatchContext.Provider>
+    </conectedDeviceContext.Provider>
   );
 }
 
@@ -30,7 +33,7 @@ function conectedDeviceReducer(
   action: actionType
 ) {
   switch (action.type) {
-    case "added": {
+    case "ADD": {
       return [
         ...conectedDevice,
         {
@@ -42,4 +45,11 @@ function conectedDeviceReducer(
     default:
       return [...conectedDevice];
   }
+}
+
+export function useConnectedDevice() {
+  return useContext(conectedDeviceContext);
+}
+export function useConnectedDeviceDispatch() {
+  return useContext(conectedDeviceDispatchContext);
 }

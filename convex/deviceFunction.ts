@@ -6,12 +6,14 @@ export const createFunction = mutation({
     deviceId: v.id("device"),
     nombre: v.string(),
     descripcion: v.string(),
+    comando: v.string(),
   },
   handler: async (ctx, args) => {
     const deviceFunction = ctx.db.insert("deviceFunction", {
       deviceId: args.deviceId,
       nombre: args.nombre,
       descripcion: args.descripcion,
+      command: args.comando,
     });
   },
 });

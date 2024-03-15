@@ -10,12 +10,9 @@ import { useQuery } from "convex/react";
 import { deFormatUrl } from "lib/utils";
 import { useParams } from "next/navigation";
 import FunctionCardView from "components/admin/functionCardView";
-import { useState } from "react";
-import { ConectedDeviceProvider } from "../../../context/conectedDeviceContext";
+import FunctionCardExecution from "components/user/FunctionCardsExecution";
 
 export default function Device() {
-  const [isEditing, setIsEditing] = useState(false);
-
   const params = useParams<{ deviceName: string }>();
   const deviceId = deFormatUrl(params.deviceName);
 
@@ -29,28 +26,29 @@ export default function Device() {
   //Todo: comand lifecycle, and styles
   const functionscom = functions?.map((e, i) => {
     return (
-      <FunctionCardView titulo={e.nombre} descripcion={e.descripcion} key={i} />
+      <FunctionCardExecution
+        titulo={e.nombre}
+        descripcion={e.descripcion}
+        key={i}
+        id={e._id}
+      />
     );
   });
+
   return (
-    <ConectedDeviceProvider>
-      <main className={styles.container}>
-        <Protect>
-          <Navbar />
-          <section className={styles.mainContainer}>
-            <div className={styles.titleContainer}>
-              <h2>{device?.nombre}</h2>
-              <div>
-                <button>Conectar</button>
-                <button>Editar Funciones</button>
-              </div>
-            </div>
-            <p>{device?.description}</p>
-            <h3>Funciones Disponibles</h3>
-            {isEditing ? <></> : functionscom}
-          </section>
-        </Protect>
-      </main>
-    </ConectedDeviceProvider>
+    <main className={styles.container}>
+      <Protect>
+        <Navbar />
+        <section className={styles.mainContainer}>
+          <div className={styles.titleContainer}>
+            <h2>{device?.nombre}</h2>
+            <div></div>
+          </div>
+          <p>{device?.description}</p>
+          <h3>Funciones Disponibles</h3>
+          {functionscom}
+        </section>
+      </Protect>
+    </main>
   );
 }

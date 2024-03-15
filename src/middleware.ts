@@ -1,8 +1,7 @@
 import { authMiddleware } from "@clerk/nextjs";
 
 import { NextResponse } from "next/server";
-import { query } from "../convex/_generated/server";
-import { internal } from "../convex/_generated/api";
+
 export default authMiddleware({
   publicRoutes: ["/"],
   afterAuth(auth, req, evt) {
@@ -10,7 +9,7 @@ export default authMiddleware({
       return NextResponse.redirect(new URL("/", req.url));
     }
     if (auth.userId && req.nextUrl.pathname === "/") {
-      return NextResponse.redirect(new URL("/dashboard", req.url));
+      return NextResponse.redirect(new URL("/adminDashboard", req.url));
     }
     return NextResponse.next();
   },

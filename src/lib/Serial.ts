@@ -2,8 +2,8 @@ async function getPorts() {
   return await navigator.serial.getPorts();
 }
 
-async function connectToSerial(port: SerialPort | undefined) {
-  port = await navigator.serial.requestPort();
+async function connectToSerial() {
+  const port = await navigator.serial.requestPort();
   if (port) {
     await port.open({ baudRate: 9600 });
     return port;

@@ -3,19 +3,30 @@ import { mutation, query } from "./_generated/server";
 
 export const createCommand = mutation({
   args: {
-    value: v.string(),
+    deviceFunctionId: v.id("deviceFunction"),
   },
   handler: async (ctx, args) => {
     await ctx.db.insert("command", {
-      value: args.value,
+      deviceFunctionId: args.deviceFunctionId,
     });
   },
 });
 
-export const readCommand = query({
+export const readFirstCommand = query({
   args: {},
   handler: async (ctx, args) => {
-    const command = await ctx.db.query("command").order("desc").take(1);
-    return command[0] ? command[0].value : undefined;
+    const commnadCreated = await ctx.db.query("command").order("desc").first();
+    if (commnadCreated === null) {
+      return undefined;
+    } else {
+      const deviceFunction = await ctx.db.get(commnadCreated.deviceFunctionId);
+      const command = deviceFunction?.command;
+      const deviceID = deviceFunction?.deviceId;
+
+      return {
+        deviceId: deviceID,
+        command: command,
+      };
+    }
   },
 });

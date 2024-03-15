@@ -68,7 +68,7 @@ export default function NewDevice() {
         fallback={<>No tienes permiso para acceder a esta funcionalidad</>}
         permission="org:admin:usage"
       >
-        <Navbar />
+        <Navbar admin={true} />
         <section className={style.mainSection}>
           <form
             onSubmit={async (e) => {

@@ -56,7 +56,7 @@ export default function Device() {
   return (
     <main className={styles.container}>
       <Protect>
-        <Navbar />
+        <Navbar admin={true} />
         <section className={styles.mainContainer}>
           <div className={styles.titleContainer}>
             <h2>{device?.nombre}</h2>

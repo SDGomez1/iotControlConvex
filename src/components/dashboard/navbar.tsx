@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import styles from "styles/components/navbar.module.css";
 
-export default function Navbar() {
+export default function Navbar(props: { admin: boolean }) {
   const session = useSession();
   const router = useRouter();
   const userEmail = session.session?.user.primaryEmailAddress?.emailAddress;
@@ -76,15 +76,20 @@ export default function Navbar() {
                 stroke="white"
               />
             </svg>
-            Dispositvos
+            {props.admin ? "Dispositivos" : "Admins"}
           </button>
         </Link>
       </div>
-      <div className={styles.adminContainer}>
-        <Link href={"/"}>
-          <button> + Nuevo admin</button>
-        </Link>
-      </div>
+      {props.admin ? (
+        <div className={styles.adminContainer}>
+          <Link href={"/"}>
+            <button> + Nuevo admin</button>
+          </Link>
+        </div>
+      ) : (
+        <></>
+      )}
+
       <div className={styles.profileContainer}>
         <span
           className={styles.profile}

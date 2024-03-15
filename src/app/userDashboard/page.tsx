@@ -25,7 +25,7 @@ export default function () {
   });
   return (
     <main className={styles.container}>
-      <Navbar />
+      <Navbar admin={false} />
 
       <section className={styles.mainSection}>
         <div className={styles.linkContainer}>

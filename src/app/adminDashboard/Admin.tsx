@@ -25,7 +25,7 @@ export default function Admin() {
   });
   return (
     <main className={style.container}>
-      <Navbar />
+      <Navbar admin={true} />
       <section className={style.mainSection}>
         <div className={style.linkContainer}>
           <h2>Conectar un dispositvo</h2>

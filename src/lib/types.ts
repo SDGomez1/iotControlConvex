@@ -9,3 +9,9 @@ export type conectedDeviceData = {
   id: string;
   device: SerialPort;
 };
+
+export type ActiveLinks = {
+  link: string;
+  location: string;
+  url: string;
+};

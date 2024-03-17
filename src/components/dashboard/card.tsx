@@ -1,20 +1,21 @@
 import Link from "next/link";
-import styles from "styles/components/card.module.css";
 export default function Card(props: {
   titulo: string;
   descripcion: string;
   url: string;
 }) {
   return (
-    <div className={styles.container}>
-      <div>
-        <h3>{props.titulo}</h3>
-        <p> {props.descripcion}</p>
+    <div className=" flex h-44 w-11/12 shrink-0 flex-col rounded bg-white p-6 drop-shadow-sm transition hover:drop-shadow-md lg:w-11/12 ">
+      <h3 className="text-xl font-medium">{props.titulo}</h3>
+      <p className="text-sm text-neutral-500"> {props.descripcion}</p>
+      <div className="flex h-full flex-col justify-end">
+        <Link
+          href={props.url}
+          className="w-full rounded bg-neutral-900 py-2 text-center text-sm text-white"
+        >
+          Conectar →
+        </Link>
       </div>
-
-      <Link href={props.url}>
-        <button> Conectar →</button>
-      </Link>
     </div>
   );
 }

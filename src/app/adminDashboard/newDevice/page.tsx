@@ -1,8 +1,5 @@
 "use client";
 
-import style from "styles/dashboard/newDevice/newDevice.module.css";
-
-import Navbar from "components/dashboard/navbar";
 import FunctionCardEditing from "components/admin/functionCardEditing";
 
 import { FunctionData } from "lib/types";
@@ -52,7 +49,7 @@ export default function NewDevice() {
   if (currentIndex !== "") {
     const newArray = cards.filter((e) => !e.props.index.includes(currentIndex));
     const newArrayData = functionData.filter(
-      (e) => !e.index.includes(currentIndex)
+      (e) => !e.index.includes(currentIndex),
     );
     setCards(newArray);
     setCurrentIndex("");
@@ -63,83 +60,91 @@ export default function NewDevice() {
   }
 
   return (
-    <main className={style.container}>
+    <main className="min-h-screen min-w-full bg-gray-50   ">
       <Protect
         fallback={<>No tienes permiso para acceder a esta funcionalidad</>}
         permission="org:admin:usage"
       >
-        <Navbar />
-        <section className={style.mainSection}>
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
+        <form
+          className=" flex flex-col"
+          onSubmit={async (e) => {
+            e.preventDefault();
 
-              const form = e.target as HTMLFormElement;
+            const form = e.target as HTMLFormElement;
 
-              const formdata = new FormData(e.currentTarget);
-              const titulo = formdata.get("titulo") as string;
-              const descripcion = formdata.get("descripcion") as string;
+            const formdata = new FormData(e.currentTarget);
+            const titulo = formdata.get("titulo") as string;
+            const descripcion = formdata.get("descripcion") as string;
 
-              if (
-                !titulo ||
-                !descripcion ||
-                !(cards.length === functionData.length)
-              ) {
-                alert("Llena todos los espacios");
+            if (
+              !titulo ||
+              !descripcion ||
+              !(cards.length === functionData.length)
+            ) {
+              alert("Llena todos los espacios");
 
-                return;
-              }
-              const deviceId = await createNewDevice({
-                nombre: titulo,
-                descripcion: descripcion,
+              return;
+            }
+            const deviceId = await createNewDevice({
+              nombre: titulo,
+              descripcion: descripcion,
+            });
+
+            functionData.map((data) => {
+              createNewFunction({
+                nombre: data.nombre,
+                descripcion: data.descripcion,
+                deviceId: deviceId,
+                comando: data.comando,
               });
+            });
+            const url = formatUrl(titulo, deviceId);
 
-              functionData.map((data) => {
-                createNewFunction({
-                  nombre: data.nombre,
-                  descripcion: data.descripcion,
-                  deviceId: deviceId,
-                  comando: data.comando,
-                });
-              });
-              const url = formatUrl(titulo, deviceId);
+            router.push(`devices/${url}`);
 
-              router.push(`devices/${url}`);
-
-              form.reset();
-            }}
-            autoComplete="off"
-          >
-            <div className={style.titleContainer}>
-              <input name="titulo" placeholder="Nombre" />
-              <button type="submit"> Guardar</button>
-            </div>
+            form.reset();
+          }}
+          autoComplete="off"
+        >
+          <div className="flex flex-col gap-4 border-b-2 px-4 py-8 lg:flex-row lg:justify-between lg:px-40 ">
+            <h1 className="my-0 text-xl font-semibold lg:text-3xl">
+              Crea un nuevo dispositivo
+            </h1>
+            <button
+              type="submit"
+              className="w-1/4 rounded bg-neutral-950 py-2 text-sm text-white lg:w-1/12"
+            >
+              Guardar
+            </button>
+          </div>
+          <div className="">
+            <input name="titulo" placeholder="Nombre" />
 
             <input
               name="descripcion"
               placeholder="Descripción"
-              className={style.deviceDescription}
+              className=""
             ></input>
+          </div>
 
-            <h2 className={style.funcionTitle}>Funciones del dispositivo</h2>
-            {cards}
+          <h2 className="">Funciones del dispositivo</h2>
+          {cards}
 
-            {isCreating ? (
-              <></>
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  setCount(count + 1);
-                  setCreating(true);
-                }}
-                className={style.addButton}
-              >
-                + Añadir nueva funcion
-              </button>
-            )}
-          </form>
-        </section>
+          {isCreating ? (
+            <></>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                setCount(count + 1);
+                setCreating(true);
+              }}
+              className=""
+            >
+              + Añadir nueva funcion
+            </button>
+          )}
+        </form>
       </Protect>
     </main>
   );

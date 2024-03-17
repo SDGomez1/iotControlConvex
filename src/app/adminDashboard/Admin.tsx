@@ -1,19 +1,16 @@
 "use client";
 
-import Card from "components/dashboard/card";
-import Navbar from "components/dashboard/navbar";
-import { useConnectedDevice } from "context/conectedDeviceContext";
+import Card from "components/dashboard/Card";
 import { api } from "convex/_generated/api";
 import { useQuery } from "convex/react";
 import { formatUrl } from "lib/utils";
-import Link from "next/link";
-import style from "styles/dashboard/admin.module.css";
 
 export default function Admin() {
   const devicesList = useQuery(api.device.getdevices);
 
   const devicesCards = devicesList?.map((device, index) => {
     const url = formatUrl(device.nombre, device._id);
+
     return (
       <Card
         titulo={device.nombre}
@@ -24,18 +21,8 @@ export default function Admin() {
     );
   });
   return (
-    <main className={style.container}>
-      <Navbar admin={true} />
-      <section className={style.mainSection}>
-        <div className={style.linkContainer}>
-          <h2>Conectar un dispositvo</h2>
-          <Link href={"adminDashboard/newDevice"}>
-            <button>Nuevo dispositvo</button>
-          </Link>
-        </div>
-
-        <div className={style.gridContainer}>{devicesCards}</div>
-      </section>
+    <main className="flex min-h-screen min-w-full flex-col items-center gap-8 bg-gray-50 py-4 lg:grid lg:auto-rows-max lg:grid-cols-3 lg:px-10">
+      {devicesCards}
     </main>
   );
 }

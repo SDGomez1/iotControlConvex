@@ -1,8 +1,8 @@
 "use client";
 import styles from "styles/dashboard/admin.module.css";
 
-import Card from "components/dashboard/card";
-import Navbar from "components/dashboard/navbar";
+import Card from "components/dashboard/Card";
+import Navbar from "components/dashboard/Navbar";
 import { useParams } from "next/navigation";
 import { deFormatUrl, formatUrl } from "lib/utils";
 import { useQuery } from "convex/react";

@@ -2,7 +2,7 @@
 import styles from "styles/devices/deviceName.module.css";
 
 import { Protect } from "@clerk/nextjs";
-import Navbar from "components/dashboard/navbar";
+import Navbar from "components/dashboard/Navbar";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { useQuery } from "convex/react";

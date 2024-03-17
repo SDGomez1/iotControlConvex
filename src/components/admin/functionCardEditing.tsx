@@ -1,5 +1,3 @@
-import style from "styles/components/admin/functionCard.module.css";
-
 import { FunctionData } from "lib/types";
 import { Dispatch, SetStateAction, useState } from "react";
 
@@ -24,79 +22,87 @@ export default function functionCardEditing(props: {
   }
 
   return (
-    <div className={style.functionContainer}>
-      <input
-        placeholder="Nombre de la funcion"
-        name={`nombreF${props.index}`}
-        onChange={(e) => {
-          setNombre(e.target.value);
-        }}
-        value={nombre}
-      />
-      <h3> Informacion general</h3>
-      <input
-        placeholder="Descripcion"
-        name={`descripcionF${props.index}`}
-        onChange={(e) => {
-          setDescripcion(e.target.value);
-        }}
-      />
-      <h3>Inputs</h3>
-      <input
-        placeholder="Comando de ejecucion"
-        name={`comando${props.index}`}
-        onChange={(e) => {
-          setComando(e.target.value);
-        }}
-      />
-      {savedState ? (
-        <div className={style.buttonContainer}>
-          <button
-            type="button"
-            onClick={() => {
-              setSavedState(false);
-              props.isCreating(true);
-            }}
-          >
-            Editar
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              props.setCurrentIndex(props.index);
-              props.isCreating(false);
-            }}
-          >
-            Borrar
-          </button>
+    <section className="px-4 lg:px-40">
+      <div className="flex flex-col gap-2 rounded bg-white px-2 py-4">
+        <input
+          placeholder="Nombre de la funcion"
+          name={`nombreF${props.index}`}
+          onChange={(e) => {
+            setNombre(e.target.value);
+          }}
+          value={nombre}
+          className="block w-full border-b-2 px-1 py-1 outline-none"
+        />
+        <h3 className="font-medium"> Informacion general</h3>
+        <input
+          placeholder="Descripcion"
+          name={`descripcionF${props.index}`}
+          onChange={(e) => {
+            setDescripcion(e.target.value);
+          }}
+          className="block w-full border-b-2 px-1 py-1 outline-none"
+        />
+        <h3 className="font-medium">Inputs</h3>
+        <input
+          placeholder="Comando de ejecucion"
+          name={`comando${props.index}`}
+          onChange={(e) => {
+            setComando(e.target.value);
+          }}
+          className="block w-full border-b-2 px-1 py-1 outline-none"
+        />
+
+        <div className="flex gap-8">
+          {savedState ? (
+            <>
+              <button
+                type="button"
+                onClick={() => {
+                  setSavedState(false);
+                  props.isCreating(true);
+                }}
+              >
+                Editar
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  props.setCurrentIndex(props.index);
+                  props.isCreating(false);
+                }}
+              >
+                Borrar
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => {
+                  if (!nombre || !descripcion || !comando) {
+                    alert("Llena todos los espacios");
+                    return;
+                  }
+                  addData();
+                  setSavedState(true);
+                  props.isCreating(false);
+                }}
+              >
+                Crear
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  props.setCurrentIndex(props.index);
+                  props.isCreating(false);
+                }}
+              >
+                Cancelar
+              </button>
+            </>
+          )}
         </div>
-      ) : (
-        <div className={style.buttonContainer}>
-          <button
-            type="button"
-            onClick={() => {
-              if (!nombre || !descripcion || !comando) {
-                alert("Llena todos los espacios");
-                return;
-              }
-              addData();
-              setSavedState(true);
-              props.isCreating(false);
-            }}
-          >
-            Crear
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              props.setCurrentIndex(props.index);
-              props.isCreating(false);
-            }}
-          >
-            Cancelar
-          </button>
-        </div>
-      )}
-    </div>
+      </div>
+    </section>
   );
 }

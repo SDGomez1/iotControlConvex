@@ -117,32 +117,40 @@ export default function NewDevice() {
               Guardar
             </button>
           </div>
-          <div className="">
-            <input name="titulo" placeholder="Nombre" />
+          <div className="flex flex-col gap-4 px-4 pt-10 lg:px-40">
+            <input
+              name="titulo"
+              placeholder="Nombre"
+              className="border-b-2 bg-transparent px-1 py-1 text-xl outline-none focus:border-b-neutral-700"
+            />
 
             <input
               name="descripcion"
               placeholder="Descripción"
-              className=""
+              className="border-b-2 bg-transparent px-1 py-1 text-base outline-none focus:border-b-neutral-700   "
             ></input>
+            <h2 className="mb-4 text-xl  font-medium lg:text-2xl">
+              Funciones del dispositivo
+            </h2>
           </div>
 
-          <h2 className="">Funciones del dispositivo</h2>
           {cards}
 
           {isCreating ? (
             <></>
           ) : (
-            <button
-              type="button"
-              onClick={() => {
-                setCount(count + 1);
-                setCreating(true);
-              }}
-              className=""
-            >
-              + Añadir nueva funcion
-            </button>
+            <div className="px-4 lg:px-40">
+              <button
+                type="button"
+                onClick={() => {
+                  setCount(count + 1);
+                  setCreating(true);
+                }}
+                className="w-full rounded bg-white py-2 text-sm drop-shadow-sm hover:drop-shadow-md "
+              >
+                + Añadir nueva funcion
+              </button>
+            </div>
           )}
         </form>
       </Protect>

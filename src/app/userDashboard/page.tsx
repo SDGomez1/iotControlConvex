@@ -1,5 +1,4 @@
 "use client";
-import styles from "styles/dashboard/admin.module.css";
 
 import Card from "components/dashboard/Card";
 import Navbar from "components/dashboard/Navbar";
@@ -9,7 +8,7 @@ import { formatUrl } from "lib/utils";
 
 export default function () {
   const availableOrganizations = useQuery(
-    api.organization.getUserOrganizations
+    api.organization.getUserOrganizations,
   );
 
   const organizationCards = availableOrganizations?.map((info, index) => {
@@ -24,14 +23,14 @@ export default function () {
     );
   });
   return (
-    <main className={styles.container}>
-      <Navbar admin={false} />
+    <main className={"container"}>
+      <Navbar />
 
-      <section className={styles.mainSection}>
-        <div className={styles.linkContainer}>
+      <section className={"mainSection"}>
+        <div className={"linkContainer"}>
           <h2> Conectar a Admin</h2>
         </div>
-        <div className={styles.gridContainer}>{organizationCards}</div>
+        <div className={"gridContainer"}>{organizationCards}</div>
       </section>
     </main>
   );

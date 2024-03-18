@@ -75,7 +75,7 @@ export default function Device() {
               <UsbSvg />
               Conectar
             </button>
-            <button className="flex h-8 w-44 items-center justify-center rounded border border-black bg-white px-8 py-1 text-sm transition hover:bg-neutral-50 lg:h-9">
+            <button className="flex h-8 w-44 items-center justify-center rounded border border-black bg-transparent px-8 py-1 text-sm transition hover:bg-white lg:h-9">
               Editar Funciones
             </button>
           </div>

@@ -1,15 +1,12 @@
 "use client";
-import styles from "styles/devices/deviceName.module.css";
 
 import { Protect } from "@clerk/nextjs";
-import Navbar from "components/dashboard/Navbar";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 
 import { deFormatUrl } from "lib/utils";
 import { useParams } from "next/navigation";
-import FunctionCardView from "components/admin/functionCardView";
 import FunctionCardExecution from "components/user/FunctionCardsExecution";
 
 export default function Device() {
@@ -36,18 +33,22 @@ export default function Device() {
   });
 
   return (
-    <main className={styles.container}>
+    <main className="min-h-screen min-w-full bg-gray-50 ">
       <Protect>
-        <Navbar />
-        <section className={styles.mainContainer}>
-          <div className={styles.titleContainer}>
-            <h2>{device?.nombre}</h2>
-            <div></div>
+        <section className="flex flex-col items-start  gap-4 border-b-2 px-4 py-8 lg:flex-row lg:items-center lg:justify-between lg:px-40">
+          <div className="w-full ">
+            <h2 className="my-0 text-xl font-semibold lg:text-3xl">
+              {device?.nombre}
+            </h2>
+            <p className="text-sm text-neutral-500">{device?.description}</p>
           </div>
-          <p>{device?.description}</p>
-          <h3>Funciones Disponibles</h3>
-          {functionscom}
         </section>
+        <div className="flex flex-col gap-4 px-4 pt-4 lg:px-40">
+          <h3 className="text-xl  font-medium lg:text-2xl">
+            Funciones Disponibles
+          </h3>
+          {functionscom}
+        </div>
       </Protect>
     </main>
   );

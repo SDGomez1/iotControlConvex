@@ -1,7 +1,7 @@
 "use client";
 
 import Card from "components/dashboard/Card";
-import Navbar from "components/dashboard/Navbar";
+
 import { useParams } from "next/navigation";
 import { deFormatUrl, formatUrl } from "lib/utils";
 import { useQuery } from "convex/react";
@@ -28,15 +28,8 @@ export default function () {
     );
   });
   return (
-    <main>
-      <Navbar />
-
-      <section>
-        <div>
-          <h2> Conectar a dispositivo</h2>
-        </div>
-        <div>{deviceCard}</div>
-      </section>
+    <main className="flex min-h-screen min-w-full flex-col items-center gap-8 bg-gray-50 py-4 lg:grid lg:auto-rows-max lg:grid-cols-3 lg:px-10">
+      {deviceCard}
     </main>
   );
 }

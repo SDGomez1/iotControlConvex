@@ -1,7 +1,6 @@
 "use client";
 
 import Card from "components/dashboard/Card";
-import Navbar from "components/dashboard/Navbar";
 import { api } from "convex/_generated/api";
 import { useQuery } from "convex/react";
 import { formatUrl } from "lib/utils";
@@ -23,15 +22,8 @@ export default function () {
     );
   });
   return (
-    <main className={"container"}>
-      <Navbar />
-
-      <section className={"mainSection"}>
-        <div className={"linkContainer"}>
-          <h2> Conectar a Admin</h2>
-        </div>
-        <div className={"gridContainer"}>{organizationCards}</div>
-      </section>
+    <main className="flex min-h-screen min-w-full flex-col items-center gap-8 bg-gray-50 py-4 lg:grid lg:auto-rows-max lg:grid-cols-3 lg:px-10">
+      {organizationCards}
     </main>
   );
 }

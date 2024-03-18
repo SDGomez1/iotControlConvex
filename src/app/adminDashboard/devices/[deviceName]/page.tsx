@@ -1,5 +1,5 @@
 "use client";
-import FunctionCardView from "components/admin/functionCardView";
+import FunctionCardView from "components/admin/FunctionCardView";
 
 import { Protect } from "@clerk/nextjs";
 import { api } from "convex/_generated/api";

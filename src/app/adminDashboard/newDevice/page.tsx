@@ -1,6 +1,6 @@
 "use client";
 
-import FunctionCardEditing from "components/admin/functionCardEditing";
+import FunctionCardEditing from "components/admin/FunctionCardEditing";
 
 import { FunctionData } from "lib/types";
 import { formatUrl, generateUUID } from "lib/utils";

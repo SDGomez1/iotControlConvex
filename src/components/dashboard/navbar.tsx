@@ -34,7 +34,7 @@ export default function Navbar() {
           LOGO
         </Link>
       </div>
-      <div className="relative flex items-center justify-end">
+      <div className="relative flex items-center justify-end ">
         <span
           className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-slate-500 p-2 text-sm text-white "
           onClick={() => setIsOpen(!isOpen)}
@@ -43,8 +43,8 @@ export default function Navbar() {
         </span>
         <div
           className={`${
-            isOpen ? "flex" : "hidden"
-          } absolute top-full z-10 flex-col gap-1 rounded bg-white px-6 py-3 drop-shadow-2xl`}
+            isOpen ? "flex " : "hidden "
+          } animate-openMenu absolute top-full z-10  mt-2 flex-col gap-1 rounded bg-white  px-6 py-3  shadow-lg ring-1 ring-black  ring-opacity-5 `}
           id="dropDown"
           ref={dropDownRef}
         >

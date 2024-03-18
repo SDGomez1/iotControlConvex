@@ -1,5 +1,4 @@
 "use client";
-import styles from "styles/dashboard/admin.module.css";
 
 import Card from "components/dashboard/Card";
 import Navbar from "components/dashboard/Navbar";
@@ -29,14 +28,14 @@ export default function () {
     );
   });
   return (
-    <main className={styles.container}>
+    <main>
       <Navbar />
 
-      <section className={styles.mainSection}>
-        <div className={styles.linkContainer}>
+      <section>
+        <div>
           <h2> Conectar a dispositivo</h2>
         </div>
-        <div className={styles.gridContainer}>{deviceCard}</div>
+        <div>{deviceCard}</div>
       </section>
     </main>
   );

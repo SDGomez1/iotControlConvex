@@ -17,7 +17,6 @@ export default function LinkBar(props: { links: ActiveLinks[] }) {
         : (active = segments.includes(link.location));
     }
     if (segments.length === 1 && link.location === "adminDashboard") {
-      console.log("entra");
       active = true;
     }
 

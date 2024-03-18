@@ -6,6 +6,7 @@ import { api } from "convex/_generated/api";
 import { writeToPort } from "lib/Serial";
 import Navbar from "components/dashboard/Navbar";
 import LinkBar from "components/dashboard/LinkBar";
+import Footer from "components/dashboard/Footer";
 
 export default function AdminLayout({ children }: PropsWithChildren) {
   const commands = useQuery(api.commands.readFirstCommand);
@@ -43,6 +44,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
         />
       </nav>
       {children}
+      <Footer />
     </div>
   );
 }

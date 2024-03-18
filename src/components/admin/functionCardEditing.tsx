@@ -22,8 +22,8 @@ export default function functionCardEditing(props: {
   }
 
   return (
-    <section className="px-4 lg:px-40">
-      <div className="flex flex-col gap-2 rounded bg-white px-2 py-4">
+    <section className="mb-4 mt-4 px-4 lg:px-40">
+      <div className="flex flex-col gap-2 rounded bg-white px-2 py-4 drop-shadow-md">
         <input
           placeholder="Nombre de la funcion"
           name={`nombreF${props.index}`}
@@ -52,7 +52,7 @@ export default function functionCardEditing(props: {
           className="block w-full border-b-2 px-1 py-1 outline-none"
         />
 
-        <div className="flex gap-8">
+        <div className="mt-4 flex items-center justify-center gap-8 lg:justify-start">
           {savedState ? (
             <>
               <button
@@ -61,6 +61,7 @@ export default function functionCardEditing(props: {
                   setSavedState(false);
                   props.isCreating(true);
                 }}
+                className="flex h-8 w-28 items-center justify-center rounded bg-neutral-900 px-8 py-1 text-sm text-white hover:bg-neutral-800"
               >
                 Editar
               </button>
@@ -70,6 +71,7 @@ export default function functionCardEditing(props: {
                   props.setCurrentIndex(props.index);
                   props.isCreating(false);
                 }}
+                className="flex h-8 w-28 items-center justify-center rounded border border-black px-8 py-1 text-sm hover:bg-neutral-50"
               >
                 Borrar
               </button>
@@ -87,6 +89,7 @@ export default function functionCardEditing(props: {
                   setSavedState(true);
                   props.isCreating(false);
                 }}
+                className="flex h-8 w-28 items-center justify-center rounded bg-neutral-900 px-8 py-1 text-sm text-white hover:bg-neutral-800"
               >
                 Crear
               </button>
@@ -96,6 +99,7 @@ export default function functionCardEditing(props: {
                   props.setCurrentIndex(props.index);
                   props.isCreating(false);
                 }}
+                className="flex h-8 w-28 items-center justify-center rounded border border-black px-8 py-1 text-sm hover:bg-neutral-50"
               >
                 Cancelar
               </button>

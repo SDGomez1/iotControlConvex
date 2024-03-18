@@ -106,18 +106,18 @@ export default function NewDevice() {
           }}
           autoComplete="off"
         >
-          <div className="flex flex-col gap-4 border-b-2 px-4 py-8 lg:flex-row lg:justify-between lg:px-40 ">
+          <div className="ju flex flex-col gap-4 border-b-2 px-4 py-8 lg:flex-row lg:justify-between lg:px-40">
             <h1 className="my-0 text-xl font-semibold lg:text-3xl">
               Crea un nuevo dispositivo
             </h1>
             <button
               type="submit"
-              className="w-1/4 rounded bg-neutral-950 py-2 text-sm text-white lg:w-1/12"
+              className="w-1/4 rounded bg-neutral-950 py-2 text-sm text-white hover:bg-neutral-800 lg:w-1/12"
             >
               Guardar
             </button>
           </div>
-          <div className="flex flex-col gap-4 px-4 pt-10 lg:px-40">
+          <div className="flex flex-col gap-4 px-4 pt-4 lg:px-40">
             <input
               name="titulo"
               placeholder="Nombre"
@@ -129,7 +129,7 @@ export default function NewDevice() {
               placeholder="Descripción"
               className="border-b-2 bg-transparent px-1 py-1 text-base outline-none focus:border-b-neutral-700   "
             ></input>
-            <h2 className="mb-4 text-xl  font-medium lg:text-2xl">
+            <h2 className=" text-xl  font-medium lg:text-2xl">
               Funciones del dispositivo
             </h2>
           </div>
@@ -146,7 +146,7 @@ export default function NewDevice() {
                   setCount(count + 1);
                   setCreating(true);
                 }}
-                className="w-full rounded bg-white py-2 text-sm drop-shadow-sm hover:drop-shadow-md "
+                className="mt-4 w-full rounded border bg-white py-2 text-sm drop-shadow-sm hover:drop-shadow-md"
               >
                 + Añadir nueva funcion
               </button>

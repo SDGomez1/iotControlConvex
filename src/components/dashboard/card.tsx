@@ -5,7 +5,7 @@ export default function Card(props: {
   url: string;
 }) {
   return (
-    <div className=" flex h-44 w-11/12 shrink-0 flex-col rounded bg-white p-6 drop-shadow-sm transition hover:drop-shadow-md lg:w-11/12 ">
+    <div className=" lg:wborder flex h-44 w-11/12 shrink-0 flex-col rounded border bg-white p-6 drop-shadow-sm transition hover:drop-shadow-md ">
       <h3 className="text-xl font-medium">{props.titulo}</h3>
       <p className="text-sm text-neutral-500"> {props.descripcion}</p>
       <div className="flex h-full flex-col justify-end">

@@ -1,16 +1,20 @@
 "use client";
-import { PropsWithChildren, useEffect } from "react";
-import { useConnectedDevice } from "context/conectedDeviceContext";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
-import { writeToPort } from "lib/Serial";
 import Navbar from "components/dashboard/Navbar";
 import LinkBar from "components/dashboard/LinkBar";
 import Footer from "components/dashboard/Footer";
+import { useAppSelector } from "lib/hooks";
+import { RootState } from "lib/store";
+import { startReading, writeToPort } from "lib/Serial";
 
 export default function AdminLayout({ children }: PropsWithChildren) {
   const commands = useQuery(api.commands.readFirstCommand);
-  const deviceConected = useConnectedDevice();
+  const deviceConected = useAppSelector(
+    (state: RootState) => state.conectedDevice,
+  );
+
   useEffect(() => {
     if (commands !== undefined && deviceConected.length > 0) {
       const targetDevice = deviceConected.find(

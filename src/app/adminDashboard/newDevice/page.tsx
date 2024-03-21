@@ -121,13 +121,13 @@ export default function NewDevice() {
             <input
               name="titulo"
               placeholder="Nombre"
-              className="border-b-2 bg-transparent px-1 py-1 text-xl outline-none focus:border-b-neutral-700"
+              className="border-0 border-b bg-transparent px-1 py-1 text-xl outline-none focus:border-b-neutral-700"
             />
 
             <input
               name="descripcion"
               placeholder="Descripción"
-              className="border-b-2 bg-transparent px-1 py-1 text-base outline-none focus:border-b-neutral-700   "
+              className="border-0 border-b bg-transparent px-1 py-1 text-base outline-none focus:border-b-neutral-700   "
             ></input>
             <h2 className=" text-xl  font-medium lg:text-2xl">
               Funciones del dispositivo

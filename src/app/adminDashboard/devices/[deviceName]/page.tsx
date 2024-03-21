@@ -9,19 +9,29 @@ import { useQuery } from "convex/react";
 import { useParams } from "next/navigation";
 
 import { useEffect, useState } from "react";
-import { useConnectedDeviceDispatch } from "context/conectedDeviceContext";
 
 import { conectedDeviceData } from "lib/types";
-import { connectToSerial } from "lib/Serial";
+import {
+  closePort,
+  connectToSerial,
+  getReader,
+  startReading,
+  writeToPort,
+} from "lib/Serial";
 import { deFormatUrl } from "lib/utils";
+import { useAppDispatch, useAppSelector } from "lib/hooks";
+
+import { add, remove } from "lib/features/conectedDevices/conectedDevicesSlice";
+import Graph from "./Graph";
 
 export default function Device() {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedPort, setSelectedPort] = useState<SerialPort | undefined>(
     undefined,
   );
-
-  const dispatch = useConnectedDeviceDispatch();
+  const [reader, setReader] = useState<ReadableStreamDefaultReader | undefined>(
+    undefined,
+  );
 
   const params = useParams<{ deviceName: string }>();
   const deviceId = deFormatUrl(params.deviceName);
@@ -33,24 +43,25 @@ export default function Device() {
     deviceId: deviceId as Id<"device">,
   });
 
-  //Todo: comand lifecycle, and styles
   const functionscom = functions?.map((e, i) => {
     return (
       <FunctionCardView titulo={e.nombre} descripcion={e.descripcion} key={i} />
     );
   });
 
+  const dispatchConectedDevices = useAppDispatch();
+  const devicesList = useAppSelector((state) => state.conectedDevice);
+
+  const isConected = devicesList.find((item) => item.id === deviceId);
+
   useEffect(() => {
     if (selectedPort !== undefined) {
       const data: conectedDeviceData = {
         id: deviceId,
         device: selectedPort,
+        reader: reader as ReadableStreamDefaultReader,
       };
-      console.log(data);
-      dispatch({
-        type: "ADD",
-        payload: data,
-      });
+      dispatchConectedDevices(add(data));
     }
   }, [selectedPort]);
   return (
@@ -65,16 +76,38 @@ export default function Device() {
           </div>
 
           <div className="flex w-full gap-8  lg:justify-end">
-            <button
-              onClick={async () => {
-                const port = await connectToSerial();
-                setSelectedPort(port);
-              }}
-              className=" hidden h-8 w-44 items-center justify-center gap-4 rounded bg-emerald-700 py-2 text-sm text-white transition hover:bg-emerald-600 lg:flex lg:h-9"
-            >
-              <UsbSvg />
-              Conectar
-            </button>
+            {!isConected ? (
+              <button
+                onClick={async () => {
+                  const port = await connectToSerial();
+                  const reader = await getReader(port);
+                  const readPort = async () => {
+                    const data = await startReading(port, reader, deviceId);
+                  };
+                  readPort();
+                  setReader(reader);
+                  setSelectedPort(port);
+                }}
+                className=" hidden h-8 w-44 items-center justify-center gap-4 rounded bg-emerald-700 py-2 text-sm text-white transition hover:bg-emerald-600 lg:flex lg:h-9"
+              >
+                <UsbSvg />
+                Conectar
+              </button>
+            ) : (
+              <button
+                onClick={async () => {
+                  closePort(selectedPort, reader);
+                  setReader(undefined);
+                  setSelectedPort(undefined);
+                  dispatchConectedDevices(remove(deviceId));
+                }}
+                className=" hidden h-8 w-44 items-center justify-center gap-4 rounded bg-red-700 py-2 text-sm text-white transition hover:bg-red-600 lg:flex lg:h-9"
+              >
+                <UsbSvg />
+                Desconectar
+              </button>
+            )}
+
             <button className="flex h-8 w-44 items-center justify-center rounded border border-black bg-transparent px-8 py-1 text-sm transition hover:bg-white lg:h-9">
               Editar Funciones
             </button>
@@ -85,6 +118,10 @@ export default function Device() {
             Funciones Disponibles
           </h3>
           {isEditing ? <></> : functionscom}
+          <button onClick={() => writeToPort(selectedPort, "A")}>
+            Prender desde comando
+          </button>
+          <Graph id={deviceId} />
         </div>
       </Protect>
     </main>

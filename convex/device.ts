@@ -22,7 +22,9 @@ export const getdevices = query({
   args: { teamId: v.id("team") },
   handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
-    if (!user?.subject) {
+    console.log(user);
+
+    if (!user) {
       throw new Error("You dont have authorizacion");
     }
     return await ctx.db

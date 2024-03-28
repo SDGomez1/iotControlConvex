@@ -1,6 +1,7 @@
 import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { internal } from "./_generated/api";
+import { error } from "console";
 
 const http = httpRouter();
 
@@ -23,10 +24,12 @@ http.route({
 
       switch (result.type) {
         case "user.created":
-          await ctx.runMutation(internal.user.createUser, {
-            userId: result.data.id,
-            email: result.data.email_addresses[0]?.email_address,
-          });
+          if (result.data.username) {
+            await ctx.runMutation(internal.user.createUser, {
+              userId: result.data.id,
+              userName: result.data.username,
+            });
+          }
       }
 
       return new Response(null, {

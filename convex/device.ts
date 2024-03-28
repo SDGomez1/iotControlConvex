@@ -3,7 +3,7 @@ import { mutation, query } from "./_generated/server";
 import { error } from "console";
 
 export const createDevice = mutation({
-  args: { nombre: v.string(), descripcion: v.string() },
+  args: { name: v.string(), description: v.string(), teamId: v.id("team") },
   handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
     if (!user) {
@@ -11,23 +11,23 @@ export const createDevice = mutation({
     }
 
     return await ctx.db.insert("device", {
-      userId: user.subject,
-      nombre: args.nombre,
-      description: args.descripcion,
+      teamId: args.teamId,
+      name: args.name,
+      description: args.description,
     });
   },
-}); // todo: circular references
+});
 
 export const getdevices = query({
-  args: {},
+  args: { teamId: v.id("team") },
   handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
-    // if (!user) {
-    //   throw new Error("You dont have authorizacion");
-    // }
+    if (!user?.subject) {
+      throw new Error("You dont have authorizacion");
+    }
     return await ctx.db
       .query("device")
-      .filter((q) => q.eq(q.field("userId"), user?.subject))
+      .filter((q) => q.eq(q.field("teamId"), args.teamId))
       .collect();
   },
 });
@@ -41,19 +41,5 @@ export const getdeviceById = query({
       throw new Error("No device Found");
     }
     return device;
-  },
-});
-
-export const getDeviceByOrganizationId = query({
-  args: { organizationId: v.id("organization") },
-  handler: async (ctx, args) => {
-    const organization = await ctx.db
-      .query("organization")
-      .filter((q) => q.eq(q.field("_id"), args.organizationId))
-      .take(1);
-    return await ctx.db
-      .query("device")
-      .filter((q) => q.eq(q.field("userId"), organization[0]?.adminId))
-      .collect();
   },
 });

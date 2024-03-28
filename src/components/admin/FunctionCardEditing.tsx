@@ -1,5 +1,6 @@
-import { FunctionData } from "lib/types";
-import { Dispatch, SetStateAction, useState } from "react";
+import type { FunctionData } from "types/deviceFunction";
+import type { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 
 export default function functionCardEditing(props: {
   index: string;

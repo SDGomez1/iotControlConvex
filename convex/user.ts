@@ -1,12 +1,13 @@
 import { v } from "convex/values";
-import { internalMutation, internalQuery, query } from "./_generated/server";
+import { internalMutation } from "./_generated/server";
 
 export const createUser = internalMutation({
-  args: { email: v.string(), userId: v.string() },
+  args: { userName: v.string(), userId: v.string() },
   handler: async (ctx, args) => {
     await ctx.db.insert("user", {
-      email: args.email,
+      userName: args.userName,
       userId: args.userId,
+      firstLogin: true,
     });
   },
 });

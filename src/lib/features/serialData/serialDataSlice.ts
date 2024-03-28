@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { serialData } from "lib/types";
+import { serialData } from "types/serial";
 const initialState: serialData[] = [];
 
 const serialDataSlice = createSlice({

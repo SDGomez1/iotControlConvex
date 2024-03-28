@@ -4,15 +4,15 @@ import { mutation, query } from "./_generated/server";
 export const createFunction = mutation({
   args: {
     deviceId: v.id("device"),
-    nombre: v.string(),
-    descripcion: v.string(),
+    name: v.string(),
+    description: v.string(),
     comando: v.string(),
   },
   handler: async (ctx, args) => {
     const deviceFunction = ctx.db.insert("deviceFunction", {
       deviceId: args.deviceId,
-      nombre: args.nombre,
-      descripcion: args.descripcion,
+      name: args.name,
+      description: args.description,
       command: args.comando,
     });
   },

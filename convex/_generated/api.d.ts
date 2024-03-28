@@ -19,7 +19,7 @@ import type * as commands from "../commands.js";
 import type * as device from "../device.js";
 import type * as deviceFunction from "../deviceFunction.js";
 import type * as http from "../http.js";
-import type * as organization from "../organization.js";
+import type * as team from "../team.js";
 import type * as user from "../user.js";
 
 /**
@@ -36,7 +36,7 @@ declare const fullApi: ApiFromModules<{
   device: typeof device;
   deviceFunction: typeof deviceFunction;
   http: typeof http;
-  organization: typeof organization;
+  team: typeof team;
   user: typeof user;
 }>;
 export declare const api: FilterApi<

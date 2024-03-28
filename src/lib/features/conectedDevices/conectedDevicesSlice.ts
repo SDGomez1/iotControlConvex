@@ -1,6 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { action } from "convex/_generated/server";
-import { conectedDeviceData } from "lib/types";
+import type { conectedDeviceData } from "types/serial";
 const initialState: conectedDeviceData[] = [];
 
 const conectedDevicesSlice = createSlice({

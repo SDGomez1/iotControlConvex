@@ -4,24 +4,26 @@ import { v } from "convex/values";
 export default defineSchema({
   user: defineTable({
     userId: v.string(),
-    email: v.string(),
+    userName: v.string(),
+    firstLogin: v.boolean(),
+    activeTeam: v.optional(v.id("team")),
   }),
   command: defineTable({
     deviceFunctionId: v.id("deviceFunction"),
     status: v.optional(v.string()),
   }),
   device: defineTable({
-    userId: v.optional(v.string()),
-    nombre: v.string(),
+    teamId: v.id("team"),
+    name: v.string(),
     description: v.string(),
   }),
   deviceFunction: defineTable({
     deviceId: v.id("device"),
-    nombre: v.string(),
-    descripcion: v.string(),
+    name: v.string(),
+    description: v.string(),
     command: v.string(),
   }),
-  organization: defineTable({
+  team: defineTable({
     adminId: v.string(),
     userRegistered: v.array(v.string()),
     name: v.string(),

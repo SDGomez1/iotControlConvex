@@ -34,7 +34,9 @@
       "components/*" : ["./src/components/*"],
       "convex/*": ["./convex/*"],
       "lib/*": ["./src/lib/*"],
-      "context/*": ["./src/context/*"]
+      "utils/*": ["./src/utils/*"],
+      "types/*": ["./src/types/*"],
+      "img/*": ["./src/assets/img/*"]
     }
   },
   "include": [

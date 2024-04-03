@@ -4,7 +4,14 @@ export default function LogIn() {
   return (
     <SignIn
       redirectUrl="/onboarding"
-      appearance={{ variables: { colorPrimary: "#131217" } }}
+      appearance={{
+        elements: {
+          formButtonPrimary: "bg-slate-500",
+          headerSubtitle: "hidden",
+          card: "shadow-none border",
+          headerTitle: "hidden",
+        },
+      }}
     />
   );
 }

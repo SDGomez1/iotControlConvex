@@ -3,7 +3,7 @@ import { SignUp } from "@clerk/nextjs";
 export default function LogIn() {
   return (
     <SignUp
-      redirectUrl="/onboarding"
+      redirectUrl="/logIn"
       appearance={{ variables: { colorPrimary: "#131217" } }}
     />
   );

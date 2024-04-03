@@ -1,14 +1,18 @@
-import { auth } from "@clerk/nextjs";
-import { api } from "convex/_generated/api";
-import { fetchQuery } from "convex/nextjs";
+"use client";
 
-export default async function Onboarding() {
-  const firstlogin = await fetchQuery(api.user.userFirstLogin);
-  const user = auth();
+import { useRouter } from "next/navigation";
 
+export default function Onboarding() {
+  const router = useRouter();
   return (
     <div>
-      <p> {user.session ? "true" : "false"}</p>
+      <p>Onboarding</p>
+      <button
+        onClick={() => router.push("/onboarding/selectTeam")}
+        className=" border p-2 "
+      >
+        FinishConfig
+      </button>
     </div>
   );
 }

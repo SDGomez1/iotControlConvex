@@ -2,11 +2,14 @@
 
 import Card from "components/common/Card";
 import { api } from "convex/_generated/api";
+import { Id } from "convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { formatUrl } from "utils/urlUtils";
 
 export default function Admin() {
-  const devicesList = useQuery(api.device.getdevices);
+  const devicesList = useQuery(api.device.getdevices, {
+    teamId: "jx714hm6fqewpbaca61pmye3yd6p6zge" as Id<"team">,
+  });
 
   const devicesCards = devicesList?.map((device, index) => {
     const url = formatUrl(device.name, device._id);

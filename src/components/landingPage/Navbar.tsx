@@ -21,7 +21,7 @@ export default function Navbar() {
               setIsOpen(!isOpen);
             }}
           >
-            <XMark />
+            <XMark className="size-6" />
           </div>
         </div>
         <div className="flex w-full flex-col items-center justify-center gap-3 px-6">
@@ -55,7 +55,7 @@ export default function Navbar() {
             setIsOpen(!isOpen);
           }}
         >
-          <BurguerMenu />
+          <BurguerMenu className="size-6" />
         </div>
         <div className="hidden w-auto items-center justify-center gap-4 lg:flex">
           <Link href={""} className="p-2 text-left text-sm text-neutral-500">

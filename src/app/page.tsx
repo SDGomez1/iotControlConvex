@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <main className="">
       <Navbar />
-      <section className="h-70vh bg-hero-pattern flex flex-col items-center justify-center px-4">
+      <section className="bg-hero-pattern flex h-70vh flex-col items-center justify-center px-4">
         <h1 className="border border-dotted p-5 text-center text-2xl font-semibold lg:w-1/2 lg:text-5xl">
           Conecta y gestiona tus dispositivos como nunca antes.
         </h1>

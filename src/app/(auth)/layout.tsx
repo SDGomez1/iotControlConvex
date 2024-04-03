@@ -8,12 +8,12 @@ export default function DashboardLayout({
   return (
     <main className="flex h-screen flex-col items-center justify-center gap-4 lg:gap-10">
       {children}
-      <Link
+      {/* <Link
         href="/"
         className="border-b border-b-neutral-500 text-neutral-500 "
       >
         ← Volver
-      </Link>
+      </Link> */}
     </main>
   );
 }

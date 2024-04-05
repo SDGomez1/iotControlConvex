@@ -1,5 +1,22 @@
 {
+  "name": "convex-iot-control",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev"
+  },
   "devDependencies": {
-    "turbo": "^1.13.2"
-  }
+    "turbo": "latest",
+    "prettier": "^3.2.5",
+    "@repo/typescript-config": "*"
+
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "npm@10.4.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }

@@ -1,9 +1,10 @@
 import { Providers } from "./providers";
 import type { Metadata } from "next";
-import { Jost } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
+import ThemesProvider from "./ThemesProvider";
 
-const jost = Jost({ subsets: ["latin"] });
+const dmSans = DM_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,8 +18,10 @@ export default function RootLayout({
 }>) {
   return (
     <Providers>
-      <html lang="en" className={jost.className}>
-        <body className={jost.className}>{children}</body>
+      <html lang="en" suppressHydrationWarning>
+        <body className={dmSans.className}>
+          <ThemesProvider>{children}</ThemesProvider>
+        </body>
       </html>
     </Providers>
   );

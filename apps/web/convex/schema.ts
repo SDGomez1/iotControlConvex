@@ -1,3 +1,4 @@
+import { invitations } from "@clerk/clerk-sdk-node";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
@@ -7,6 +8,8 @@ export default defineSchema({
     userName: v.string(),
     firstLogin: v.boolean(),
     activeTeam: v.optional(v.id("team")),
+  }).searchIndex("search_user", {
+    searchField: "userName",
   }),
   command: defineTable({
     deviceFunctionId: v.id("deviceFunction"),
@@ -28,5 +31,10 @@ export default defineSchema({
     userRegistered: v.array(v.string()),
     name: v.string(),
     description: v.string(),
+  }),
+  invitations: defineTable({
+    teamId: v.id("team"),
+    userId: v.string(),
+    accepted: v.boolean(),
   }),
 });

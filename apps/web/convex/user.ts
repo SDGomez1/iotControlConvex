@@ -1,12 +1,5 @@
 import { v } from "convex/values";
-import {
-  internalMutation,
-  internalQuery,
-  mutation,
-  query,
-} from "./_generated/server";
-import { Id } from "./_generated/dataModel";
-import { useId } from "react";
+import { internalMutation, mutation, query } from "./_generated/server";
 
 export const createUser = internalMutation({
   args: { userName: v.string(), userId: v.string() },
@@ -68,5 +61,17 @@ export const setActiveTeam = mutation({
     }
 
     await ctx.db.patch(userId, { activeTeam: args.teamId });
+  },
+});
+
+export const getUserbyUserName = mutation({
+  args: { userName: v.string() },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("user")
+      .withSearchIndex("search_user", (q) =>
+        q.search("userName", args.userName),
+      )
+      .take(3);
   },
 });

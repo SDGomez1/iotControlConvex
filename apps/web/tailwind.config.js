@@ -11,6 +11,17 @@ module.exports = {
     current: "currentColor",
     extend: {
       colors: {
+        // Brand Colors
+        accent: "#4F46E5",
+        dark: "#19191C",
+        success: "#E7F8F6",
+        sucessText: "#29867F",
+        danger: "#EF4444",
+        lightText: "#737373",
+        darkText: "#898989",
+        error: "#FEEBEF",
+        errorText: "#C11D45",
+
         // light mode
         tremor: {
           brand: {
@@ -100,6 +111,8 @@ module.exports = {
 
       spacing: {
         "70vh": "70vh",
+        "700px": "700px",
+        "500px": "500px",
       },
     },
     keyframes: {
@@ -142,4 +155,5 @@ module.exports = {
     },
   ],
   plugins: [require("@headlessui/tailwindcss"), require("@tailwindcss/forms")],
+  darkMode: "selector",
 };

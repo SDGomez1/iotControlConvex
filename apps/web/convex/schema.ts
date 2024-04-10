@@ -35,6 +35,5 @@ export default defineSchema({
   invitations: defineTable({
     teamId: v.id("team"),
     userId: v.string(),
-    accepted: v.boolean(),
   }),
 });

@@ -11,13 +11,19 @@ import { useUser } from "@clerk/clerk-react";
 import { Id } from "convex/_generated/dataModel";
 
 export default function SelectTeam() {
+  const router = useRouter();
+
   const user = useUser();
-  const queryData = useQuery(api.invitations.getInvitationByUser, {
-    userId: user.user?.id as string,
-  });
+  if (!user.isLoaded) {
+    return <div>Loading</div>;
+  }
+  if (!user.user) {
+    router.push("/");
+  }
+  const queryData = useQuery(api.invitations.getInvitationByUser);
   const selectTeam = useMutation(api.user.setActiveTeam);
   const acceptInvitation = useMutation(api.invitations.setInvitationAccepted);
-  const router = useRouter();
+  const createTeam = useMutation(api.team.createTeam);
 
   const [selected, setSelected] = useState("");
   const [selectedId, setSelectedID] = useState("");
@@ -47,11 +53,11 @@ export default function SelectTeam() {
   const placeholder =
     (teams?.length as number) > 0
       ? "Seleciona una invitacion a un equipo"
-      : "No hay equipos disponbiles";
+      : "No hay invitaciones disponbiles";
 
   return (
     <div className=" flex h-screen w-full items-center justify-center px-4">
-      <div className="lg:w-500px flex w-full  flex-col  p-4">
+      <div className="flex w-full flex-col  p-4  lg:w-500px">
         <Image
           src={logo}
           alt="Logo"
@@ -60,25 +66,50 @@ export default function SelectTeam() {
         <h2 className="text-xl font-semibold lg:text-center lg:text-4xl">
           Crea un nuevo equipo
         </h2>
-        <p className="text-lightText mb-6 text-sm lg:text-center lg:text-base dark:text-darkText">
+        <p className="mb-6 text-sm text-lightText lg:text-center lg:text-base dark:text-darkText">
           O unete a un equipo por invitación
         </p>
-        <form className="flex w-full flex-col">
+        <form
+          className="flex w-full flex-col"
+          onSubmit={(e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.currentTarget);
+            const name = formData.get("name") as string;
+            const description = formData.get("description") as string;
+
+            if (name !== "" && description !== "") {
+              createTeam({
+                name: name,
+                description: description,
+              });
+              router.push("/adminDashboard");
+            }
+          }}
+        >
           <label className=" text-xs font-bold lg:text-base"> Nombre</label>
-          <input className="border-lightText/60 mb-4 bg-transparent dark:border-darkText/60" />
+          <input
+            className="mb-4 border-lightText/60 bg-transparent dark:border-darkText/60"
+            name="name"
+            placeholder={`Equipo de ${user.user?.username}`}
+          />
           <label className="  text-xs font-bold lg:text-base">
             Descripción
           </label>
-          <input className="border-lightText/60 mb-4 bg-transparent dark:border-darkText/60" />
-        </form>
-        <button className="mb-10 w-full rounded bg-accent py-2 text-xs text-white lg:text-base">
-          Crear
-        </button>
+          <input
+            className="mb-4 border-lightText/60 bg-transparent dark:border-darkText/60"
+            name="description"
+            placeholder={`Equipo personal de ${user.user?.username}`}
+          />
 
+          <button className="mb-10 w-full rounded bg-accent py-2 text-xs text-white lg:text-base">
+            Crear
+          </button>
+        </form>
         <h2 className="text-xl font-semibold lg:text-center lg:text-4xl">
           Tus invitaciones
         </h2>
-        <p className="text-lightText  text-sm lg:mb-4 lg:text-center lg:text-base dark:text-darkText">
+        <p className="text-sm  text-lightText lg:mb-4 lg:text-center lg:text-base dark:text-darkText">
           Pidele a un administrador de equipo que te invite
         </p>
         <Listbox
@@ -90,12 +121,12 @@ export default function SelectTeam() {
           }}
         >
           <div className="relative mb-4 w-full">
-            <Listbox.Button className="border-lightText/60 relative mt-2 w-full rounded-lg border p-2 text-left text-sm dark:border-darkText/60 ">
+            <Listbox.Button className="relative mt-2 w-full rounded-lg border border-lightText/60 p-2 text-left text-sm dark:border-darkText/60 ">
               <span className="text-lightText lg:text-base dark:text-darkText">
                 {selected !== "" ? selected : placeholder}
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                <ChevronUpDown className="stroke-lightText size-6 dark:stroke-darkText" />
+                <ChevronUpDown className="size-6 stroke-lightText dark:stroke-darkText" />
               </span>
             </Listbox.Button>
             <Transition

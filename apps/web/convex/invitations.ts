@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { Doc } from "./_generated/dataModel";
 
 export const createInvitation = mutation({
   args: {
@@ -10,27 +11,26 @@ export const createInvitation = mutation({
     await ctx.db.insert("invitations", {
       teamId: args.teamId,
       userId: args.userId,
-      accepted: false,
     });
   },
 });
 
 export const getInvitationByUser = query({
-  args: {
-    userId: v.string(),
-  },
+  args: {},
   handler: async (ctx, args) => {
+    const user = await ctx.auth.getUserIdentity();
+
     const invitations = await ctx.db
       .query("invitations")
-      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .filter((q) => q.eq(q.field("userId"), user?.subject))
       .collect();
     if (invitations.length === 0) {
       return;
     }
-    let teams: any[] = [];
+    let teams: Doc<"team">[] = [];
     for (var i = 0; i < invitations.length; i++) {
       let actualTeam = await ctx.db.get(invitations[i].teamId);
-      teams.push(actualTeam);
+      teams.push(actualTeam as Doc<"team">);
     }
 
     return { teams, invitations };
@@ -42,8 +42,31 @@ export const setInvitationAccepted = mutation({
     invitationId: v.id("invitations"),
   },
   handler: async (ctx, args) => {
-    await ctx.db.patch(args.invitationId, {
-      accepted: true,
+    const invitation = await ctx.db.get(args.invitationId);
+    if (!invitation) {
+      return;
+    }
+    const team = await ctx.db.get(invitation.teamId);
+    if (!team) {
+      return;
+    }
+    await ctx.db.patch(invitation.teamId, {
+      userRegistered: [...team.userRegistered, invitation.userId],
     });
+
+    await ctx.db.delete(invitation._id);
+  },
+});
+
+export const setInvitationRejected = mutation({
+  args: {
+    invitationId: v.id("invitations"),
+  },
+  handler: async (ctx, args) => {
+    const invitation = await ctx.db.get(args.invitationId);
+    if (!invitation) {
+      return;
+    }
+    await ctx.db.delete(invitation._id);
   },
 });

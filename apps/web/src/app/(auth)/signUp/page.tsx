@@ -9,7 +9,7 @@ export default function LogIn() {
   return (
     <main className="lg flex h-screen w-full flex-col justify-center px-8 lg:flex-row lg:items-center lg:justify-between lg:gap-10 lg:px-0">
       <div className=" flex w-full flex-col lg:items-center">
-        <div className="lg:w-500px flex flex-col gap-4">
+        <div className="flex flex-col gap-4 lg:w-500px">
           <span className="mb-8 flex flex-col items-center justify-center">
             <Image
               src={logo}
@@ -22,7 +22,7 @@ export default function LogIn() {
             Crea tu cuenta
           </h1>
           <SignUp
-            redirectUrl="/logIn"
+            redirectUrl="/dashboard"
             appearance={{
               elements: {
                 rootBox: "w-full",
@@ -41,7 +41,7 @@ export default function LogIn() {
             }}
           />
           <span className=" flex items-center gap-2">
-            <p className="text-lightText text-xs font-medium lg:text-sm dark:text-darkText">
+            <p className="text-xs font-medium text-lightText lg:text-sm dark:text-darkText">
               ¿Ya tienes cuenta?
             </p>
             <Link
@@ -52,10 +52,10 @@ export default function LogIn() {
             </Link>
           </span>
 
-          <span className="border-lightText/30  border dark:border-darkText/30" />
+          <span className="border  border-lightText/30 dark:border-darkText/30" />
           <Link
             href="/"
-            className=" border-lightText text-lightText flex w-full items-center justify-center gap-2 rounded border bg-transparent py-2 text-center text-xs lg:text-sm  dark:border-darkText dark:text-darkText"
+            className=" flex w-full items-center justify-center gap-2 rounded border border-lightText bg-transparent py-2 text-center text-xs text-lightText lg:text-sm  dark:border-darkText dark:text-darkText"
           >
             <ArrowLong className="size-5" />
             Volver

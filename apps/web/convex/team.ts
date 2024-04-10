@@ -3,17 +3,28 @@ import { mutation, query } from "./_generated/server";
 
 export const createTeam = mutation({
   args: {
-    adminID: v.string(),
     name: v.string(),
     description: v.string(),
   },
   handler: async (ctx, args) => {
-    await ctx.db.insert("team", {
+    const user = await ctx.auth.getUserIdentity();
+    if (!user) {
+      return;
+    }
+    const newTeam = await ctx.db.insert("team", {
       name: args.name,
       description: args.description,
-      adminId: args.adminID,
-      userRegistered: [args.adminID],
+      adminId: user.subject,
+      userRegistered: [user.subject],
     });
+    const userId = await ctx.db
+      .query("user")
+      .filter((q) => q.eq(q.field("userId"), user.subject))
+      .unique();
+    if (!userId) {
+      return;
+    }
+    await ctx.db.patch(userId._id, { activeTeam: newTeam });
   },
 });
 
@@ -32,16 +43,9 @@ export const getUserTeams = query({
 
 export const getTeamById = query({
   args: {
-    teamId: v.string(),
+    teamId: v.id("team"),
   },
   handler: async (ctx, args) => {
-    const user = await ctx.auth.getUserIdentity();
-    if (!user) {
-      throw new Error("No tienes permitido ver esta pagina");
-    }
-    return await ctx.db
-      .query("team")
-      .filter((q) => q.eq(q.field("_id"), args.teamId))
-      .take(1);
+    return await ctx.db.get(args.teamId);
   },
 });

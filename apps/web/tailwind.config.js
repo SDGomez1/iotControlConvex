@@ -111,8 +111,11 @@ module.exports = {
 
       spacing: {
         "70vh": "70vh",
+        "75vw": "75vw",
         "700px": "700px",
         "500px": "500px",
+        "10%": "10%",
+        "15%": "15%",
       },
     },
     keyframes: {

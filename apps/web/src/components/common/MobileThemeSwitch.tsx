@@ -17,16 +17,16 @@ export default function MobileThemeSwitch() {
   }
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1 lg:hidden">
       <span>
         {resolvedTheme === "light" ? (
-          <Sun className="stroke-lightText size-5" />
+          <Sun className="size-5 stroke-lightText" />
         ) : (
           <Moon className="size-5 stroke-darkText" />
         )}
       </span>
       <select
-        className="text-lightText border-0 bg-none p-0 text-sm focus:border-none focus:outline-none dark:bg-dark dark:text-darkText"
+        className="border-0 bg-none p-0 text-sm text-lightText focus:border-none focus:outline-none dark:bg-dark dark:text-darkText "
         value={resolvedTheme}
         onChange={(e) => setTheme(e.target.value)}
       >
@@ -35,7 +35,7 @@ export default function MobileThemeSwitch() {
         <option value="system">Sistema</option>
       </select>
       <span>
-        <ChevronUpDown className="stroke-lightText size-5 dark:stroke-darkText" />
+        <ChevronUpDown className="size-5 stroke-lightText dark:stroke-darkText" />
       </span>
     </div>
   );

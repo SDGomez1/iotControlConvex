@@ -14,12 +14,7 @@ export default function SelectTeam() {
   const router = useRouter();
 
   const user = useUser();
-  if (!user.isLoaded) {
-    return <div>Loading</div>;
-  }
-  if (!user.user) {
-    router.push("/");
-  }
+
   const queryData = useQuery(api.invitations.getInvitationByUser);
   const selectTeam = useMutation(api.user.setActiveTeam);
   const acceptInvitation = useMutation(api.invitations.setInvitationAccepted);

@@ -1,6 +1,7 @@
 "use client";
 
 import type { FunctionData } from "types/deviceFunction";
+
 import { formatUrl } from "utils/urlUtils";
 import { generateUUID } from "utils/uuidUtils";
 
@@ -9,8 +10,9 @@ import { api } from "convex/_generated/api";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import FunctionCardEditing from "components/dashboard/admin/newDevice/FunctionCardEditing";
+
 import { Plus } from "components/icons/Plus";
+import FunctionCardEditing from "components/dashboard/admin/newDevice/FunctionCardEditing";
 
 export default function NewDevice() {
   const router = useRouter();

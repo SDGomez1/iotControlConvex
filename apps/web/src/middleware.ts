@@ -9,7 +9,7 @@ export default authMiddleware({
       return NextResponse.redirect(new URL("/", req.url));
     }
     if (auth.userId && req.nextUrl.pathname === "/") {
-      return NextResponse.redirect(new URL("/loading", req.url));
+      return NextResponse.redirect(new URL("/admin", req.url));
     }
     return NextResponse.next();
   },

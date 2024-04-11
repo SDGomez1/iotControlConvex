@@ -1,11 +1,13 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { Doc, Id } from "convex/_generated/dataModel";
 import type { databaseDataFormat } from "types/databaseData";
-
+import type { ActiveSessionResource } from "@clerk/types";
 const initialState: databaseDataFormat = {
   invitationsByUser: undefined,
-  userActiveTeam: undefined,
-  userActiveTeamInfo: undefined,
+  userActiveTeam: "" as Id<"team">,
+  userActiveTeamInfo: {} as Doc<"team">,
   userTeams: [],
+  currentUser: {} as ActiveSessionResource,
 };
 
 const databaseDataSlice = createSlice({
@@ -13,7 +15,7 @@ const databaseDataSlice = createSlice({
   initialState: initialState,
   reducers: {
     update: (state, action: PayloadAction<databaseDataFormat>) =>
-      (state = action.payload),
+      action.payload,
   },
 });
 

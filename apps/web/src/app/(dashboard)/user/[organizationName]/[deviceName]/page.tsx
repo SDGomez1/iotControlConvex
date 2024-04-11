@@ -6,7 +6,7 @@ import { useQuery } from "convex/react";
 
 import { deFormatUrl } from "utils/urlUtils";
 import { useParams } from "next/navigation";
-import FunctionCardExecution from "components/user/FunctionCardsExecution";
+import FunctionCardExecution from "components/dashboard/user/FunctionCardsExecution";
 
 export default function Device() {
   const params = useParams<{ deviceName: string }>();

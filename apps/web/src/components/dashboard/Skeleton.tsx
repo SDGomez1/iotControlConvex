@@ -1,42 +1,26 @@
 "use client";
 import Sidebar from "components/dashboard/Sidebar";
 import Topbar from "components/dashboard/Topbar";
-import { Doc } from "convex/_generated/dataModel";
 import type { ActiveSessionResource } from "@clerk/types";
 
 import { ReactNode, useState } from "react";
-interface invitation {
-  teams: Doc<"team">[];
-  invitations: Doc<"invitations">[];
-}
 
-export default function Skeleton(props: {
-  userActiveTeamInfo: Doc<"team">;
-  currentUser: ActiveSessionResource;
-  userTeams: Doc<"team">[];
-  children: ReactNode;
-  invitationsByUser: invitation | null;
-}) {
+export default function Skeleton({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   const [isOpen, setIsOpen] = useState(false);
+  console.log("rendered Skeleton");
 
   return (
     <main className="flex h-screen w-screen lg:max-h-screen dark:bg-dark">
-      <Sidebar
-        isAdmin={true}
-        setIsOpen={setIsOpen}
-        isOpen={isOpen}
-        userActiveTeamInfo={props.userActiveTeamInfo}
-        userTeams={props.userTeams}
-        currentUser={props.currentUser}
-      />
+      <Sidebar setIsOpen={setIsOpen} isOpen={isOpen} isAdmin={true} />
 
-      <section className="w-full lg:px-12">
-        <Topbar
-          setIsOpen={setIsOpen}
-          invitationsByUser={props.invitationsByUser}
-        />
+      <section className="relative max-h-screen w-full overflow-hidden lg:px-12">
+        <Topbar setIsOpen={setIsOpen} />
 
-        {props.children}
+        {children}
       </section>
 
       {isOpen ? (

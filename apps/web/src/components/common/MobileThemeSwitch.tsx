@@ -26,7 +26,7 @@ export default function MobileThemeSwitch() {
         )}
       </span>
       <select
-        className="border-0 bg-none p-0 text-sm text-lightText focus:border-none focus:outline-none dark:bg-dark dark:text-darkText "
+        className="border-0 bg-none p-0 text-sm text-lightText focus:border-none focus:outline-none focus:ring-0 dark:bg-dark dark:text-darkText "
         value={resolvedTheme}
         onChange={(e) => setTheme(e.target.value)}
       >

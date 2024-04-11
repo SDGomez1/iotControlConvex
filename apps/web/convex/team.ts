@@ -49,3 +49,21 @@ export const getTeamById = query({
     return await ctx.db.get(args.teamId);
   },
 });
+
+export const getActiveTeamInfo = query({
+  args: {},
+  handler: async (ctx, args) => {
+    const user = await ctx.auth.getUserIdentity();
+    if (!user) {
+      return;
+    }
+    const data = await ctx.db
+      .query("user")
+      .filter((q) => q.eq(q.field("userId"), user.subject))
+      .first();
+    if (!data?.activeTeam) {
+      return;
+    }
+    return await ctx.db.get(data.activeTeam);
+  },
+});

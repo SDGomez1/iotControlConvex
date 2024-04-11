@@ -14,19 +14,23 @@ import { ChevronUpDown } from "components/icons/ChevronUpDown";
 import { Listbox, Transition } from "@headlessui/react";
 import { useRouter } from "next/navigation";
 import type { ActiveSessionResource } from "@clerk/types";
+import { useAppSelector } from "lib/hooks";
 export default function Sidebar(props: {
   isAdmin: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
-  userActiveTeamInfo: Doc<"team">;
-  currentUser: ActiveSessionResource;
-  userTeams: Doc<"team">[];
 }) {
   const router = useRouter();
 
+  const userTeams = useAppSelector((state) => state.databaseData.userTeams);
+  const userActiveTeamInfo = useAppSelector(
+    (state) => state.databaseData.userActiveTeamInfo,
+  );
+  const currentUser = useAppSelector((state) => state.databaseData.currentUser);
+
   const setActiveTeam = useMutation(api.user.setActiveTeam);
 
-  const teamOptions = props.userTeams.map((team) => {
+  const teamOptions = userTeams.map((team) => {
     return (
       <Listbox.Option
         value={team._id}
@@ -52,11 +56,11 @@ export default function Sidebar(props: {
         <Listbox
           onChange={(value) => {
             setActiveTeam({ teamId: value as Id<"team"> });
-            router.replace("/dashboard");
+            router.prefetch("/loading");
           }}
         >
           <Listbox.Button className="flex w-full items-center justify-between">
-            {props.userActiveTeamInfo.name}
+            {userActiveTeamInfo.name}
             <ChevronUpDown className="size-5 stroke-lightText dark:stroke-darkText" />
           </Listbox.Button>
           <Transition
@@ -74,17 +78,17 @@ export default function Sidebar(props: {
       <div className="h-full">
         <ul className="font-medium">
           <li className="py-2">
-            <Link href={`dashboard/${props.isAdmin ? "admin" : "user"}`}>
+            <Link href={`/${props.isAdmin ? "admin" : "user"}`}>
               Dispositivos
             </Link>
           </li>
           <li className="py-2">
-            <Link href={`dashboard/${props.isAdmin ? "admin" : "user"}`}>
+            <Link href={`/${props.isAdmin ? "admin" : "user"}/newDevice`}>
               Miembros
             </Link>
           </li>
           <li className="py-2">
-            <Link href={`dashboard/${props.isAdmin ? "admin" : "user"}`}>
+            <Link href={`/${props.isAdmin ? "admin" : "user"}`}>
               Configuración
             </Link>
           </li>
@@ -93,7 +97,7 @@ export default function Sidebar(props: {
       <div>
         <MobileThemeSwitch />
         <p className="py-2 pl-1 text-base font-medium ">
-          {props.currentUser.user.username}
+          {currentUser.user.username}
         </p>
         <SignOutButton>
           <button className="w-full justify-center rounded border border-lightText/60 py-2 text-center text-xs text-lightText lg:text-sm dark:border-darkText dark:text-darkText">

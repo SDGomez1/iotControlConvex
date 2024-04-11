@@ -5,49 +5,50 @@ import { XMark } from "components/icons/XMark";
 import { api } from "convex/_generated/api";
 import { Doc } from "convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
+import { useAppSelector } from "lib/hooks";
 import { Fragment } from "react";
 interface invitation {
   teams: Doc<"team">[];
   invitations: Doc<"invitations">[];
 }
 
-export default function Notifications(props: {
-  invitationsByUser: invitation | null;
-}) {
+export default function Notifications() {
+  const invitationsByUser = useAppSelector(
+    (state) => state.databaseData.invitationsByUser,
+  );
+
   const acceptInvitation = useMutation(api.invitations.setInvitationAccepted);
   const rejectInvitation = useMutation(api.invitations.setInvitationRejected);
 
-  const currentInvitations = props.invitationsByUser?.invitations.map(
-    (data: any) => {
-      const teamInfo = props.invitationsByUser?.teams.find(
-        (team: any) => team._id === data.teamId,
-      );
-      return (
-        <Menu.Item>
-          <div className="flex items-center gap-6 px-4 py-2 text-sm font-light">
-            <span className="dark:text-darktext flex size-8 shrink-0 items-center justify-center rounded-full border border-accent text-accent dark:border-darkText dark:text-darkText">
-              {teamInfo?.name.charAt(0)}
-            </span>
-            <p className="flex w-52 flex-wrap items-center justify-center text-left ">
-              Te han invitado a unirte al equipo {teamInfo?.name}
-            </p>
-            <div className=" flex items-center justify-center gap-4">
-              <button
-                onClick={() => acceptInvitation({ invitationId: data._id })}
-              >
-                <Check className="size-5 stroke-green-600" />
-              </button>
-              <button
-                onClick={() => rejectInvitation({ invitationId: data._id })}
-              >
-                <XMark className="size-5 stroke-red-600" />
-              </button>
-            </div>
+  const currentInvitations = invitationsByUser?.invitations.map((data: any) => {
+    const teamInfo = invitationsByUser?.teams.find(
+      (team: any) => team._id === data.teamId,
+    );
+    return (
+      <Menu.Item>
+        <div className="flex items-center gap-6 px-4 py-2 text-sm font-light">
+          <span className="dark:text-darktext flex size-8 shrink-0 items-center justify-center rounded-full border border-accent text-accent dark:border-darkText dark:text-darkText">
+            {teamInfo?.name.charAt(0)}
+          </span>
+          <p className="flex w-52 flex-wrap items-center justify-center text-left ">
+            Te han invitado a unirte al equipo {teamInfo?.name}
+          </p>
+          <div className=" flex items-center justify-center gap-4">
+            <button
+              onClick={() => acceptInvitation({ invitationId: data._id })}
+            >
+              <Check className="size-5 stroke-green-600" />
+            </button>
+            <button
+              onClick={() => rejectInvitation({ invitationId: data._id })}
+            >
+              <XMark className="size-5 stroke-red-600" />
+            </button>
           </div>
-        </Menu.Item>
-      );
-    },
-  );
+        </div>
+      </Menu.Item>
+    );
+  });
 
   return (
     <Menu as="div" className="relative hidden  lg:block">

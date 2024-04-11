@@ -35,7 +35,7 @@ export default function SelectTeam() {
 
     return (
       <Listbox.Option
-        value={`${teamInfo.name};${data._id}:${teamInfo._id}`}
+        value={`${teamInfo?.name};${data._id}:${teamInfo?._id}`}
         key={data._id as string}
         className={({ active }) =>
           `relative cursor-default select-none px-2 py-2 pr-4 ${
@@ -45,7 +45,7 @@ export default function SelectTeam() {
           }`
         }
       >
-        {teamInfo.name}
+        {teamInfo?.name}
       </Listbox.Option>
     );
   });
@@ -83,7 +83,7 @@ export default function SelectTeam() {
                 name: name,
                 description: description,
               });
-              router.push("/adminDashboard");
+              router.push("/loading");
             }
           }}
         >

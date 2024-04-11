@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import conectedDeviceReducer from "./features/conectedDevices/conectedDevicesSlice";
 import serialDataReducer from "./features/serialData/serialDataSlice";
+import databaseDataReducer from "./features/databaseData/dataBaseDataSlice";
 const makeStore = () => {
   return configureStore({
     reducer: {
       conectedDevice: conectedDeviceReducer,
       serialData: serialDataReducer,
+      databaseData: databaseDataReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({ serializableCheck: false }),

@@ -27,13 +27,15 @@ export const getUserFirstLogin = query({
 });
 
 export const getUserActiveTeam = query({
-  args: {
-    userId: v.string(),
-  },
+  args: {},
   handler: async (ctx, args) => {
+    const user = await ctx.auth.getUserIdentity();
+    if (!user) {
+      return;
+    }
     const data = await ctx.db
       .query("user")
-      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .filter((q) => q.eq(q.field("userId"), user.subject))
       .first();
     if (!data) {
       return;

@@ -21,11 +21,6 @@ export const createDevice = mutation({
 export const getdevices = query({
   args: { teamId: v.id("team") },
   handler: async (ctx, args) => {
-    const user = await ctx.auth.getUserIdentity();
-
-    if (!user) {
-      return;
-    }
     return await ctx.db
       .query("device")
       .filter((q) => q.eq(q.field("teamId"), args.teamId))

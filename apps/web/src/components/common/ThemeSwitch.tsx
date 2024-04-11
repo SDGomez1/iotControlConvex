@@ -35,11 +35,11 @@ export default function ThemeSwitch() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-1 mt-2 flex w-44 origin-top-right flex-col gap-2 rounded p-2 shadow-lg ring-1 ring-lightText/20 focus:outline-none dark:bg-dark dark:ring-darkText ">
+        <Menu.Items className="absolute right-1 mt-2 flex w-44 origin-top-right flex-col gap-2 rounded bg-white p-2 shadow-lg ring-1 ring-lightText/20 focus:outline-none dark:bg-dark dark:ring-darkText ">
           <Menu.Item>
             <button
               onClick={() => setTheme("light")}
-              className="flex items-center gap-2 px-2 text-sm font-light  "
+              className="flex items-center gap-2 px-2 text-sm text-lightText dark:text-darkText "
             >
               <Sun className="size-6 stroke-lightText  dark:stroke-darkText" />
               Modo claro
@@ -48,16 +48,16 @@ export default function ThemeSwitch() {
           <Menu.Item>
             <button
               onClick={() => setTheme("dark")}
-              className="flex items-center gap-2 px-2 text-sm font-light  "
+              className="flex items-center gap-2 px-2 text-sm text-lightText dark:text-darkText"
             >
-              <Moon className="size-6 stroke-lightText dark:stroke-darkText" />
+              <Moon className="size-6 stroke-lightText  dark:stroke-darkText" />
               Modo Oscuro
             </button>
           </Menu.Item>
           <Menu.Item>
             <button
               onClick={() => setTheme("system")}
-              className="flex items-center gap-2 px-2 text-sm font-light "
+              className="flex items-center gap-2 px-2 text-sm text-lightText dark:text-darkText"
             >
               <Desktop className="size-6 stroke-lightText dark:stroke-darkText" />
               Sistema

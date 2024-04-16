@@ -1,9 +1,8 @@
 "use client";
 import Sidebar from "components/dashboard/Sidebar";
 import Topbar from "components/dashboard/Topbar";
-import type { ActiveSessionResource } from "@clerk/types";
 
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 
 export default function Skeleton({
   children,
@@ -11,7 +10,6 @@ export default function Skeleton({
   children: React.ReactNode;
 }>) {
   const [isOpen, setIsOpen] = useState(false);
-  console.log("rendered Skeleton");
 
   return (
     <main className="flex h-screen w-screen lg:max-h-screen dark:bg-dark">

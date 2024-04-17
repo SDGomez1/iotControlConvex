@@ -86,24 +86,36 @@ export default function Device() {
         {functionscom}
       </div>
       <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
-        <button
-          className="rounded border border-lightText bg-transparent px-8 py-2 text-sm text-lightText dark:border-darkText dark:text-darkText"
-          onClick={() => setIsEditing(true)}
-        >
-          Editar
-        </button>
-        <button
-          className="rounded bg-accent  px-8 py-2 text-sm text-white "
-          onClick={async () => {
-            const serialPort = await connectToSerial();
-            const reader = await getReader(serialPort);
-            startReading(serialPort, reader, deviceId);
+        {selectedPort ? (
+          <></>
+        ) : (
+          <button
+            className="rounded border border-lightText bg-transparent px-8 py-2 text-sm text-lightText dark:border-darkText dark:text-darkText"
+            onClick={() => setIsEditing(true)}
+          >
+            Editar
+          </button>
+        )}
 
-            setSelectedPort(serialPort);
-            setReader(reader);
+        <button
+          className={`rounded  px-8 py-2 text-sm text-white ${!selectedPort ? "bg-accent" : "bg-danger"}`}
+          onClick={async () => {
+            if (!selectedPort) {
+              const serialPort = await connectToSerial();
+              const reader = await getReader(serialPort);
+              startReading(serialPort, reader, deviceId);
+
+              setSelectedPort(serialPort);
+              setReader(reader);
+            } else {
+              closePort(selectedPort, reader);
+              dispatch(remove(deviceId));
+              setReader(undefined);
+              setSelectedPort(undefined);
+            }
           }}
         >
-          Conectar
+          {selectedPort ? "Desconectar" : "Conectar"}
         </button>
       </div>
     </section>

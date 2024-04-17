@@ -13,7 +13,6 @@ import { Doc, Id } from "convex/_generated/dataModel";
 import { ChevronUpDown } from "components/icons/ChevronUpDown";
 import { Listbox, Transition } from "@headlessui/react";
 import { useRouter } from "next/navigation";
-import type { ActiveSessionResource } from "@clerk/types";
 import { useAppSelector } from "lib/hooks";
 export default function Sidebar(props: {
   isAdmin: boolean;
@@ -56,7 +55,7 @@ export default function Sidebar(props: {
         <Listbox
           onChange={(value) => {
             setActiveTeam({ teamId: value as Id<"team"> });
-            router.prefetch("/loading");
+            router.push("/loading");
           }}
         >
           <Listbox.Button className="flex w-full items-center justify-between">

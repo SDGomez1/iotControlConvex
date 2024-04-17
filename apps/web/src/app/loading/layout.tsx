@@ -13,7 +13,7 @@ export default async function LoadingLayout({
     api.team.getActiveTeamInfoWithServer,
     { userId: user?.id as string },
   );
-  console.log(userActiveTeamInfo);
+
   if (userActiveTeamInfo && user) {
     if (userActiveTeamInfo.adminId === user.id) {
       redirect("/admin");

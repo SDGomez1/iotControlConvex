@@ -34,5 +34,15 @@ export default function DeviceList(props: { isAdmin: boolean }) {
       </div>
     );
   });
-  return <>{deviceItems}</>;
+  return (
+    <>
+      {deviceItems?.length ? (
+        deviceItems
+      ) : (
+        <p className="text-center text-sm text-lightText lg:text-base dark:text-darkText">
+          No hay Dispositivos para este equipo
+        </p>
+      )}
+    </>
+  );
 }

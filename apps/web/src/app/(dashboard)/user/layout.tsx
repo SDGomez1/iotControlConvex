@@ -1,12 +1,9 @@
-"use client";
+import Skeleton from "components/dashboard/Skeleton";
 
-import { PropsWithChildren } from "react";
-
-export default function AdminLayout({ children }: PropsWithChildren) {
-  return (
-    <div>
-      <nav className="border-b"></nav>
-      {children}
-    </div>
-  );
+export default function AdminLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return <Skeleton>{children}</Skeleton>;
 }

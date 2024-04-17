@@ -140,7 +140,10 @@ export default function SelectTeam() {
           className="mb-10 w-full rounded bg-accent py-2 text-xs text-white lg:text-base"
           onClick={() => {
             const [invitationID, teamID] = selectedId.split(":");
-            selectTeam({ teamId: teamID as Id<"team"> });
+            selectTeam({
+              teamId: teamID as Id<"team">,
+              userID: user.user?.id as string,
+            });
             acceptInvitation({
               invitationId: invitationID as Id<"invitations">,
             });

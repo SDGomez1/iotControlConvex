@@ -23,7 +23,7 @@ export default function LogIn() {
             Iniciar sesión
           </h1>
           <SignIn
-            afterSignInUrl="/dashboard"
+            afterSignInUrl="/selecTeam"
             appearance={{
               elements: {
                 rootBox: "w-full",

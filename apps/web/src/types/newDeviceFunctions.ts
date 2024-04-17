@@ -12,6 +12,7 @@ export type newDeviceFunctionData = {
   format: typeOfFormat | undefined;
   maxInterval: number | undefined;
   minInterval: number | undefined;
+  scaleData: number[] | undefined;
   message: string | undefined;
   streaming: boolean;
 };

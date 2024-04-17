@@ -2,20 +2,69 @@
 import FunctionCardView from "components/dashboard/admin/newDevice/FunctionCardView";
 import FunctionForm from "components/dashboard/admin/newDevice/FunctionForm";
 import { Plus } from "components/icons/Plus";
+import { api } from "convex/_generated/api";
+import { useMutation } from "convex/react";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { formatUrl } from "utils/urlUtils";
 
 export default function NewDevice() {
-  const [isCreating, setIsCreating] = useState(false);
-  const currentFunctions = useAppSelector((state) => state.newDeviceFunctions);
+  const router = useRouter();
+
+  const createNewDevice = useMutation(api.device.createDevice);
+  const createNewFunction = useMutation(api.deviceFunction.createFunction);
+
   const dispatch = useAppDispatch();
 
+  const currentTeam = useAppSelector(
+    (state) => state.databaseData.userActiveTeamInfo,
+  );
+  const [isCreating, setIsCreating] = useState(false);
+  const currentFunctions = useAppSelector((state) => state.newDeviceFunctions);
+
   const currentFunctionsCards = currentFunctions.map((functionData) => {
-    return <FunctionCardView name={functionData.name} />;
+    return <FunctionCardView name={functionData.name} key={functionData.id} />;
   });
   return (
     <section className=" flex max-h-screen flex-col px-5">
-      <form className="  flex flex-col pt-4">
+      <form
+        className="  flex flex-col pt-4"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          const formdata = new FormData(e.currentTarget);
+          const deviceName = formdata.get("deviceName") as string;
+          const deviceDescription = formdata.get("deviceDescription") as string;
+          const deviceId = await createNewDevice({
+            name: deviceName,
+            description: deviceDescription,
+            teamId: currentTeam._id,
+          });
+
+          currentFunctions.forEach((functionData) => {
+            createNewFunction({
+              deviceId: deviceId,
+              name: functionData.name,
+              description: functionData.description,
+              command: functionData.command as string,
+              blocking: functionData.blocking,
+              userInfo: functionData.userInfo,
+              userTypeOfEntry: functionData.userTEntry,
+              unit: functionData.unit,
+              symbol: functionData.symbol,
+              format: functionData.format,
+              maxInterval: functionData.maxInterval,
+              minInterval: functionData.minInterval,
+              scaleData: functionData.scaleData,
+              message: functionData.message,
+              streaming: functionData.streaming,
+            });
+          });
+          const url = formatUrl(deviceName, deviceId);
+
+          router.replace(`/admin/devices/${url}`);
+        }}
+      >
         <input
           name="deviceName"
           placeholder="Nombre"
@@ -39,6 +88,18 @@ export default function NewDevice() {
         <p className=" mb-4  py-2 text-sm font-medium text-lightText lg:text-base dark:text-darkText">
           Oprime el botón para crear una nueva función de tu dispositivo
         </p>
+        <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
+          <button
+            className="rounded border border-danger bg-transparent px-8 py-2 text-sm text-danger"
+            type="button"
+            onClick={() => router.replace("/admin")}
+          >
+            Cancelar
+          </button>
+          <button className="rounded border border-accent bg-transparent px-8 py-2 text-sm text-accent dark:text-indigo-400">
+            Crear Dispositivo
+          </button>
+        </div>
       </form>
       {isCreating ? (
         <div className="  h-min max-h-min overflow-y-scroll pb-32 lg:pb-40">

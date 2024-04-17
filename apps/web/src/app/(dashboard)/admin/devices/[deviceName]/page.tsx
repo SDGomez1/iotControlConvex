@@ -14,16 +14,17 @@ import {
   connectToSerial,
   getReader,
   startReading,
-  writeToPort,
 } from "utils/serialUtils";
 
 import { deFormatUrl } from "utils/urlUtils";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
 
 import { add, remove } from "lib/features/conectedDevices/conectedDevicesSlice";
-import Graph from "./Graph";
+import FunctionCard from "components/dashboard/admin/device/FunctionCard";
 
 export default function Device() {
+  const dispatch = useAppDispatch();
+
   const [isEditing, setIsEditing] = useState(false);
   const [selectedPort, setSelectedPort] = useState<SerialPort | undefined>(
     undefined,
@@ -42,13 +43,10 @@ export default function Device() {
     deviceId: deviceId as Id<"device">,
   });
 
-  // const functionscom = functions?.map((e, i) => {
-  //   return (
-  //     <FunctionCardView titulo={e.name} descripcion={e.description} key={i} />
-  //   );
-  // });
+  const functionscom = functions?.map((e, i) => {
+    return <FunctionCard name={e.name} description={e.description} key={i} />;
+  });
 
-  const dispatchConectedDevices = useAppDispatch();
   const devicesList = useAppSelector((state) => state.conectedDevice);
 
   const isConected = devicesList.find((item) => item.id === deviceId);
@@ -60,62 +58,54 @@ export default function Device() {
         device: selectedPort,
         reader: reader as ReadableStreamDefaultReader,
       };
-      dispatchConectedDevices(add(data));
+      dispatch(add(data));
     }
   }, [selectedPort]);
 
+  if (selectedPort === undefined) {
+    if (isConected) {
+      setSelectedPort(isConected.device);
+    }
+  }
+
   return (
-    <main className="min-h-screen min-w-full dark:bg-dark ">
-      <section className="flex flex-col items-start  gap-4 border-b-2 px-4 py-8 lg:flex-row lg:items-center lg:justify-between lg:px-40">
-        <div className="w-full ">
-          <h2 className="my-0 text-xl font-semibold lg:text-3xl">
-            {device?.name}
-          </h2>
-          <p className="text-sm text-neutral-500">{device?.description}</p>
-        </div>
+    <section className="flex h-full flex-col items-start gap-4 px-4 py-4">
+      <h2 className="my-0 border-none bg-transparent px-0 font-semibold outline-none focus:ring-0 lg:text-4xl">
+        {device?.name}
+      </h2>
+      <p
+        className={`border-0 bg-transparent px-0 text-sm text-lightText  outline-none lg:text-base dark:text-darkText`}
+      >
+        {device?.description}
+      </p>
 
-        <div className="flex w-full gap-8  lg:justify-end">
-          {!isConected ? (
-            <button
-              onClick={async () => {
-                const port = await connectToSerial();
-                const reader = await getReader(port);
-                const readPort = async () => {
-                  const data = await startReading(port, reader, deviceId);
-                };
-                readPort();
-                setReader(reader);
-                setSelectedPort(port);
-              }}
-              className=" hidden h-8 w-44 items-center justify-center gap-4 rounded bg-emerald-700 py-2 text-sm text-white transition hover:bg-emerald-600 lg:flex lg:h-9"
-            >
-              Conectar
-            </button>
-          ) : (
-            <button
-              onClick={async () => {
-                closePort(selectedPort, reader);
-                setReader(undefined);
-                setSelectedPort(undefined);
-                dispatchConectedDevices(remove(deviceId));
-              }}
-              className=" hidden h-8 w-44 items-center justify-center gap-4 rounded bg-red-700 py-2 text-sm text-white transition hover:bg-red-600 lg:flex lg:h-9"
-            >
-              Desconectar
-            </button>
-          )}
-
-          <button className="flex h-8 w-44 items-center justify-center rounded border border-black bg-transparent px-8 py-1 text-sm transition hover:bg-white lg:h-9">
-            Editar Funciones
-          </button>
-        </div>
-      </section>
-      <div className="flex flex-col gap-4 px-4 pt-4 lg:px-40">
-        <h3 className="text-xl  font-medium lg:text-2xl">
-          Funciones Disponibles
-        </h3>
-        {isEditing ? <></> : <></>}
+      <h3 className="text-xl  font-medium lg:text-2xl">
+        Funciones Disponibles
+      </h3>
+      <div className="flex h-full w-full auto-rows-max grid-cols-2 flex-col justify-items-center gap-4 overflow-y-scroll pb-32 lg:grid 2xl:grid-cols-3 2xl:pb-32 ">
+        {functionscom}
       </div>
-    </main>
+      <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
+        <button
+          className="rounded border border-lightText bg-transparent px-8 py-2 text-sm text-lightText dark:border-darkText dark:text-darkText"
+          onClick={() => setIsEditing(true)}
+        >
+          Editar
+        </button>
+        <button
+          className="rounded bg-accent  px-8 py-2 text-sm text-white "
+          onClick={async () => {
+            const serialPort = await connectToSerial();
+            const reader = await getReader(serialPort);
+            startReading(serialPort, reader, deviceId);
+
+            setSelectedPort(serialPort);
+            setReader(reader);
+          }}
+        >
+          Conectar
+        </button>
+      </div>
+    </section>
   );
 }

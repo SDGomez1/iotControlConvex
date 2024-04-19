@@ -15,3 +15,5 @@ O **Prueba la página directamente** con **[iot-control-convex.com](https://iot-
 
 ### Prerrequisitos
 -	Navegadores habilitados: Chrome, Opera y Microsoft Edges.
+### Funcionamiento
+Para el correcto funcionamiento del Arduino este debe estar codeado como una máquina de estados.

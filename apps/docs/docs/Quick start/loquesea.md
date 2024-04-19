@@ -1,17 +1,8 @@
 ---
 sidebar_position: 2
 ---
-
-# Quick Start
-**Bienvenido a la documentación de Plataforma IOT, en esta sección encontraras información básica sobre el uso de la página web.**
-### Aprenderas a:
--   Crear un nuevo equipo
-- 	Unirse a un equipo
--   Añadir dispositivos
-- 	Crear una función
-- 	Ejecutar la función creada
  
-## Creando Equipos
+# Creando Equipos
 Plataforma IoT está hecho para trabajar conjuntamente con otras personas. La función de crear equipos se encuentra de la siguiente forma (luego de registrarse):
 ![alt text](image.png)
 

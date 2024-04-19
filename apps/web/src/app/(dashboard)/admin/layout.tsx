@@ -41,7 +41,6 @@ export default function AdminLayout({
           body: data.file,
         });
         const { storageId } = await result.json();
-        console.log(storageId);
         await writeFileToDb({
           storageId: storageId,
           deviceId: data.deviceId as Id<"device">,

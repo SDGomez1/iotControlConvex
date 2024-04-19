@@ -2,34 +2,13 @@
 
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 
 import { deFormatUrl } from "utils/urlUtils";
 import { useParams } from "next/navigation";
 import FunctionCardExecution from "components/dashboard/user/FunctionCardsExecution";
 import { Card, LineChart } from "@tremor/react";
-const chartdata = [
-  {
-    date: "Jan 22",
-    SemiAnalysis: 2890,
-    "The Pragmatic Engineer": 2338,
-  },
-  {
-    date: "Feb 22",
-    SemiAnalysis: 2756,
-    "The Pragmatic Engineer": 2103,
-  },
-  {
-    date: "Mar 22",
-    SemiAnalysis: 3322,
-    "The Pragmatic Engineer": 2194,
-  },
-  {
-    date: "Apr 22",
-    SemiAnalysis: 3470,
-    "The Pragmatic Engineer": 2108,
-  },
-];
+import { useEffect } from "react";
 
 export default function Device() {
   const params = useParams<{ deviceName: string }>();
@@ -42,6 +21,11 @@ export default function Device() {
     deviceId: deviceId as Id<"device">,
   });
 
+  const file = useQuery(api.device.getStorageUrl, {
+    deviceId: deviceId as Id<"device">,
+  });
+
+  const getFileUrl = useMutation(api.device.getFiles);
   //Todo: comand lifecycle, and styles
   const functionscom = functions?.map((e, i) => {
     return (
@@ -53,6 +37,19 @@ export default function Device() {
       />
     );
   });
+
+  useEffect(() => {
+    const getFunction = async () => {
+      const fileUrl = await getFileUrl({ storageId: file as Id<"_storage"> });
+      if (!fileUrl) {
+        return;
+      }
+      const fileData = await fetch(fileUrl);
+      console.log(fileData);
+      const reader = new FileReader();
+    };
+    getFunction();
+  }, [file]);
 
   return (
     <section className="h-full  items-start overflow-y-scroll px-4 pb-20 ">
@@ -117,15 +114,6 @@ export default function Device() {
       <p className="mb-2 text-xs text-lightText lg:text-base dark:text-darkText">
         Esta sección muestra los datos configurados como “Graficar”{" "}
       </p>
-      <LineChart
-        className="mb-8 h-80"
-        data={chartdata}
-        index="date"
-        categories={["SemiAnalysis", "The Pragmatic Engineer"]}
-        colors={["indigo", "rose"]}
-        yAxisWidth={60}
-        onValueChange={(v) => console.log(v)}
-      />
     </section>
   );
 }

@@ -1,4 +1,4 @@
-import DeviceList from "components/dashboard/admin/DeviceList";
+import DeviceList from "components/dashboard/DeviceList";
 import { Plus } from "components/icons/Plus";
 import Link from "next/link";
 

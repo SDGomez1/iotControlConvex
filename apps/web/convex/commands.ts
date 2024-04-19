@@ -26,6 +26,7 @@ export const readFirstCommand = query({
       return {
         deviceId: deviceID,
         command: command,
+        deviceFunctionId: deviceFunction?._id,
       };
     }
   },

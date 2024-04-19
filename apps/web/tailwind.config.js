@@ -4,7 +4,7 @@ const colors = require("tailwindcss/colors");
 module.exports = {
   content: [
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@tremor/**/*.{js,ts,jsx,tsx}",
+    "../../node_modules/@tremor/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     transparent: "transparent",
@@ -38,9 +38,9 @@ module.exports = {
             DEFAULT: colors.white,
             emphasis: colors.gray[700],
           },
-          // border: {
-          //   DEFAULT: colors.gray[200],
-          // },
+          border: {
+            DEFAULT: colors.gray[200],
+          },
           ring: {
             DEFAULT: colors.gray[200],
           },

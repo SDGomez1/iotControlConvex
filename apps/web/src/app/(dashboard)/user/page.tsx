@@ -1,4 +1,4 @@
-import DeviceList from "components/dashboard/admin/DeviceList";
+import DeviceList from "components/dashboard/DeviceList";
 
 export default function userPage() {
   return (

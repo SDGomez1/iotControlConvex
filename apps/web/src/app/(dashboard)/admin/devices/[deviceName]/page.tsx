@@ -21,6 +21,7 @@ import { useAppDispatch, useAppSelector } from "lib/hooks";
 
 import { add, remove } from "lib/features/conectedDevices/conectedDevicesSlice";
 import FunctionCard from "components/dashboard/admin/device/FunctionCard";
+import { updateStatus } from "lib/features/fileEnqueu/fileEnqueuSlice";
 
 export default function Device() {
   const dispatch = useAppDispatch();
@@ -44,7 +45,15 @@ export default function Device() {
   });
 
   const functionscom = functions?.map((e, i) => {
-    return <FunctionCard name={e.name} description={e.description} key={i} />;
+    return (
+      <FunctionCard
+        name={e.name}
+        description={e.description}
+        key={i}
+        serialPort={selectedPort}
+        command={e.command}
+      />
+    );
   });
 
   const devicesList = useAppSelector((state) => state.conectedDevice);
@@ -82,9 +91,11 @@ export default function Device() {
       <h3 className="text-xl  font-medium lg:text-2xl">
         Funciones Disponibles
       </h3>
+
       <div className="flex h-full w-full auto-rows-max grid-cols-2 flex-col justify-items-center gap-4 overflow-y-scroll pb-32 lg:grid 2xl:grid-cols-3 2xl:pb-32 ">
         {functionscom}
       </div>
+
       <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
         {selectedPort ? (
           <></>
@@ -103,10 +114,10 @@ export default function Device() {
             if (!selectedPort) {
               const serialPort = await connectToSerial();
               const reader = await getReader(serialPort);
-              startReading(serialPort, reader, deviceId);
 
               setSelectedPort(serialPort);
               setReader(reader);
+              startReading(serialPort, reader, deviceId);
             } else {
               closePort(selectedPort, reader);
               dispatch(remove(deviceId));

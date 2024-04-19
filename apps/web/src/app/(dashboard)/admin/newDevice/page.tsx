@@ -4,6 +4,7 @@ import FunctionForm from "components/dashboard/admin/newDevice/FunctionForm";
 import { Plus } from "components/icons/Plus";
 import { api } from "convex/_generated/api";
 import { useMutation } from "convex/react";
+import { clean } from "lib/features/newDeviceFunctions/newDeviceFunctionsSlice";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -61,6 +62,7 @@ export default function NewDevice() {
             });
           });
           const url = formatUrl(deviceName, deviceId);
+          dispatch(clean());
 
           router.replace(`/admin/devices/${url}`);
         }}
@@ -92,7 +94,10 @@ export default function NewDevice() {
           <button
             className="rounded border border-danger bg-transparent px-8 py-2 text-sm text-danger"
             type="button"
-            onClick={() => router.replace("/admin")}
+            onClick={() => {
+              dispatch(clean());
+              router.replace("/admin");
+            }}
           >
             Cancelar
           </button>

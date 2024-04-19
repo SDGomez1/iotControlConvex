@@ -7,6 +7,29 @@ import { useQuery } from "convex/react";
 import { deFormatUrl } from "utils/urlUtils";
 import { useParams } from "next/navigation";
 import FunctionCardExecution from "components/dashboard/user/FunctionCardsExecution";
+import { Card, LineChart } from "@tremor/react";
+const chartdata = [
+  {
+    date: "Jan 22",
+    SemiAnalysis: 2890,
+    "The Pragmatic Engineer": 2338,
+  },
+  {
+    date: "Feb 22",
+    SemiAnalysis: 2756,
+    "The Pragmatic Engineer": 2103,
+  },
+  {
+    date: "Mar 22",
+    SemiAnalysis: 3322,
+    "The Pragmatic Engineer": 2194,
+  },
+  {
+    date: "Apr 22",
+    SemiAnalysis: 3470,
+    "The Pragmatic Engineer": 2108,
+  },
+];
 
 export default function Device() {
   const params = useParams<{ deviceName: string }>();
@@ -23,8 +46,8 @@ export default function Device() {
   const functionscom = functions?.map((e, i) => {
     return (
       <FunctionCardExecution
-        titulo={e.name}
-        descripcion={e.description}
+        name={e.name}
+        description={e.description}
         key={i}
         id={e._id}
       />
@@ -32,21 +55,77 @@ export default function Device() {
   });
 
   return (
-    <main className="min-h-screen min-w-full bg-gray-50 ">
-      <section className="flex flex-col items-start  gap-4 border-b-2 px-4 py-8 lg:flex-row lg:items-center lg:justify-between lg:px-40">
-        <div className="w-full ">
-          <h2 className="my-0 text-xl font-semibold lg:text-3xl">
-            {device?.name}
-          </h2>
-          <p className="text-sm text-neutral-500">{device?.description}</p>
-        </div>
-      </section>
-      <div className="flex flex-col gap-4 px-4 pt-4 lg:px-40">
-        <h3 className="text-xl  font-medium lg:text-2xl">
-          Funciones Disponibles
-        </h3>
+    <section className="h-full  items-start overflow-y-scroll px-4 pb-20 ">
+      <h2 className="my-0 mb-2 border-none bg-transparent px-0 font-semibold outline-none focus:ring-0 lg:text-4xl">
+        {device?.name}
+      </h2>
+      <p
+        className={`mb-4 border-0 bg-transparent px-0 text-sm  text-lightText outline-none lg:text-base dark:text-darkText`}
+      >
+        {device?.description}
+      </p>
+
+      <h3 className="mb-2  text-xl font-medium lg:text-2xl">
+        Funciones del dispositivo
+      </h3>
+      <div className="mb-8 flex w-full auto-rows-max grid-cols-2 flex-col justify-items-center   gap-4 lg:grid  2xl:grid-cols-3">
         {functionscom}
       </div>
-    </main>
+      <h3 className="text-xl  font-medium lg:text-2xl">Datos Recibidos</h3>
+      <h4 className="mb-2 text-sm lg:text-xl">Consola de comandos</h4>
+      <p className="mb-2 text-xs text-lightText lg:text-base dark:text-darkText">
+        Esta sección muestra todos los datos recibidos que no se configuraron
+        para graficar
+      </p>
+      <div className="dark:border-darkTex mb-4 max-h-32 w-full overflow-y-scroll rounded border border-lightText p-2 text-sm">
+        <ul>
+          <li>Dato 1</li>
+          <li>Dato 2</li>
+        </ul>
+      </div>
+      <h4 className="mb-2 text-sm lg:text-xl">Últimos datos recibidos</h4>
+      <p className="mb-2 text-xs text-lightText lg:text-base dark:text-darkText">
+        Esta sección muestra los datos configurados como “mostrar ultimo”
+      </p>
+      <div className="mb-4 flex h-auto items-start justify-start gap-4 overflow-x-scroll p-2">
+        <Card
+          className="mx-auto max-w-xs"
+          decoration="top"
+          decorationColor="indigo"
+        >
+          <p className="text-xs lg:text-sm dark:text-dark-tremor-content">
+            Sales
+          </p>
+          <p className="text-2xl font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
+            $34,743
+          </p>
+        </Card>
+        <Card
+          className="mx-auto max-w-xs"
+          decoration="top"
+          decorationColor="indigo"
+        >
+          <p className="text-xs lg:text-sm dark:text-dark-tremor-content">
+            Sales
+          </p>
+          <p className="text-2xl font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
+            $34,743
+          </p>
+        </Card>
+      </div>
+      <h4 className="mb-2 text-sm lg:text-xl">Graficas</h4>
+      <p className="mb-2 text-xs text-lightText lg:text-base dark:text-darkText">
+        Esta sección muestra los datos configurados como “Graficar”{" "}
+      </p>
+      <LineChart
+        className="mb-8 h-80"
+        data={chartdata}
+        index="date"
+        categories={["SemiAnalysis", "The Pragmatic Engineer"]}
+        colors={["indigo", "rose"]}
+        yAxisWidth={60}
+        onValueChange={(v) => console.log(v)}
+      />
+    </section>
   );
 }

@@ -4,11 +4,7 @@ import Topbar from "components/dashboard/Topbar";
 
 import { useState } from "react";
 
-export default function Skeleton({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function Skeleton(props: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -18,7 +14,7 @@ export default function Skeleton({
       <section className="relative max-h-screen w-full overflow-hidden lg:px-12">
         <Topbar setIsOpen={setIsOpen} />
 
-        {children}
+        {props.children}
       </section>
 
       {isOpen ? (

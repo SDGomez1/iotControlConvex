@@ -1,3 +1,4 @@
+"use client";
 import Notifications from "components/dashboard/Notifications";
 import ThemeSwitch from "components/common/ThemeSwitch";
 import { BurguerMenu } from "components/icons/BurgerMenu";

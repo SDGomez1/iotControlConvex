@@ -8,9 +8,14 @@ import { deFormatUrl } from "utils/urlUtils";
 import { useParams } from "next/navigation";
 import FunctionCardExecution from "components/dashboard/user/FunctionCardsExecution";
 import { Card, LineChart } from "@tremor/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import {
+  fetchAndReadStreamData,
+  filterAndFormatData,
+} from "utils/dataProcessingUtils";
 
 export default function Device() {
+  const [recievedData, setRecievedData] = useState("");
   const params = useParams<{ deviceName: string }>();
   const deviceId = deFormatUrl(params.deviceName);
 
@@ -39,18 +44,23 @@ export default function Device() {
   });
 
   useEffect(() => {
-    const getFunction = async () => {
-      const fileUrl = await getFileUrl({ storageId: file as Id<"_storage"> });
-      if (!fileUrl) {
-        return;
-      }
-      const fileData = await fetch(fileUrl);
-      console.log(fileData);
-      const reader = new FileReader();
-    };
-    getFunction();
+    if (file) {
+      const getFunction = async () => {
+        const fileUrl = await getFileUrl({ storageId: file as Id<"_storage"> });
+        if (!fileUrl) {
+          return;
+        }
+        const data = await fetchAndReadStreamData(fileUrl);
+        setRecievedData(data);
+      };
+      getFunction();
+    }
   }, [file]);
 
+  const filteredData = filterAndFormatData(recievedData);
+  const consoleData = filteredData?.map((value, index) => {
+    return <li key={index}>{value}</li>;
+  });
   return (
     <section className="h-full  items-start overflow-y-scroll px-4 pb-20 ">
       <h2 className="my-0 mb-2 border-none bg-transparent px-0 font-semibold outline-none focus:ring-0 lg:text-4xl">
@@ -75,10 +85,7 @@ export default function Device() {
         para graficar
       </p>
       <div className="dark:border-darkTex mb-4 max-h-32 w-full overflow-y-scroll rounded border border-lightText p-2 text-sm">
-        <ul>
-          <li>Dato 1</li>
-          <li>Dato 2</li>
-        </ul>
+        <ul>{consoleData}</ul>
       </div>
       <h4 className="mb-2 text-sm lg:text-xl">Últimos datos recibidos</h4>
       <p className="mb-2 text-xs text-lightText lg:text-base dark:text-darkText">

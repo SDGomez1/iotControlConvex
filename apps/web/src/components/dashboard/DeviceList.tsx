@@ -16,7 +16,7 @@ export default function DeviceList(props: { isAdmin: boolean }) {
     const url = formatUrl(device.name, device._id);
     return (
       <div
-        className="dark:border-darkTex flex w-full shrink-0 flex-col gap-2 rounded border border-lightText p-4 lg:h-40 2xl:h-44 2xl:w-500px "
+        className="dark:border-darkTex flex w-full shrink-0 flex-col gap-2 rounded border border-lightText p-4 lg:h-40 2xl:h-44 2xl:w-full "
         key={device._id}
       >
         <p className="font-medium 2xl:text-xl">{device.name}</p>

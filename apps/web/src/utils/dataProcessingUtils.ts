@@ -25,4 +25,34 @@ function createDataBlob(deviceId: string) {
   storeInstace.dispatch(add(payload));
 }
 
-export { createDataBlob };
+async function fetchAndReadStreamData(url: string) {
+  const resonse = await fetch(url);
+  const reader = await resonse.body?.getReader();
+  let data = "";
+  if (!reader) {
+    return "No hay datos";
+  }
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) {
+      return data;
+    }
+    var decodedData = new TextDecoder().decode(value);
+    data = data + decodedData;
+  }
+}
+
+function filterAndFormatData(data: string) {
+  let lines = data.split("\n");
+  lines = lines.filter((line) => line.trim() !== "");
+  let allValues: string[] = [];
+
+  lines.forEach((line) => {
+    let parts = line.split(",");
+    allValues.push(...parts);
+  });
+
+  return allValues;
+}
+
+export { createDataBlob, fetchAndReadStreamData, filterAndFormatData };

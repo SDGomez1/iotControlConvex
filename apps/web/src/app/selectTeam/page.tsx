@@ -14,12 +14,7 @@ export default function SelectTeam() {
   const router = useRouter();
 
   const user = useUser();
-  if (!user.isLoaded) {
-    return <div>Loading</div>;
-  }
-  if (!user.user) {
-    router.push("/");
-  }
+
   const queryData = useQuery(api.invitations.getInvitationByUser);
   const selectTeam = useMutation(api.user.setActiveTeam);
   const acceptInvitation = useMutation(api.invitations.setInvitationAccepted);
@@ -145,7 +140,10 @@ export default function SelectTeam() {
           className="mb-10 w-full rounded bg-accent py-2 text-xs text-white lg:text-base"
           onClick={() => {
             const [invitationID, teamID] = selectedId.split(":");
-            selectTeam({ teamId: teamID as Id<"team"> });
+            selectTeam({
+              teamId: teamID as Id<"team">,
+              userID: user.user?.id as string,
+            });
             acceptInvitation({
               invitationId: invitationID as Id<"invitations">,
             });

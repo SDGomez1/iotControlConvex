@@ -3,46 +3,15 @@ sidebar_position: 1
 slug: /
 ---
 
-# Tutorial Intro
+# Get Started
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Descubre **Iot  Platform en menos de 5 minutos**.
 
 ## Getting Started
+### ¿Qué es IoT Platform?
+Se trata de una plataforma IoT que proporciona la funcionalidad de conectar microcontroladores y controlarlos a través de Internet. En esta página, encontrarás una guía detallada sobre cómo utilizarla desde el principio. Entre las secciones disponibles, se incluye el manejo de dispositivos, la recepción de datos y otras características importantes.
 
-Get started by **creating a new site**.
+O **Prueba la página directamente** con **[iot-control-convex.com](https://iot-control-convex.vercel.app/admin)**.
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
-
-### What you'll need
-
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
-
-## Generate a new site
-
-Generate a new Docusaurus site using the **classic template**.
-
-The classic template will automatically be added to your project after you run the command:
-
-```bash
-npm init docusaurus@latest my-website classic
-```
-
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
-
-The command also installs all necessary dependencies you need to run Docusaurus.
-
-## Start your site
-
-Run the development server:
-
-```bash
-cd my-website
-npm run start
-```
-
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
-
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
-
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+### Prerrequisitos
+-	Navegadores habilitados: Chrome, Opera y Microsoft Edge.

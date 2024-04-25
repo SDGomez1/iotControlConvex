@@ -3,28 +3,29 @@ import { Id } from "convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 
 export default function FunctionCardExecution(props: {
-  titulo: string;
-  descripcion: string;
-
+  name: string;
+  description: string;
   id: string;
 }) {
   const createCommand = useMutation(api.commands.createCommand);
   return (
-    <div className="flex w-full items-center justify-between border bg-white p-4 shadow-sm">
-      <div className="w-full">
-        <h3 className="text-xl font-medium">{props.titulo}</h3>
-        <p className="text-sm text-neutral-500">{props.descripcion}</p>
-      </div>
-      <button
-        onClick={() => {
-          createCommand({
-            deviceFunctionId: props.id as Id<"deviceFunction">,
-          });
-        }}
-        className="flex h-8 w-28 shrink-0 items-center justify-center rounded bg-neutral-900 px-8 py-1 text-sm text-white hover:bg-neutral-800"
-      >
-        Ejecutar
-      </button>
+    <div className="flex  w-full shrink-0 flex-col gap-2 rounded border border-lightText p-4 lg:h-40 2xl:h-44 2xl:w-full dark:border-darkText">
+      <h2 className="text-sm font-bold 2xl:text-xl">{props.name}</h2>
+      <p className="line-clamp-3 shrink-0 text-xs text-lightText 2xl:text-base dark:text-darkText">
+        {props.description}
+      </p>
+      <span className="flex h-full items-end justify-end">
+        <button
+          onClick={() => {
+            createCommand({
+              deviceFunctionId: props.id as Id<"deviceFunction">,
+            });
+          }}
+          className="self-end rounded bg-accent p-2 text-sm text-white"
+        >
+          Ejecutar
+        </button>
+      </span>
     </div>
   );
 }

@@ -9,11 +9,9 @@ import { Fragment, type Dispatch, type SetStateAction } from "react";
 import Link from "next/link";
 import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
-import { Doc, Id } from "convex/_generated/dataModel";
 import { ChevronUpDown } from "components/icons/ChevronUpDown";
 import { Listbox, Transition } from "@headlessui/react";
 import { useRouter } from "next/navigation";
-import type { ActiveSessionResource } from "@clerk/types";
 import { useAppSelector } from "lib/hooks";
 export default function Sidebar(props: {
   isAdmin: boolean;
@@ -27,8 +25,6 @@ export default function Sidebar(props: {
     (state) => state.databaseData.userActiveTeamInfo,
   );
   const currentUser = useAppSelector((state) => state.databaseData.currentUser);
-
-  const setActiveTeam = useMutation(api.user.setActiveTeam);
 
   const teamOptions = userTeams.map((team) => {
     return (
@@ -55,8 +51,7 @@ export default function Sidebar(props: {
       <div className="py-2 font-medium">
         <Listbox
           onChange={(value) => {
-            setActiveTeam({ teamId: value as Id<"team"> });
-            router.prefetch("/loading");
+            router.replace(`/loading?teamId=${value}`);
           }}
         >
           <Listbox.Button className="flex w-full items-center justify-between">

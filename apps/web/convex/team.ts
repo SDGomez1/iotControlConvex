@@ -67,3 +67,17 @@ export const getActiveTeamInfo = query({
     return await ctx.db.get(data.activeTeam);
   },
 });
+
+export const getActiveTeamInfoWithServer = query({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    const data = await ctx.db
+      .query("user")
+      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .first();
+    if (!data?.activeTeam) {
+      return;
+    }
+    return await ctx.db.get(data.activeTeam);
+  },
+});

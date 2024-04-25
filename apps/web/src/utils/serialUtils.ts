@@ -1,5 +1,6 @@
 import { storeInstace } from "../lib/store";
 import { add } from "../lib/features/serialData/serialDataSlice";
+import { createDataBlob } from "./dataProcessingUtils";
 
 const currentSerialData = storeInstace.getState().serialData;
 async function getPorts() {
@@ -49,6 +50,8 @@ async function startReading(
   if (port && reader) {
     try {
       let word = "";
+      let begin = false;
+      let sended = false;
       while (true) {
         const { value, done } = await reader.read();
         if (done) {
@@ -58,12 +61,25 @@ async function startReading(
 
         for (const data of encodedData) {
           if (data === 10) {
-            storeInstace.dispatch(
-              add({
-                id: deviceId,
-                data: word,
-              }),
-            );
+            if (word.includes("start")) {
+              begin = true;
+              sended = false;
+            }
+            if (word.includes("finish")) {
+              begin = false;
+              if (!sended) {
+                createDataBlob(deviceId);
+                sended = true;
+              }
+            }
+            if (begin) {
+              storeInstace.dispatch(
+                add({
+                  id: deviceId,
+                  data: word,
+                }),
+              );
+            }
             word = "";
           } else {
             const decodedData = String.fromCharCode(data);

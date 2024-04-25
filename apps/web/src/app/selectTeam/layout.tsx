@@ -10,7 +10,7 @@ export default async function SelectTeamLayout({
 }>) {
   const userActiveTeam = await fetchQuery(api.user.getUserActiveTeam);
 
-  if (!userActiveTeam) {
+  if (userActiveTeam) {
     redirect("/loading");
   }
 

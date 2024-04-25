@@ -22,7 +22,7 @@ export default function LogIn() {
             Crea tu cuenta
           </h1>
           <SignUp
-            redirectUrl="/dashboard"
+            redirectUrl="/selectTeam"
             appearance={{
               elements: {
                 rootBox: "w-full",

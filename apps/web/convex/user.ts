@@ -47,15 +47,12 @@ export const getUserActiveTeam = query({
 export const setActiveTeam = mutation({
   args: {
     teamId: v.id("team"),
+    userID: v.string(),
   },
   handler: async (ctx, args) => {
-    const user = await ctx.auth.getUserIdentity();
-    if (!user) {
-      return;
-    }
     const userData = await ctx.db
       .query("user")
-      .filter((q) => q.eq(q.field("userId"), user.subject))
+      .filter((q) => q.eq(q.field("userId"), args.userID))
       .first();
     const userId = userData?._id;
     if (!userId) {

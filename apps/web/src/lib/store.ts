@@ -3,6 +3,7 @@ import conectedDeviceReducer from "./features/conectedDevices/conectedDevicesSli
 import serialDataReducer from "./features/serialData/serialDataSlice";
 import databaseDataReducer from "./features/databaseData/dataBaseDataSlice";
 import newDeviceFunctionsReducer from "./features/newDeviceFunctions/newDeviceFunctionsSlice";
+import fileEnqueuReducer from "./features/fileEnqueu/fileEnqueuSlice";
 const makeStore = () => {
   return configureStore({
     reducer: {
@@ -10,6 +11,7 @@ const makeStore = () => {
       serialData: serialDataReducer,
       databaseData: databaseDataReducer,
       newDeviceFunctions: newDeviceFunctionsReducer,
+      fileEnqueu: fileEnqueuReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({ serializableCheck: false }),

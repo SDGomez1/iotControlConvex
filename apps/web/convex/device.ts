@@ -39,3 +39,38 @@ export const getdeviceById = query({
     return device;
   },
 });
+
+export const generateUploadUrl = mutation(async (ctx) => {
+  return await ctx.storage.generateUploadUrl();
+});
+
+export const sendFile = mutation({
+  args: {
+    storageId: v.id("_storage"),
+    deviceId: v.id("device"),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.deviceId, {
+      files: args.storageId,
+    });
+  },
+});
+
+export const getStorageUrl = query({
+  args: {
+    deviceId: v.id("device"),
+  },
+  handler: async (ctx, args) => {
+    const deviceData = await ctx.db.get(args.deviceId);
+    return deviceData?.files;
+  },
+});
+
+export const getFiles = mutation({
+  args: {
+    storageId: v.id("_storage"),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.storage.getUrl(args.storageId);
+  },
+});

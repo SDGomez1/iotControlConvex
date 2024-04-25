@@ -30,6 +30,7 @@ export default function AdminLayout({
   if (!userActiveTeam || !userActiveTeamInfo || !userTeams || !user.session) {
     return;
   }
+
   const databaseData: databaseDataFormat = {
     invitationsByUser: invitationsByUser as invitation,
     userActiveTeam: userActiveTeam,

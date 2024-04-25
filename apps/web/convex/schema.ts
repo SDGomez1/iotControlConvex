@@ -19,6 +19,7 @@ export default defineSchema({
     teamId: v.id("team"),
     name: v.string(),
     description: v.string(),
+    files: v.optional(v.id("_storage")),
   }),
   deviceFunction: defineTable({
     deviceId: v.id("device"),

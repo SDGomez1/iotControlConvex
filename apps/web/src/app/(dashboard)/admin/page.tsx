@@ -1,4 +1,4 @@
-import DeviceList from "components/dashboard/admin/DeviceList";
+import DeviceList from "components/dashboard/DeviceList";
 import { Plus } from "components/icons/Plus";
 import Link from "next/link";
 
@@ -8,7 +8,7 @@ export default function AdminPage() {
       <DeviceList isAdmin={true} />
       <Link
         href={"/admin/newDevice"}
-        className="dark:border-darkTex flex w-full shrink-0 flex-col items-center justify-center gap-2 rounded border border-lightText p-4 lg:h-40  2xl:h-44 2xl:w-500px"
+        className="dark:border-darkTex flex w-full shrink-0 flex-col items-center justify-center gap-2 rounded border border-lightText p-4 lg:h-40  2xl:h-44 2xl:w-full"
       >
         <Plus className="size-10 stroke-lightText 2xl:size-16 dark:stroke-darkText" />
         <p className="text-sm text-lightText 2xl:text-base dark:text-darkText">

@@ -13,12 +13,13 @@ import { ChevronUpDown } from "components/icons/ChevronUpDown";
 import { Listbox, Transition } from "@headlessui/react";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "lib/hooks";
+import { Id } from "convex/_generated/dataModel";
 export default function Sidebar(props: {
   isAdmin: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
 }) {
-  const router = useRouter();
+  const selectTeam = useMutation(api.user.setActiveTeam);
 
   const userTeams = useAppSelector((state) => state.databaseData.userTeams);
   const userActiveTeamInfo = useAppSelector(
@@ -51,7 +52,10 @@ export default function Sidebar(props: {
       <div className="py-2 font-medium">
         <Listbox
           onChange={(value) => {
-            router.replace(`/loading?teamId=${value}`);
+            selectTeam({
+              teamId: value as Id<"team">,
+              userID: currentUser.user.id,
+            });
           }}
         >
           <Listbox.Button className="flex w-full items-center justify-between">

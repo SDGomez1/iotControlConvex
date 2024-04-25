@@ -68,6 +68,10 @@ export const getActiveTeamInfo = query({
   },
 });
 
+//----------------------------------------
+//  Server Actions for usage with middleware
+//----------------------------------------
+
 export const getActiveTeamInfoWithServer = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {

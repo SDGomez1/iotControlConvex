@@ -6,7 +6,7 @@ import { useMutation, useQuery } from "convex/react";
 import { updateStatus } from "lib/features/fileEnqueu/fileEnqueuSlice";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
 import { useEffect } from "react";
-import { startReading, writeToPort } from "utils/serialUtils";
+import { writeToPort } from "utils/serialUtils";
 
 export default function AdminLayout({
   children,
@@ -24,11 +24,13 @@ export default function AdminLayout({
 
   const dataToSend = useAppSelector((state) => state.fileEnqueu);
   useEffect(() => {
-    if (commands && deviceConected.length > 0) {
-      const targetDevice = deviceConected.find(
-        (device) => device.id === commands.deviceId,
-      );
-      writeToPort(targetDevice?.device, commands.command as string);
+    if ("serial" in navigator) {
+      if (commands && deviceConected.length > 0) {
+        const targetDevice = deviceConected.find(
+          (device) => device.id === commands.deviceId,
+        );
+        writeToPort(targetDevice?.device, commands.command as string);
+      }
     }
   });
 

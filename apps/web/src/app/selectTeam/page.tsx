@@ -78,7 +78,7 @@ export default function SelectTeam() {
                 name: name,
                 description: description,
               });
-              router.push("/loading");
+              router.push("/admin");
             }
           }}
         >

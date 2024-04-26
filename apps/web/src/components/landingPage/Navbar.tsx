@@ -1,20 +1,18 @@
 "use client";
-
-import type { Dispatch, SetStateAction } from "react";
-import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-
-import { useState } from "react";
-
 import { useRouter } from "next/navigation";
-
-import Image from "next/image";
 import Link from "next/link";
-
+import Image from "next/image";
 import logo from "img/Logo.png";
+
 import { BurguerMenu } from "components/icons/BurgerMenu";
 import { XMark } from "components/icons/XMark";
 import MobileThemeSwitch from "components/common/MobileThemeSwitch";
 import ThemeSwitch from "components/common/ThemeSwitch";
+
+import { useState } from "react";
+
+import type { Dispatch, SetStateAction } from "react";
+import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +30,7 @@ export default function Navbar() {
         </span>
         <Link
           href="/"
-          className="text-lightText hidden text-sm lg:block dark:text-darkText"
+          className="hidden text-sm text-lightText lg:block dark:text-darkText"
         >
           Documentación
         </Link>
@@ -43,7 +41,7 @@ export default function Navbar() {
             setIsOpen(true);
           }}
         >
-          <BurguerMenu className="stroke-lightText size-7 lg:hidden dark:stroke-darkText" />
+          <BurguerMenu className="size-7 stroke-lightText lg:hidden dark:stroke-darkText" />
         </span>
 
         <ThemeSwitch />
@@ -74,10 +72,10 @@ function MobileMenu(props: {
   return (
     <div className="fixed right-0 top-0 z-10 flex h-screen w-screen flex-col gap-4 bg-white px-4 py-3 dark:bg-dark">
       <span onClick={() => props.setOpen(false)} className="self-end">
-        <XMark className="stroke-lightText size-7 dark:stroke-darkText" />
+        <XMark className="size-7 stroke-lightText dark:stroke-darkText" />
       </span>
       <button
-        className="border-lightText w-full rounded border py-2 text-sm dark:border-darkText"
+        className="w-full rounded border border-lightText py-2 text-sm dark:border-darkText"
         onClick={() => props.router.push("/logIn")}
       >
         Inicia sesión
@@ -88,8 +86,8 @@ function MobileMenu(props: {
       >
         Crea una cuenta
       </button>
-      <span className="border-lightText/30 border dark:border-darkText/30" />
-      <a className="text-lightText text-sm dark:text-darkText">Documentación</a>
+      <span className="border border-lightText/30 dark:border-darkText/30" />
+      <a className="text-sm text-lightText dark:text-darkText">Documentación</a>
       <MobileThemeSwitch />
     </div>
   );

@@ -1,33 +1,39 @@
 "use client";
-import { XMark } from "components/icons/XMark";
+import Link from "next/link";
 import Image from "next/image";
 import logo from "img/Logo.png";
+
+import { useRouter } from "next/navigation";
+
 import MobileThemeSwitch from "components/common/MobileThemeSwitch";
+
+import { XMark } from "components/icons/XMark";
+import { ChevronUpDown } from "components/icons/ChevronUpDown";
+
 import { SignOutButton } from "@clerk/clerk-react";
+import type { ActiveSessionResource } from "@clerk/types";
+
 import { Fragment, type Dispatch, type SetStateAction } from "react";
 
-import Link from "next/link";
 import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
-import { ChevronUpDown } from "components/icons/ChevronUpDown";
+import { Doc, Id } from "convex/_generated/dataModel";
+
 import { Listbox, Transition } from "@headlessui/react";
-import { useRouter } from "next/navigation";
-import { useAppSelector } from "lib/hooks";
-import { Id } from "convex/_generated/dataModel";
+
 export default function Sidebar(props: {
   isAdmin: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
+  userTeams: Doc<"team">[];
+  userActiveTeamInfo: Doc<"team">;
+  currentUser: ActiveSessionResource;
 }) {
+  const router = useRouter();
+
   const selectTeam = useMutation(api.user.setActiveTeam);
 
-  const userTeams = useAppSelector((state) => state.databaseData.userTeams);
-  const userActiveTeamInfo = useAppSelector(
-    (state) => state.databaseData.userActiveTeamInfo,
-  );
-  const currentUser = useAppSelector((state) => state.databaseData.currentUser);
-
-  const teamOptions = userTeams.map((team) => {
+  const teamOptions = props.userTeams.map((team) => {
     return (
       <Listbox.Option
         value={team._id}
@@ -54,12 +60,13 @@ export default function Sidebar(props: {
           onChange={(value) => {
             selectTeam({
               teamId: value as Id<"team">,
-              userID: currentUser.user.id,
+              userID: props.currentUser.user.id,
             });
+            router.replace("/user");
           }}
         >
           <Listbox.Button className="flex w-full items-center justify-between">
-            {userActiveTeamInfo.name}
+            {props.userActiveTeamInfo.name}
             <ChevronUpDown className="size-5 stroke-lightText dark:stroke-darkText" />
           </Listbox.Button>
           <Transition
@@ -96,7 +103,7 @@ export default function Sidebar(props: {
       <div>
         <MobileThemeSwitch />
         <p className="py-2 pl-1 text-base font-medium ">
-          {currentUser.user.username}
+          {props.currentUser.user.username}
         </p>
         <SignOutButton>
           <button className="w-full justify-center rounded border border-lightText/60 py-2 text-center text-xs text-lightText lg:text-sm dark:border-darkText dark:text-darkText">

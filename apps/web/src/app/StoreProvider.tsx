@@ -1,6 +1,8 @@
 "use client";
 import { useRef } from "react";
+
 import { Provider } from "react-redux";
+
 import { AppStore, storeInstace } from "lib/store";
 
 export default function StoreProvider({

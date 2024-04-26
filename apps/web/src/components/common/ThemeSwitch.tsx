@@ -1,10 +1,13 @@
 "use client";
-import { Menu, Transition } from "@headlessui/react";
 import { Desktop } from "components/icons/Desktop";
 import { Moon } from "components/icons/Moon";
 import { Sun } from "components/icons/Sun";
+
 import { useTheme } from "next-themes";
+
 import { Fragment, useEffect, useState } from "react";
+
+import { Menu, Transition } from "@headlessui/react";
 
 export default function ThemeSwitch() {
   const [mounted, setMounted] = useState(false);

@@ -1,8 +1,10 @@
-import { Providers } from "./providers";
+import "./globals.css";
+
 import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
-import "./globals.css";
+
 import ThemesProvider from "./ThemesProvider";
+import { Providers } from "./providers";
 
 const dmSans = DM_Sans({ subsets: ["latin"] });
 

@@ -1,14 +1,20 @@
 "use client";
+import { useRouter } from "next/navigation";
+
 import FunctionCardView from "components/dashboard/admin/newDevice/FunctionCardView";
 import FunctionForm from "components/dashboard/admin/newDevice/FunctionForm";
+
 import { Plus } from "components/icons/Plus";
-import { api } from "convex/_generated/api";
-import { useMutation } from "convex/react";
+
 import { clean } from "lib/features/newDeviceFunctions/newDeviceFunctionsSlice";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+
 import { formatUrl } from "utils/urlUtils";
+
+import { useState } from "react";
+
+import { api } from "convex/_generated/api";
+import { useMutation } from "convex/react";
 
 export default function NewDevice() {
   const router = useRouter();

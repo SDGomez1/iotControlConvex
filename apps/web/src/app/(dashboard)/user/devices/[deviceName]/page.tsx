@@ -1,14 +1,8 @@
 "use client";
-
-import { api } from "convex/_generated/api";
-import { Id } from "convex/_generated/dataModel";
-import { useMutation, useQuery } from "convex/react";
-
-import { deFormatUrl } from "utils/urlUtils";
 import { useParams } from "next/navigation";
+
 import FunctionCardExecution from "components/dashboard/user/FunctionCardsExecution";
-import { Card, LineChart } from "@tremor/react";
-import { useEffect, useState } from "react";
+
 import {
   fetchAndReadStreamData,
   filterAndFormatData,
@@ -16,6 +10,15 @@ import {
   getDownloadData,
   getGraphData,
 } from "utils/dataProcessingUtils";
+import { deFormatUrl } from "utils/urlUtils";
+
+import { useEffect, useState } from "react";
+
+import { api } from "convex/_generated/api";
+import { Id } from "convex/_generated/dataModel";
+import { useMutation, useQuery } from "convex/react";
+
+import { Card, LineChart } from "@tremor/react";
 
 export default function Device() {
   const [recievedData, setRecievedData] = useState("");
@@ -34,7 +37,6 @@ export default function Device() {
   });
 
   const getFileUrl = useMutation(api.device.getFiles);
-  //Todo: comand lifecycle, and styles
   const functionscom = functions?.map((e, i) => {
     return (
       <FunctionCardExecution
@@ -103,12 +105,10 @@ export default function Device() {
             link.href = url;
             link.download = `${deviceId}.csv`;
 
-            // Append the link to the body, click it, and then remove it
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
 
-            // Free up the blob URL
             window.URL.revokeObjectURL(url);
           }}
         >

@@ -1,9 +1,12 @@
 "use client";
-import { api } from "convex/_generated/api";
-import { useQuery } from "convex/react";
-import { useAppSelector } from "lib/hooks";
 import Link from "next/link";
+
+import { useAppSelector } from "lib/hooks";
+
 import { formatUrl } from "utils/urlUtils";
+
+import { useQuery } from "convex/react";
+import { api } from "convex/_generated/api";
 
 export default function DeviceList(props: { isAdmin: boolean }) {
   const userActiveTeam = useAppSelector(

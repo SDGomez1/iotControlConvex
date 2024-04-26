@@ -1,14 +1,19 @@
 "use client";
-import { Listbox, Transition } from "@headlessui/react";
-import { ChevronUpDown } from "components/icons/ChevronUpDown";
-import { api } from "convex/_generated/api";
-import { useMutation, useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
-import { Fragment, useState } from "react";
 import Image from "next/image";
 import logo from "img/Logo.png";
+
+import { ChevronUpDown } from "components/icons/ChevronUpDown";
+
 import { useUser } from "@clerk/clerk-react";
+
+import { Fragment, useState } from "react";
+
+import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
+import { useMutation, useQuery } from "convex/react";
+
+import { Listbox, Transition } from "@headlessui/react";
 
 export default function SelectTeam() {
   const router = useRouter();
@@ -78,7 +83,7 @@ export default function SelectTeam() {
                 name: name,
                 description: description,
               });
-              router.push("/loading");
+              router.push("/admin");
             }
           }}
         >

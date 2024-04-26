@@ -1,23 +1,27 @@
 "use client";
+import { usePathname, useRouter } from "next/navigation";
+
 import Notifications from "components/dashboard/Notifications";
 import ThemeSwitch from "components/common/ThemeSwitch";
+
 import { BurguerMenu } from "components/icons/BurgerMenu";
 import { InformationCircle } from "components/icons/InformationCircle";
+
+import type { ActiveSessionResource } from "@clerk/types";
+
 import type { Dispatch, SetStateAction } from "react";
-import { useAppSelector } from "lib/hooks";
-import { usePathname, useRouter } from "next/navigation";
+
+import { Doc } from "convex/_generated/dataModel";
 
 export default function Topbar(props: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  currentTeam: Doc<"team">;
+  currentUser: ActiveSessionResource;
 }) {
   const currentUrl = usePathname();
   const router = useRouter();
-  const currentTeam = useAppSelector(
-    (state) => state.databaseData.userActiveTeamInfo,
-  );
-  const currentUser = useAppSelector((state) => state.databaseData.currentUser);
 
-  const isAdmin = currentTeam.adminId === currentUser.user.id;
+  const isAdmin = props.currentTeam.adminId === props.currentUser.user.id;
   const adminUrl = currentUrl.includes("admin");
 
   return (

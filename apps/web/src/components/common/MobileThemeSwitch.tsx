@@ -1,8 +1,10 @@
 "use client";
-import { ChevronUpDown } from "components/icons/ChevronUpDown";
 import { Moon } from "components/icons/Moon";
 import { Sun } from "components/icons/Sun";
+import { ChevronUpDown } from "components/icons/ChevronUpDown";
+
 import { useTheme } from "next-themes";
+
 import { useEffect, useState } from "react";
 
 export default function MobileThemeSwitch() {

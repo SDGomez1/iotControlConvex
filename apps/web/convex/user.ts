@@ -74,3 +74,21 @@ export const getUserbyUserName = mutation({
       .take(3);
   },
 });
+
+//----------------------------------------
+//  Server Actions for usage with middleware
+//----------------------------------------
+
+export const getUserActiveTeamWithServer = query({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    const data = await ctx.db
+      .query("user")
+      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .first();
+    if (!data) {
+      return;
+    }
+    return data.activeTeam;
+  },
+});

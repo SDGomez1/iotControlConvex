@@ -1,27 +1,27 @@
 "use client";
 
-import { api } from "convex/_generated/api";
-import { Id } from "convex/_generated/dataModel";
-import { useQuery } from "convex/react";
-
 import { useParams } from "next/navigation";
 
-import { useEffect, useState } from "react";
+import FunctionCard from "components/dashboard/admin/device/FunctionCard";
 
-import type { conectedDeviceData } from "types/serial";
 import {
   closePort,
   connectToSerial,
   getReader,
   startReading,
 } from "utils/serialUtils";
-
 import { deFormatUrl } from "utils/urlUtils";
-import { useAppDispatch, useAppSelector } from "lib/hooks";
 
+import { useAppDispatch, useAppSelector } from "lib/hooks";
 import { add, remove } from "lib/features/conectedDevices/conectedDevicesSlice";
-import FunctionCard from "components/dashboard/admin/device/FunctionCard";
-import { updateStatus } from "lib/features/fileEnqueu/fileEnqueuSlice";
+
+import { useEffect, useState } from "react";
+
+import { api } from "convex/_generated/api";
+import { Id } from "convex/_generated/dataModel";
+import { useQuery } from "convex/react";
+
+import type { conectedDeviceData } from "types/serial";
 
 export default function Device() {
   const dispatch = useAppDispatch();

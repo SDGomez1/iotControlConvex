@@ -1,16 +1,16 @@
-import { Menu, Transition } from "@headlessui/react";
 import { Bell } from "components/icons/Bell";
 import { Check } from "components/icons/Check";
 import { XMark } from "components/icons/XMark";
+
+import { useAppSelector } from "lib/hooks";
+
+import { Fragment } from "react";
+
 import { api } from "convex/_generated/api";
 import { Doc } from "convex/_generated/dataModel";
-import { useMutation, useQuery } from "convex/react";
-import { useAppSelector } from "lib/hooks";
-import { Fragment } from "react";
-interface invitation {
-  teams: Doc<"team">[];
-  invitations: Doc<"invitations">[];
-}
+import { useMutation } from "convex/react";
+
+import { Menu, Transition } from "@headlessui/react";
 
 export default function Notifications() {
   const invitationsByUser = useAppSelector(

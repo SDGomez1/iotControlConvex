@@ -2,15 +2,19 @@
 
 import { Plus } from "components/icons/Plus";
 import { XMark } from "components/icons/XMark";
+
 import { add } from "lib/features/newDeviceFunctions/newDeviceFunctionsSlice";
 import { useAppDispatch } from "lib/hooks";
+
+import { generateUUID } from "utils/uuidUtils";
+
 import { useState, type Dispatch, type SetStateAction } from "react";
+
 import {
-  newDeviceFunctionData,
+  type newDeviceFunctionData,
   typeOfEntry,
   typeOfFormat,
 } from "types/newDeviceFunctions";
-import { generateUUID } from "utils/uuidUtils";
 
 const initialState: newDeviceFunctionData = {
   id: generateUUID(),

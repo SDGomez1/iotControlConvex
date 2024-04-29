@@ -17,6 +17,9 @@ export default authMiddleware({
     }
     if (auth.userId && !auth.isPublicRoute)
       return getUserActiveTeam(auth.userId).then((teamId) => {
+        if (currentUrl.includes("/selectTeam") && !teamId) {
+          return NextResponse.next();
+        }
         if (!teamId) {
           return NextResponse.redirect(new URL("/selectTeam", req.url));
         }

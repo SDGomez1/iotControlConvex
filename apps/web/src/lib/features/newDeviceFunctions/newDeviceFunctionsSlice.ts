@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import type { newDeviceFunctionData } from "types/newDeviceFunctions";
+import { update } from "../databaseData/dataBaseDataSlice";
 
 const initialState: newDeviceFunctionData[] = [];
 
@@ -16,9 +17,17 @@ const newDeviceFunctionsSlice = createSlice({
       newArray.splice(0, newArray.length);
       return newArray;
     },
+    updateFunction: (state, action: PayloadAction<newDeviceFunctionData>) => {
+      let newArray = state.slice();
+      let indexOfTheArray = newArray.findIndex(
+        (data) => data.id === action.payload.id,
+      );
+      newArray[indexOfTheArray] = action.payload;
+      return newArray;
+    },
   },
 });
 
-export const { add, clean } = newDeviceFunctionsSlice.actions;
+export const { add, clean, updateFunction } = newDeviceFunctionsSlice.actions;
 
 export default newDeviceFunctionsSlice.reducer;

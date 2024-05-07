@@ -1,73 +1,199 @@
-import { useState } from "react";
-
-import type { Dispatch, SetStateAction } from "react";
-import type { FunctionData } from "types/deviceFunction";
-
-export default function functionCardEditing(props: {
-  index: string;
-  isCreating: Dispatch<SetStateAction<boolean>>;
-  setCurrentIndex: Dispatch<SetStateAction<string>>;
-  setData: Dispatch<SetStateAction<FunctionData | undefined>>;
+"use client";
+import { Plus } from "components/icons/Plus";
+import { XMark } from "components/icons/XMark";
+import { api } from "convex/_generated/api";
+import { Doc, Id } from "convex/_generated/dataModel";
+import { useMutation } from "convex/react";
+import { updateFunction } from "lib/features/newDeviceFunctions/newDeviceFunctionsSlice";
+import { useAppDispatch } from "lib/hooks";
+import { type Dispatch, type SetStateAction, useState } from "react";
+import {
+  typeOfEntry,
+  typeOfFormat,
+  type newDeviceFunctionData,
+} from "types/newDeviceFunctions";
+import { generateUUID } from "utils/uuidUtils";
+export default function FunctionCardEditing(props: {
+  initialData: newDeviceFunctionData;
+  isCreating: boolean;
+  setIsEditing: Dispatch<SetStateAction<boolean>>;
 }) {
-  const [nombre, setNombre] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [comando, setComando] = useState("");
-  const [savedState, setSavedState] = useState(false);
+  const initialState: newDeviceFunctionData = {
+    id: props.initialData.id,
+    name: props.initialData.name,
+    description: props.initialData.description,
+    tEntry: props.initialData.tEntry,
+    command: props.initialData.command,
+    blocking: props.initialData.blocking,
+    userInfo: props.initialData.userInfo,
+    userTEntry: props.initialData.userTEntry,
+    unit: props.initialData.unit,
+    symbol: props.initialData.symbol,
+    format: props.initialData.format,
+    maxInterval: props.initialData.maxInterval,
+    minInterval: props.initialData.minInterval,
+    scaleData: props.initialData.scaleData,
+    message: props.initialData.message,
+    streaming: props.initialData.streaming,
+  };
 
-  function addData() {
-    props.setData({
-      index: props.index,
-      nombre: nombre,
-      descripcion: descripcion,
-      comando: comando,
-    });
-  }
+  const [data, setData] = useState<newDeviceFunctionData>(initialState);
+  const dispatch = useAppDispatch();
+  const updateDeviceFunction = useMutation(
+    api.deviceFunction.updateDeviceFunction,
+  );
+  const scaleData = data.scaleData?.map((value, key) => {
+    return (
+      <div
+        className="flex w-1/2 items-center justify-center gap-1"
+        key={generateUUID()}
+      >
+        <input
+          type="number"
+          placeholder={value.toString()}
+          onBlur={(e) => {
+            let entry = Number(e.target.value);
+            let newData = data.scaleData;
+            if (!newData) {
+              return;
+            }
+            newData[key] = entry;
+            setData({
+              ...data,
+              scaleData: newData,
+            });
+          }}
+          className="mb-2 block w-4/5 border-0 border-b border-lightText/60 bg-transparent px-1  py-1 text-xs focus:border-black focus:ring-0  lg:text-sm dark:border-darkText dark:focus:border-white"
+        />
+        <span
+          onClick={() => {
+            let newData = data.scaleData;
+            if (newData !== undefined) {
+              newData.splice(key, 1);
+              setData({
+                ...data,
+                scaleData: newData,
+              });
+            }
+          }}
+        >
+          <XMark className="size-4 stroke-lightText dark:stroke-darkText" />
+        </span>
+      </div>
+    );
+  });
 
   return (
-    <div className="  flex h-min flex-col gap-2 rounded border border-lightText/60 bg-white px-4 py-4 dark:border-darkText dark:bg-dark">
+    <form
+      autoComplete="off"
+      className="flex  w-full flex-col gap-2 rounded border border-lightText/60 bg-white px-4 py-4 dark:border-darkText dark:bg-dark"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (props.isCreating) {
+          dispatch(updateFunction(data));
+          props.setIsEditing(false);
+        } else {
+          updateDeviceFunction({
+            functionId: data.id as Id<"deviceFunction">,
+            name: data.name,
+            description: data.description,
+            command: data.command as string,
+            blocking: data.blocking,
+            userInfo: data.userInfo,
+            userTypeOfEntry: data.userTEntry,
+            unit: data.unit,
+            symbol: data.symbol,
+            format: data.format,
+            maxInterval: data.maxInterval,
+            minInterval: data.minInterval,
+            scaleData: data.scaleData,
+            message: data.message,
+            streaming: data.streaming,
+          });
+          props.setIsEditing(false);
+        }
+      }}
+    >
       <input
-        placeholder="Nombre de la función"
-        name={`nombreF${props.index}`}
+        required={data.name === "" ? true : false}
+        placeholder={data.name === "" ? "Nombre de la función" : data.name}
+        name="name"
         onChange={(e) => {
-          setNombre(e.target.value);
+          setData({
+            ...data,
+            name: e.target.value,
+          });
         }}
-        value={nombre}
         className=" block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1 text-center text-sm focus:border-black focus:ring-0 lg:text-left lg:text-base dark:border-darkText dark:focus:border-white"
       />
       <h3 className="text-center text-sm font-bold lg:text-left lg:text-xl">
         Información general
       </h3>
+      {/* ------------ Descripcion  -------------- */}
       <input
-        placeholder="Descripcion"
-        name={`descripcionF${props.index}`}
+        required={data.name === "" ? true : false}
+        placeholder={data.description === "" ? "Descripción" : data.description}
+        name="description"
         onChange={(e) => {
-          setDescripcion(e.target.value);
+          setData({
+            ...data,
+            description: e.target.value,
+          });
         }}
         className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1  py-1 text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
       />
       <h3 className="text-center text-sm font-bold lg:text-left lg:text-xl">
         Datos de entrada
       </h3>
-
+      {/* ------------ Comando -------------- */}
       <input
-        placeholder="Comando de ejecución"
-        name={`comando${props.index}`}
+        required={data.name === "" ? true : false}
+        placeholder={
+          data.command === "" ? "Comando de ejecución" : data.command.toString()
+        }
+        name="command"
         onChange={(e) => {
-          setComando(e.target.value);
+          setData({
+            ...data,
+            command: e.target.value,
+          });
         }}
-        className="block w-full  border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
+        className="mb-2 block w-full  border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
       />
       <div className="flex flex-col items-center justify-center lg:flex-row lg:justify-start lg:gap-4">
-        <h4 className="  px-1 text-xs  font-medium text-lightText lg:text-sm dark:text-darkText">
+        <h4 className=" mb-2 px-1 text-xs  font-medium text-lightText lg:text-sm dark:text-darkText">
           ¿Deseas bloquear otras funciones al ejecutar esta función?
         </h4>
-        <div className=" flex items-center justify-center gap-5">
-          <button className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText">
-            <span className="size-4 border border-lightText dark:border-darkText" />
+        {/* ------------ blocking -------------- */}
+        <div className=" mb-2 flex items-center justify-center gap-5">
+          <button
+            className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+            onClick={() => {
+              setData({
+                ...data,
+                blocking: true,
+              });
+            }}
+            type="button"
+          >
+            <span
+              className={`size-4 border border-lightText dark:border-darkText ${data.blocking ? "bg-lightText dark:bg-darkText" : ""}`}
+            />
             Si
           </button>
-          <button className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText">
-            <span className="size-4 border border-lightText dark:border-darkText" />
+          <button
+            className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+            type="button"
+            onClick={() => {
+              setData({
+                ...data,
+                blocking: false,
+              });
+            }}
+          >
+            <span
+              className={`size-4 border border-lightText dark:border-darkText ${data.blocking ? "" : "bg-lightText dark:bg-darkText"}`}
+            />
             No
           </button>
         </div>
@@ -75,97 +201,193 @@ export default function functionCardEditing(props: {
       <h3 className="text-center text-sm font-bold lg:text-left  lg:text-xl ">
         Datos del Usuario
       </h3>
-      <div className="flex flex-col items-center justify-center lg:flex-row lg:justify-start lg:gap-4">
-        <h4 className="  px-1 text-xs font-medium text-lightText lg:text-sm dark:text-darkText">
-          ¿Deseas recibir información del usuario para ejecutar la función?{" "}
+      <div className="flex flex-col items-center justify-center gap-2 lg:flex-row lg:justify-start lg:gap-4">
+        <h4 className="  mb-2 px-1 text-xs font-medium text-lightText lg:text-sm dark:text-darkText">
+          ¿Deseas recibir información del usuario para ejecutar la función?
         </h4>
+        {/* ------------ User Info -------------- */}
         <div className=" flex items-center justify-center gap-5">
-          <button className="flex items-center justify-center  gap-1 text-xs text-lightText lg:text-sm dark:text-darkText">
-            <span className="size-4 border border-lightText dark:border-darkText" />
+          <button
+            type="button"
+            onClick={() => {
+              setData({
+                ...data,
+                userInfo: true,
+              });
+            }}
+            className="flex items-center justify-center  gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+          >
+            <span
+              className={`size-4 border border-lightText dark:border-darkText ${data.userInfo ? "bg-lightText dark:bg-darkText" : ""}`}
+            />
             Si
           </button>
-          <button className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText">
-            <span className="size-4 border border-lightText dark:border-darkText" />
+          <button
+            type="button"
+            onClick={() => {
+              setData({
+                ...data,
+                userInfo: false,
+              });
+            }}
+            className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+          >
+            <span
+              className={`size-4 border border-lightText dark:border-darkText ${data.userInfo ? "" : "bg-lightText dark:bg-darkText"}`}
+            />
             No
           </button>
         </div>
       </div>
-      <select
-        name={`descripcionF${props.index}`}
-        onChange={(e) => {
-          setDescripcion(e.target.value);
-        }}
-        className="border-0 border-b border-lightText/60 p-0 px-1 text-xs text-lightText focus:border-black focus:ring-0 lg:text-sm 2xl:w-1/4 dark:border-darkText dark:bg-dark dark:text-darkText dark:focus:border-white"
-      >
-        <option value="" selected disabled hidden>
-          Tipo de entrada
-        </option>
+      {data.userInfo ? (
+        <div className="flex flex-col gap-4">
+          {/* ------------ Tipo de entrada -------------- */}
+          <select
+            required
+            name={`tEntry`}
+            onChange={(e) => {
+              setData({
+                ...data,
+                tEntry: e.target.value as typeOfEntry,
+              });
+            }}
+            className="border-0 border-b border-lightText/60 p-0 px-1 py-2 text-xs text-lightText focus:border-black focus:ring-0 lg:text-sm 2xl:w-1/4 dark:border-darkText dark:bg-dark dark:text-darkText dark:focus:border-white"
+          >
+            <option value="" selected disabled hidden>
+              Tipo de entrada
+            </option>
 
-        <option className="bg-transparent"> Numerica</option>
-        <option> Texto</option>
-      </select>
-      <div className="flex items-center justify-center gap-4 2xl:w-1/4">
-        <input
-          placeholder="Unidad de de medida"
-          name={`descripcionF${props.index}`}
-          onChange={(e) => {
-            setDescripcion(e.target.value);
-          }}
-          className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
-        />
-        <input
-          placeholder="Simbolo"
-          name={`descripcionF${props.index}`}
-          onChange={(e) => {
-            setDescripcion(e.target.value);
-          }}
-          className="block w-full border-0 border-b  border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
-        />
-      </div>
+            <option className="bg-transparent" value={typeOfEntry.number}>
+              Numerica
+            </option>
+            <option value={typeOfEntry.string}> Texto</option>
+          </select>
+          <div className="flex items-center justify-center gap-4 2xl:w-1/4">
+            {/* ------------ Unidad -------------- */}
+            <input
+              required
+              placeholder="Unidad de de medida"
+              name={"unit"}
+              onChange={(e) => {
+                setData({
+                  ...data,
+                  unit: e.target.value,
+                });
+              }}
+              className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
+            />
+            {/* ------------ Simbolo -------------- */}
+            <input
+              required
+              placeholder="Simbolo"
+              name={`symbol`}
+              onChange={(e) => {
+                setData({
+                  ...data,
+                  symbol: e.target.value,
+                });
+              }}
+              className="block w-full border-0 border-b  border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
+            />
+          </div>
+          {/* ------------ Formato -------------- */}
+          <select
+            value={data.format}
+            name={`format`}
+            onChange={(e) => {
+              setData({
+                ...data,
+                format: e.target.value as typeOfFormat,
+              });
+            }}
+            className="border-0 border-b border-lightText/60 p-0 px-1 py-2 text-xs text-lightText focus:border-black focus:ring-0 lg:text-sm 2xl:w-1/4 dark:border-darkText dark:bg-dark dark:text-darkText dark:focus:border-white"
+          >
+            <option value="" selected disabled hidden>
+              Formato
+            </option>
 
-      <select
-        name={`descripcionF${props.index}`}
-        onChange={(e) => {
-          setDescripcion(e.target.value);
-        }}
-        className="border-0 border-b border-lightText/60 p-0 px-1 text-xs text-lightText focus:border-black focus:ring-0 lg:text-sm 2xl:w-1/4 dark:border-darkText dark:bg-dark dark:text-darkText dark:focus:border-white"
-      >
-        <option value="" selected disabled hidden>
-          Formato
-        </option>
+            <option className="bg-transparent" value={typeOfFormat.interval}>
+              Intervalo
+            </option>
+            <option value={typeOfFormat.scale}> Escala</option>
+          </select>
+          {data.format === typeOfFormat.interval ? (
+            <div className="flex items-center justify-center gap-4 2xl:w-1/4">
+              {/* ------------Intervalo Maximo-------------- */}
+              <input
+                required
+                placeholder="Intervalo Maximo"
+                name={`maxInterval`}
+                type="number"
+                onChange={(e) => {
+                  setData({
+                    ...data,
+                    maxInterval: Number(e.target.value),
+                  });
+                }}
+                className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
+              />
 
-        <option className="bg-transparent"> Intervalo</option>
-        <option> Escala</option>
-      </select>
-      <div className="flex items-center justify-center gap-4 2xl:w-1/4">
-        <input
-          placeholder="Intervalo Maximo"
-          name={`descripcionF${props.index}`}
-          onChange={(e) => {
-            setDescripcion(e.target.value);
-          }}
-          className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
-        />
-        <input
-          placeholder="Intervalo minimo"
-          name={`descripcionF${props.index}`}
-          onChange={(e) => {
-            setDescripcion(e.target.value);
-          }}
-          className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
-        />
-      </div>
-      <h4 className="  px-1 text-xs font-medium text-lightText lg:text-sm dark:text-darkText">
-        ¿Deseas recibir información del usuario para ejecutar la función?
-      </h4>
-      <input
-        placeholder="Mensaje"
-        name={`comando${props.index}`}
-        onChange={(e) => {
-          setComando(e.target.value);
-        }}
-        className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
-      />
+              {/* ------------ Intervalo minimo -------------- */}
+              <input
+                required
+                placeholder="Intervalo minimo"
+                name={`minInterval`}
+                type="number"
+                onChange={(e) => {
+                  setData({
+                    ...data,
+                    minInterval: Number(e.target.value),
+                  });
+                }}
+                className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
+              />
+            </div>
+          ) : (
+            <div className="flex flex-wrap  items-center justify-between 2xl:w-1/4">
+              {/* ------------ escala -------------- */}
+              {scaleData}
+              <button
+                type="button"
+                className="2xl:text- mt-2 flex w-1/2 items-center justify-center gap-2 rounded border border-lightText/60 py-2 text-xs text-lightText dark:border-darkText dark:text-darkText"
+                onClick={() => {
+                  let newData: number[] = [];
+                  if (data.scaleData !== undefined) {
+                    newData = data.scaleData;
+                  }
+                  newData.push(0);
+                  setData({
+                    ...data,
+                    scaleData: newData,
+                  });
+                }}
+              >
+                <Plus className="dark:stroke-darkTe size-3  stroke-lightText" />
+                Añadir
+              </button>
+            </div>
+          )}
+
+          <h4 className="  px-1 text-xs font-medium text-lightText lg:text-sm dark:text-darkText">
+            Redacta un mensaje para el usuario
+          </h4>
+          {/* ------------ Mensaje -------------- */}
+          <input
+            required
+            placeholder="Mensaje"
+            name={`message`}
+            onChange={(e) => {
+              setData({
+                ...data,
+                message: e.target.value,
+              });
+            }}
+            className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
+          />
+        </div>
+      ) : (
+        <></>
+      )}
       <h3 className="text-center text-sm font-bold lg:text-left  lg:text-xl ">
         Datos de Salida
       </h3>
@@ -174,72 +396,53 @@ export default function functionCardEditing(props: {
           ¿Necesitas tener control total de los datos del dispositivo durante la
           ejecución de la función?
         </h4>
+        {/* ------------ Streaming -------------- */}
         <div className=" flex items-center justify-center gap-5">
-          <button className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText">
-            <span className="size-4 border border-lightText dark:border-darkText" />
+          <button
+            type="button"
+            className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+            onClick={() => {
+              setData({
+                ...data,
+                streaming: true,
+              });
+            }}
+          >
+            <span
+              className={`size-4 border border-lightText dark:border-darkText ${data.streaming ? "bg-lightText dark:bg-darkText" : ""}`}
+            />
             Si
           </button>
-          <button className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText">
-            <span className="size-4 border border-lightText dark:border-darkText" />
+          <button
+            type="button"
+            className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+            onClick={() => {
+              setData({
+                ...data,
+                streaming: false,
+              });
+            }}
+          >
+            <span
+              className={`size-4 border border-lightText dark:border-darkText ${data.streaming ? "" : "bg-lightText dark:bg-darkText"}`}
+            />
             No
           </button>
         </div>
       </div>
-
-      <div className="lg fixed bottom-0  left-0 mt-4 flex h-16 w-full items-center justify-center gap-8 border-t bg-white px-6 lg:absolute lg:justify-end dark:bg-dark">
-        {savedState ? (
-          <>
-            <button
-              type="button"
-              onClick={() => {
-                setSavedState(false);
-                props.isCreating(true);
-              }}
-              className="flex h-8 w-28 items-center justify-center rounded bg-neutral-900 px-8 py-1 text-sm text-white hover:bg-neutral-800"
-            >
-              Editar
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                props.setCurrentIndex(props.index);
-                props.isCreating(false);
-              }}
-              className="flex h-8 w-28 items-center justify-center rounded border border-black px-8 py-1 text-sm hover:bg-neutral-50"
-            >
-              Borrar
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              type="button"
-              onClick={() => {
-                if (!nombre || !descripcion || !comando) {
-                  alert("Llena todos los espacios");
-                  return;
-                }
-                addData();
-                setSavedState(true);
-                props.isCreating(false);
-              }}
-              className="flex h-8 w-28 items-center justify-center rounded bg-neutral-900 px-8 py-1 text-sm text-white hover:bg-neutral-800"
-            >
-              Crear
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                props.setCurrentIndex(props.index);
-                props.isCreating(false);
-              }}
-              className="flex h-8 w-28 items-center justify-center rounded border border-black px-8 py-1 text-sm hover:bg-neutral-50"
-            >
-              Cancelar
-            </button>
-          </>
-        )}
+      {/* ------------ Global Buttons -------------- */}
+      <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
+        <button
+          className="rounded border border-danger bg-transparent px-8 py-2 text-sm text-danger"
+          type="button"
+          onClick={() => props.setIsEditing(false)}
+        >
+          Cancelar
+        </button>
+        <button className="rounded border border-accent bg-transparent px-8 py-2 text-sm text-accent dark:text-indigo-400">
+          Guardar Funcion
+        </button>
       </div>
-    </div>
+    </form>
   );
 }

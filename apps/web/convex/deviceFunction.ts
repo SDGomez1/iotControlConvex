@@ -20,7 +20,7 @@ export const createFunction = mutation({
     streaming: v.boolean(),
   },
   handler: async (ctx, args) => {
-    const deviceFunction = ctx.db.insert("deviceFunction", {
+    ctx.db.insert("deviceFunction", {
       deviceId: args.deviceId,
       name: args.name,
       description: args.description,
@@ -51,5 +51,43 @@ export const getFunctionByDeviceId = query({
       .collect();
 
     return functions;
+  },
+});
+
+export const updateDeviceFunction = mutation({
+  args: {
+    functionId: v.id("deviceFunction"),
+    name: v.string(),
+    description: v.string(),
+    command: v.string(),
+    blocking: v.boolean(),
+    userInfo: v.boolean(),
+    userTypeOfEntry: v.optional(v.string()),
+    unit: v.optional(v.string()),
+    symbol: v.optional(v.string()),
+    format: v.optional(v.string()),
+    maxInterval: v.optional(v.number()),
+    minInterval: v.optional(v.number()),
+    scaleData: v.optional(v.array(v.number())),
+    message: v.optional(v.string()),
+    streaming: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    ctx.db.patch(args.functionId, {
+      name: args.name,
+      description: args.description,
+      command: args.command,
+      blocking: args.blocking,
+      userInfo: args.userInfo,
+      userTypeOfEntry: args.userTypeOfEntry,
+      unit: args.unit,
+      symbol: args.symbol,
+      format: args.format,
+      maxInterval: args.maxInterval,
+      minInterval: args.minInterval,
+      scaleData: args.scaleData,
+      message: args.message,
+      streaming: args.streaming,
+    });
   },
 });

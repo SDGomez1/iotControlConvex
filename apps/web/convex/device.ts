@@ -34,7 +34,7 @@ export const getdeviceById = query({
     const device = await ctx.db.get(args.deviceId);
 
     if (!device) {
-      throw new Error("No device Found");
+      return undefined;
     }
     return device;
   },
@@ -71,6 +71,50 @@ export const getFiles = mutation({
     storageId: v.id("_storage"),
   },
   handler: async (ctx, args) => {
-    return await ctx.storage.getUrl(args.storageId);
+    await ctx.storage.getUrl(args.storageId);
+  },
+});
+
+export const updateDevice = mutation({
+  args: {
+    deviceId: v.id("device"),
+    name: v.string(),
+    description: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.deviceId, {
+      name: args.name,
+      description: args.description,
+    });
+  },
+});
+
+export const deleteDevice = mutation({
+  args: {
+    deviceId: v.id("device"),
+  },
+  handler: async (ctx, args) => {
+    const deviceFunctions = await ctx.db
+      .query("deviceFunction")
+      .filter((q) => q.eq(q.field("deviceId"), args.deviceId))
+      .collect();
+    const commands = deviceFunctions.map(async (functionData) => {
+      const command = await ctx.db
+        .query("command")
+        .filter((q) => q.eq(q.field("deviceFunctionId"), functionData._id))
+        .collect();
+      return command;
+    });
+    commands.forEach((promise) => {
+      promise.then((data) => {
+        data.forEach(async (command) => {
+          return ctx.db.delete(command._id);
+        });
+      });
+    });
+    deviceFunctions.forEach(async (deviceFunction) => {
+      await ctx.db.delete(deviceFunction._id);
+    });
+    await ctx.db.delete(args.deviceId);
   },
 });

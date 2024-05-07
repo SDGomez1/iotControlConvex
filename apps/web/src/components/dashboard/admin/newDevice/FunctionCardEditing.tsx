@@ -4,7 +4,10 @@ import { XMark } from "components/icons/XMark";
 import { api } from "convex/_generated/api";
 import { Doc, Id } from "convex/_generated/dataModel";
 import { useMutation } from "convex/react";
-import { updateFunction } from "lib/features/newDeviceFunctions/newDeviceFunctionsSlice";
+import {
+  deleteFunction,
+  updateFunction,
+} from "lib/features/newDeviceFunctions/newDeviceFunctionsSlice";
 import { useAppDispatch } from "lib/hooks";
 import { type Dispatch, type SetStateAction, useState } from "react";
 import {
@@ -42,6 +45,10 @@ export default function FunctionCardEditing(props: {
   const updateDeviceFunction = useMutation(
     api.deviceFunction.updateDeviceFunction,
   );
+  const deleteDeviceFunction = useMutation(
+    api.deviceFunction.deleteDeviceFunction,
+  );
+
   const scaleData = data.scaleData?.map((value, key) => {
     return (
       <div
@@ -433,14 +440,32 @@ export default function FunctionCardEditing(props: {
       {/* ------------ Global Buttons -------------- */}
       <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
         <button
-          className="rounded border border-danger bg-transparent px-8 py-2 text-sm text-danger"
+          className="rounded  border border-errorText px-4 py-2 text-sm text-errorText lg:px-8"
+          type="button"
+          onClick={() => {
+            if (props.isCreating) {
+              dispatch(deleteFunction(data.id));
+              props.setIsEditing(false);
+            } else {
+              deleteDeviceFunction({
+                deviceFunction: data.id as Id<"deviceFunction">,
+              });
+              props.setIsEditing(false);
+            }
+          }}
+        >
+          Eliminar
+        </button>
+
+        <button
+          className="rounded border border-danger bg-transparent px-4 py-2 text-sm text-danger lg:px-8"
           type="button"
           onClick={() => props.setIsEditing(false)}
         >
           Cancelar
         </button>
-        <button className="rounded border border-accent bg-transparent px-8 py-2 text-sm text-accent dark:text-indigo-400">
-          Guardar Funcion
+        <button className="rounded border border-accent bg-transparent px-4 py-2 text-sm text-accent lg:px-8 dark:text-indigo-400">
+          Guardar
         </button>
       </div>
     </form>

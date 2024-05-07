@@ -91,3 +91,17 @@ export const updateDeviceFunction = mutation({
     });
   },
 });
+
+export const deleteDeviceFunction = mutation({
+  args: {
+    deviceFunction: v.id("deviceFunction"),
+  },
+  handler: async (ctx, args) => {
+    const commands = await ctx.db
+      .query("command")
+      .filter((q) => q.eq(q.field("deviceFunctionId"), args.deviceFunction))
+      .collect();
+    commands.forEach(async (command) => await ctx.db.delete(command._id));
+    ctx.db.delete(args.deviceFunction);
+  },
+});

@@ -25,9 +25,18 @@ const newDeviceFunctionsSlice = createSlice({
       newArray[indexOfTheArray] = action.payload;
       return newArray;
     },
+    deleteFunction: (state, action: PayloadAction<string>) => {
+      let newArray = state.slice();
+      let indexOfTheArray = newArray.findIndex(
+        (data) => data.id === action.payload,
+      );
+      newArray.splice(indexOfTheArray, 1);
+      return newArray;
+    },
   },
 });
 
-export const { add, clean, updateFunction } = newDeviceFunctionsSlice.actions;
+export const { add, clean, updateFunction, deleteFunction } =
+  newDeviceFunctionsSlice.actions;
 
 export default newDeviceFunctionsSlice.reducer;

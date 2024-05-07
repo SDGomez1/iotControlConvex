@@ -23,10 +23,19 @@ import { useQuery } from "convex/react";
 
 import type { conectedDeviceData } from "types/serial";
 import EditView from "components/dashboard/admin/device/EditView";
+import { clean } from "lib/features/newDeviceFunctions/newDeviceFunctionsSlice";
 
 export default function Device() {
   const dispatch = useAppDispatch();
+  const currentDeviceFunctions = useAppSelector(
+    (state) => state.newDeviceFunctions,
+  );
 
+  useEffect(() => {
+    if (currentDeviceFunctions.length > 0) {
+      dispatch(clean());
+    }
+  }, [currentDeviceFunctions]);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedPort, setSelectedPort] = useState<SerialPort | undefined>(
     undefined,

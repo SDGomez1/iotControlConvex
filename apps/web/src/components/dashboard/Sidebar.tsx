@@ -47,7 +47,7 @@ export default function Sidebar(props: {
 
   return (
     <nav
-      className={`fixed w-75vw shrink-0 ${props.isOpen ? "left-0" : "-left-full"} top-0 z-20 flex h-screen flex-col gap-2 bg-white px-4 py-4 text-sm transition-all lg:relative lg:left-0 lg:z-0 lg:w-64 lg:border-r lg:text-base dark:bg-dark lg:dark:border-r-neutral-700`}
+      className={`fixed w-75vw shrink-0 ${props.isOpen ? "left-0" : "-left-full"} top-0 z-20 flex h-svh flex-col gap-2 bg-white px-4 py-4 text-sm transition-all lg:relative lg:left-0 lg:z-0 lg:h-screen lg:w-64 lg:border-r lg:text-base dark:bg-dark lg:dark:border-r-neutral-700`}
     >
       <div className="flex items-center justify-between lg:hidden">
         <Image src={logo} alt="" className="h-6 w-8 " />

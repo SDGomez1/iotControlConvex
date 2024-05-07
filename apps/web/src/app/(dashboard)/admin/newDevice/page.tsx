@@ -15,6 +15,8 @@ import { useState } from "react";
 
 import { api } from "convex/_generated/api";
 import { useMutation } from "convex/react";
+import FunctionCardEditing from "components/dashboard/admin/newDevice/FunctionCardEditing";
+import { newDeviceFunctionData } from "types/newDeviceFunctions";
 
 export default function NewDevice() {
   const router = useRouter();
@@ -28,10 +30,20 @@ export default function NewDevice() {
     (state) => state.databaseData.userActiveTeamInfo,
   );
   const [isCreating, setIsCreating] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [functionId, setFunctionId] = useState("");
   const currentFunctions = useAppSelector((state) => state.newDeviceFunctions);
 
   const currentFunctionsCards = currentFunctions.map((functionData) => {
-    return <FunctionCardView name={functionData.name} key={functionData.id} />;
+    return (
+      <FunctionCardView
+        name={functionData.name}
+        key={functionData.id}
+        functionId={functionData.id}
+        setIsEditing={setIsEditing}
+        setFunctionId={setFunctionId}
+      />
+    );
   });
   return (
     <section className=" flex max-h-screen flex-col px-5">
@@ -96,6 +108,7 @@ export default function NewDevice() {
         <p className=" mb-4  py-2 text-sm font-medium text-lightText lg:text-base dark:text-darkText">
           Oprime el botón para crear una nueva función de tu dispositivo
         </p>
+
         <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
           <button
             className="rounded border border-danger bg-transparent px-8 py-2 text-sm text-danger"
@@ -112,26 +125,45 @@ export default function NewDevice() {
           </button>
         </div>
       </form>
-      {isCreating ? (
-        <div className="  h-min max-h-min overflow-y-scroll pb-32 lg:pb-40">
-          <FunctionForm setIsEditing={setIsCreating} />
-        </div>
+
+      {!isEditing ? (
+        <>
+          {isCreating ? (
+            <div className="  h-min max-h-min overflow-y-scroll pb-32 lg:pb-40">
+              <FunctionForm setIsEditing={setIsCreating} />
+            </div>
+          ) : (
+            <div className="mb-4 flex flex-col gap-4">
+              {currentFunctionsCards}
+            </div>
+          )}
+          {isCreating ? (
+            <></>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                setIsCreating(true);
+              }}
+              className=" flex w-full items-center justify-center gap-2 rounded border border-lightText bg-white py-2  text-sm  text-lightText lg:text-base dark:border-darkText dark:bg-dark dark:text-darkText"
+            >
+              <Plus className="size-4" />
+              Añadir nueva funcion
+            </button>
+          )}
+        </>
       ) : (
-        <div className="mb-4 flex flex-col gap-4">{currentFunctionsCards}</div>
-      )}
-      {isCreating ? (
-        <></>
-      ) : (
-        <button
-          type="button"
-          onClick={() => {
-            setIsCreating(true);
-          }}
-          className=" flex w-full items-center justify-center gap-2 rounded border border-lightText bg-white py-2  text-sm  text-lightText lg:text-base dark:border-darkText dark:bg-dark dark:text-darkText"
-        >
-          <Plus className="size-4" />
-          Añadir nueva funcion
-        </button>
+        <>
+          <FunctionCardEditing
+            isCreating={true}
+            setIsEditing={setIsEditing}
+            initialData={
+              currentFunctions.find(
+                (data) => data.id === functionId,
+              ) as newDeviceFunctionData
+            }
+          />
+        </>
       )}
     </section>
   );

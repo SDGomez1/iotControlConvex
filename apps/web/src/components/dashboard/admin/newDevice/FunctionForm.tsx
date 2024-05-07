@@ -17,7 +17,7 @@ import {
 } from "types/newDeviceFunctions";
 
 const initialState: newDeviceFunctionData = {
-  id: generateUUID(),
+  id: "",
   name: "",
   description: "",
   tEntry: typeOfEntry.string,
@@ -41,7 +41,6 @@ export default function FunctionForm(props: {
   const [data, setData] = useState<newDeviceFunctionData>(initialState);
   const dispatch = useAppDispatch();
 
-  console.log(data.scaleData);
   const scaleData = data.scaleData?.map((value, key) => {
     return (
       <div
@@ -89,7 +88,9 @@ export default function FunctionForm(props: {
       className="flex flex-col gap-2 rounded border border-lightText/60 bg-white px-4 py-4 dark:border-darkText dark:bg-dark"
       onSubmit={(e) => {
         e.preventDefault();
-        dispatch(add(data));
+        let sendData = data;
+        sendData.id = generateUUID();
+        dispatch(add(sendData));
         props.setIsEditing(false);
       }}
     >

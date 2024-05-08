@@ -14,4 +14,6 @@ Se trata de una plataforma IoT que proporciona la funcionalidad de conectar micr
 O **Prueba la página directamente** con **[iot-control-convex.com](https://iot-control-convex.vercel.app/admin)**.
 
 ### Prerrequisitos
--	Navegadores habilitados: Chrome, Opera y Microsoft Edge.
+-	Navegadores habilitados: Chrome, Opera y Microsoft Edges.
+### Funcionamiento
+Para el correcto funcionamiento del Arduino este debe estar codeado como una máquina de estados.

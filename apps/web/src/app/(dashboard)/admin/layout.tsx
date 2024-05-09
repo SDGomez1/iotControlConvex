@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
+import { posibleStatus } from "types/serial";
 
 export default function AdminLayout({
   children,
@@ -32,6 +33,8 @@ export default function AdminLayout({
   const getFileUrl = useMutation(api.device.generateUploadUrl);
   const writeFileToDb = useMutation(api.device.sendFile);
   const deleteCommand = useMutation(api.command.deleteCommandById);
+  const updateCommandStatus = useMutation(api.command.updateCommandStatus);
+
   useEffect(() => {
     if ("serial" in navigator) {
       if (commands && deviceConected.length > 0) {
@@ -54,20 +57,37 @@ export default function AdminLayout({
             }
           }
 
-          // To convert the map to an array of its values:
           const latestCommandsArrayFromMap: commandData[] = Array.from(
             latestCommandsMap.values(),
           );
 
           latestCommandsArrayFromMap.forEach((command) => {
-            const targetDevice = deviceConected.find(
-              (device) => device.id === command.functionData?.deviceId,
-            );
-            writeToPort(
-              targetDevice?.device,
-              command.functionData?.command as string,
-            );
-            deleteCommand({ commandId: command.commandId });
+            switch (command.status) {
+              case posibleStatus.PENDING: {
+                const targetDevice = deviceConected.find(
+                  (device) => device.id === command.functionData?.deviceId,
+                );
+                writeToPort(
+                  targetDevice?.device,
+                  command.functionData?.command as string,
+                );
+                if (command.functionData?.sendData) {
+                  updateCommandStatus({
+                    commandId: command.commandId,
+                    status: posibleStatus.INPROCESS,
+                  });
+                } else {
+                  deleteCommand({ commandId: command.commandId });
+                }
+                break;
+              }
+              case posibleStatus.FINISHED: {
+                deleteCommand({ commandId: command.commandId });
+                break;
+              }
+              default:
+                break;
+            }
           });
         }
       }

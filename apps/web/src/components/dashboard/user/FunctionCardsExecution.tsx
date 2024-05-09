@@ -7,7 +7,7 @@ export default function FunctionCardExecution(props: {
   description: string;
   id: string;
 }) {
-  const createCommand = useMutation(api.commands.createCommand);
+  const createCommand = useMutation(api.command.createCommand);
   return (
     <div className="flex  w-full shrink-0 flex-col gap-2 rounded border border-lightText p-4 lg:h-40 2xl:h-44 2xl:w-full dark:border-darkText">
       <h2 className="text-sm font-bold 2xl:text-xl">{props.name}</h2>

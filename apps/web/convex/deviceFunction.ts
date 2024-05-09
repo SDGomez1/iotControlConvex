@@ -17,6 +17,7 @@ export const createFunction = mutation({
     minInterval: v.optional(v.number()),
     scaleData: v.optional(v.array(v.number())),
     message: v.optional(v.string()),
+    sendData: v.boolean(),
     streaming: v.boolean(),
   },
   handler: async (ctx, args) => {
@@ -35,6 +36,7 @@ export const createFunction = mutation({
       minInterval: args.minInterval,
       scaleData: args.scaleData,
       message: args.message,
+      sendData: args.sendData,
       streaming: args.streaming,
     });
   },
@@ -70,6 +72,7 @@ export const updateDeviceFunction = mutation({
     minInterval: v.optional(v.number()),
     scaleData: v.optional(v.array(v.number())),
     message: v.optional(v.string()),
+    sendData: v.boolean(),
     streaming: v.boolean(),
   },
   handler: async (ctx, args) => {
@@ -87,6 +90,7 @@ export const updateDeviceFunction = mutation({
       minInterval: args.minInterval,
       scaleData: args.scaleData,
       message: args.message,
+      sendData: args.sendData,
       streaming: args.streaming,
     });
   },

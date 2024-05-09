@@ -3,7 +3,7 @@ import Skeleton from "components/dashboard/Skeleton";
 
 import { writeToPort } from "utils/serialUtils";
 
-import { updateStatus } from "lib/features/fileEnqueu/fileEnqueuSlice";
+import { updateFileQueue } from "lib/features/fileQueue/fileQueueSlice";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
 
 import { useEffect } from "react";
@@ -17,23 +17,59 @@ export default function AdminLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const commands = useQuery(api.commands.readFirstCommand);
+  const dispatch = useAppDispatch();
+
+  const dataToSend = useAppSelector((state) => state.fileEnqueu);
+  const deviceConected = useAppSelector((state) => state.conectedDevice);
+  const conectedDeviceIds = deviceConected.map(
+    (data) => data.id as Id<"device">,
+  );
+
+  const commands = useQuery(api.command.getCommandsByDeviceId, {
+    deviceId: conectedDeviceIds,
+  });
 
   const getFileUrl = useMutation(api.device.generateUploadUrl);
   const writeFileToDb = useMutation(api.device.sendFile);
-
-  const dispatch = useAppDispatch();
-
-  const deviceConected = useAppSelector((state) => state.conectedDevice);
-
-  const dataToSend = useAppSelector((state) => state.fileEnqueu);
+  const deleteCommand = useMutation(api.command.deleteCommandById);
   useEffect(() => {
     if ("serial" in navigator) {
       if (commands && deviceConected.length > 0) {
-        const targetDevice = deviceConected.find(
-          (device) => device.id === commands.deviceId,
-        );
-        writeToPort(targetDevice?.device, commands.command as string);
+        if (commands.length > 0) {
+          type commandData = (typeof commands)[0];
+          const latestCommandsMap = new Map<string, commandData>();
+
+          for (const command of commands) {
+            if (!command.functionData || !command.functionData.deviceId)
+              continue;
+            const deviceId = command.functionData.deviceId;
+
+            const existingCommand = latestCommandsMap.get(deviceId);
+            if (
+              !existingCommand ||
+              existingCommand.functionData!._creationTime <
+                command.functionData._creationTime
+            ) {
+              latestCommandsMap.set(deviceId, command);
+            }
+          }
+
+          // To convert the map to an array of its values:
+          const latestCommandsArrayFromMap: commandData[] = Array.from(
+            latestCommandsMap.values(),
+          );
+
+          latestCommandsArrayFromMap.forEach((command) => {
+            const targetDevice = deviceConected.find(
+              (device) => device.id === command.functionData?.deviceId,
+            );
+            writeToPort(
+              targetDevice?.device,
+              command.functionData?.command as string,
+            );
+            deleteCommand({ commandId: command.commandId });
+          });
+        }
       }
     }
   });
@@ -51,7 +87,7 @@ export default function AdminLayout({
           storageId: storageId,
           deviceId: data.deviceId as Id<"device">,
         });
-        dispatch(updateStatus(data.deviceId));
+        dispatch(updateFileQueue(data.deviceId));
       }
     });
   }, [dataToSend]);

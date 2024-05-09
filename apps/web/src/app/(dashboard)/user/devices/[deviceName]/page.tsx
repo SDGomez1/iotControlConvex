@@ -69,7 +69,7 @@ export default function Device() {
   const graphData = getGraphData(filteredData);
   const cardData = getCardsData(filteredData);
   return (
-    <section className="h-full  items-start overflow-y-scroll px-4 pb-40 ">
+    <section className="h-full overflow-y-scroll px-4 pb-40">
       <h2 className="my-0 mb-2 border-none bg-transparent px-0 font-semibold outline-none focus:ring-0 lg:text-4xl">
         {device?.name}
       </h2>

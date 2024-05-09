@@ -5,23 +5,23 @@ import { api } from "convex/_generated/api";
 import { Doc, Id } from "convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 import {
-  deleteFunction,
-  updateFunction,
-} from "lib/features/newDeviceFunctions/newDeviceFunctionsSlice";
+  deleteDeviceFunctionClientData,
+  updateDeviceFunctionClientData,
+} from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
 import { useAppDispatch } from "lib/hooks";
 import { type Dispatch, type SetStateAction, useState } from "react";
 import {
   typeOfEntry,
   typeOfFormat,
-  type newDeviceFunctionData,
-} from "types/newDeviceFunctions";
+  type deviceFunctionClientData,
+} from "types/deviceFunctionClientData";
 import { generateUUID } from "utils/uuidUtils";
 export default function FunctionCardEditing(props: {
-  initialData: newDeviceFunctionData;
+  initialData: deviceFunctionClientData;
   isCreating: boolean;
   setIsEditing: Dispatch<SetStateAction<boolean>>;
 }) {
-  const initialState: newDeviceFunctionData = {
+  const initialState: deviceFunctionClientData = {
     id: props.initialData.id,
     name: props.initialData.name,
     description: props.initialData.description,
@@ -37,10 +37,11 @@ export default function FunctionCardEditing(props: {
     minInterval: props.initialData.minInterval,
     scaleData: props.initialData.scaleData,
     message: props.initialData.message,
+    sendData: props.initialData.sendData,
     streaming: props.initialData.streaming,
   };
 
-  const [data, setData] = useState<newDeviceFunctionData>(initialState);
+  const [data, setData] = useState<deviceFunctionClientData>(initialState);
   const dispatch = useAppDispatch();
   const updateDeviceFunction = useMutation(
     api.deviceFunction.updateDeviceFunction,
@@ -97,7 +98,7 @@ export default function FunctionCardEditing(props: {
       onSubmit={(e) => {
         e.preventDefault();
         if (props.isCreating) {
-          dispatch(updateFunction(data));
+          dispatch(updateDeviceFunctionClientData(data));
           props.setIsEditing(false);
         } else {
           updateDeviceFunction({
@@ -115,6 +116,7 @@ export default function FunctionCardEditing(props: {
             minInterval: data.minInterval,
             scaleData: data.scaleData,
             message: data.message,
+            sendData: data.sendData,
             streaming: data.streaming,
           });
           props.setIsEditing(false);
@@ -398,43 +400,82 @@ export default function FunctionCardEditing(props: {
       <h3 className="text-center text-sm font-bold lg:text-left  lg:text-xl ">
         Datos de Salida
       </h3>
-      <div className="flex flex-col items-center justify-center lg:flex-row lg:justify-start lg:gap-4">
-        <h4 className="  px-1 text-xs font-medium text-lightText lg:text-sm dark:text-darkText">
-          ¿Necesitas tener control total de los datos del dispositivo durante la
-          ejecución de la función?
-        </h4>
-        {/* ------------ Streaming -------------- */}
-        <div className=" flex items-center justify-center gap-5">
-          <button
-            type="button"
-            className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
-            onClick={() => {
-              setData({
-                ...data,
-                streaming: true,
-              });
-            }}
-          >
-            <span
-              className={`size-4 border border-lightText dark:border-darkText ${data.streaming ? "bg-lightText dark:bg-darkText" : ""}`}
-            />
-            Si
-          </button>
-          <button
-            type="button"
-            className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
-            onClick={() => {
-              setData({
-                ...data,
-                streaming: false,
-              });
-            }}
-          >
-            <span
-              className={`size-4 border border-lightText dark:border-darkText ${data.streaming ? "" : "bg-lightText dark:bg-darkText"}`}
-            />
-            No
-          </button>
+      <div className="flex flex-col items-center justify-center lg:items-start lg:justify-start lg:gap-4">
+        <div className="mb-4 flex flex-col items-center justify-center lg:flex-row lg:gap-4">
+          <h4 className="mb-2 px-1 text-xs font-medium text-lightText lg:m-0 lg:text-sm dark:text-darkText">
+            ¿Esta funcion envia datos al usuario?
+          </h4>
+          {/* ------------ user data -------------- */}
+          <div className=" flex items-center justify-center gap-5">
+            <button
+              type="button"
+              className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+              onClick={() => {
+                setData({
+                  ...data,
+                  sendData: true,
+                });
+              }}
+            >
+              <span
+                className={`size-4 border border-lightText dark:border-darkText ${data.sendData ? "bg-lightText dark:bg-darkText" : ""}`}
+              />
+              Si
+            </button>
+            <button
+              type="button"
+              className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+              onClick={() => {
+                setData({
+                  ...data,
+                  sendData: false,
+                });
+              }}
+            >
+              <span
+                className={`size-4 border border-lightText dark:border-darkText ${data.sendData ? "" : "bg-lightText dark:bg-darkText"}`}
+              />
+              No
+            </button>
+          </div>
+        </div>
+        <div className="flex flex-col items-center justify-center lg:flex-row lg:gap-4 ">
+          <h4 className="mb-2 px-1 text-xs font-medium text-lightText lg:m-0 lg:text-sm dark:text-darkText">
+            ¿Deseas enviar los datos en tiempo real?
+          </h4>
+          {/* ------------ Streaming -------------- */}
+          <div className=" flex items-center justify-center gap-5">
+            <button
+              type="button"
+              className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+              onClick={() => {
+                setData({
+                  ...data,
+                  streaming: true,
+                });
+              }}
+            >
+              <span
+                className={`size-4 border border-lightText dark:border-darkText ${data.streaming ? "bg-lightText dark:bg-darkText" : ""}`}
+              />
+              Si
+            </button>
+            <button
+              type="button"
+              className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+              onClick={() => {
+                setData({
+                  ...data,
+                  streaming: false,
+                });
+              }}
+            >
+              <span
+                className={`size-4 border border-lightText dark:border-darkText ${data.streaming ? "" : "bg-lightText dark:bg-darkText"}`}
+              />
+              No
+            </button>
+          </div>
         </div>
       </div>
       {/* ------------ Global Buttons -------------- */}
@@ -444,7 +485,7 @@ export default function FunctionCardEditing(props: {
           type="button"
           onClick={() => {
             if (props.isCreating) {
-              dispatch(deleteFunction(data.id));
+              dispatch(deleteDeviceFunctionClientData(data.id));
               props.setIsEditing(false);
             } else {
               deleteDeviceFunction({

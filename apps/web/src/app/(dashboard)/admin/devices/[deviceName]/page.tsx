@@ -13,7 +13,10 @@ import {
 import { deFormatUrl } from "utils/urlUtils";
 
 import { useAppDispatch, useAppSelector } from "lib/hooks";
-import { add, remove } from "lib/features/conectedDevices/conectedDevicesSlice";
+import {
+  addConectedDevice,
+  removeConectedDevice,
+} from "lib/features/conectedDevices/conectedDevicesSlice";
 
 import { useEffect, useState } from "react";
 
@@ -76,7 +79,7 @@ export default function Device() {
         device: selectedPort,
         reader: reader as ReadableStreamDefaultReader,
       };
-      dispatch(add(data));
+      dispatch(addConectedDevice(data));
     }
   }, [selectedPort]);
 
@@ -139,7 +142,7 @@ export default function Device() {
                   startReading(serialPort, reader, deviceId);
                 } else {
                   closePort(selectedPort, reader);
-                  dispatch(remove(deviceId));
+                  dispatch(removeConectedDevice(deviceId));
                   setReader(undefined);
                   setSelectedPort(undefined);
                 }

@@ -1,17 +1,20 @@
 import { configureStore } from "@reduxjs/toolkit";
 import conectedDeviceReducer from "./features/conectedDevices/conectedDevicesSlice";
-import serialDataReducer from "./features/serialData/serialDataSlice";
+import filteredSerialDataSlice from "./features/filteredSerialData/filteredSerialDataSlice";
 import databaseDataReducer from "./features/databaseData/dataBaseDataSlice";
-import newDeviceFunctionsReducer from "./features/newDeviceFunctions/newDeviceFunctionsSlice";
-import fileEnqueuReducer from "./features/fileEnqueu/fileEnqueuSlice";
+import deviceFunctionClientDataSlice from "./features/deviceFunctionClientData/deviceFunctionClientDataSlice";
+import fileEnqueuReducer from "./features/fileQueue/fileQueueSlice";
+import rawSerialDataReducer from "./features/rawSerialData/rawSerialDataSlice";
+
 const makeStore = () => {
   return configureStore({
     reducer: {
       conectedDevice: conectedDeviceReducer,
-      serialData: serialDataReducer,
+      filteredSerialData: filteredSerialDataSlice,
       databaseData: databaseDataReducer,
-      newDeviceFunctions: newDeviceFunctionsReducer,
+      deviceFunctionClientData: deviceFunctionClientDataSlice,
       fileEnqueu: fileEnqueuReducer,
+      rawSerialData: rawSerialDataReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({ serializableCheck: false }),

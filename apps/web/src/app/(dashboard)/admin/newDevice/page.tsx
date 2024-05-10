@@ -6,7 +6,7 @@ import FunctionForm from "components/dashboard/admin/newDevice/FunctionForm";
 
 import { Plus } from "components/icons/Plus";
 
-import { clean } from "lib/features/newDeviceFunctions/newDeviceFunctionsSlice";
+import { cleanDeviceFunctionClientData } from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
 
 import { formatUrl } from "utils/urlUtils";
@@ -16,7 +16,7 @@ import { useState } from "react";
 import { api } from "convex/_generated/api";
 import { useMutation } from "convex/react";
 import FunctionCardEditing from "components/dashboard/admin/newDevice/FunctionCardEditing";
-import { newDeviceFunctionData } from "types/newDeviceFunctions";
+import { deviceFunctionClientData } from "types/deviceFunctionClientData";
 
 export default function NewDevice() {
   const router = useRouter();
@@ -32,7 +32,9 @@ export default function NewDevice() {
   const [isCreating, setIsCreating] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [functionId, setFunctionId] = useState("");
-  const currentFunctions = useAppSelector((state) => state.newDeviceFunctions);
+  const currentFunctions = useAppSelector(
+    (state) => state.deviceFunctionClientData,
+  );
 
   const currentFunctionsCards = currentFunctions.map((functionData) => {
     return (
@@ -76,11 +78,12 @@ export default function NewDevice() {
               minInterval: functionData.minInterval,
               scaleData: functionData.scaleData,
               message: functionData.message,
+              sendData: functionData.sendData,
               streaming: functionData.streaming,
             });
           });
           const url = formatUrl(deviceName, deviceId);
-          dispatch(clean());
+          dispatch(cleanDeviceFunctionClientData());
 
           router.replace(`/admin/devices/${url}`);
         }}
@@ -114,7 +117,7 @@ export default function NewDevice() {
             className="rounded border border-danger bg-transparent px-8 py-2 text-sm text-danger"
             type="button"
             onClick={() => {
-              dispatch(clean());
+              dispatch(cleanDeviceFunctionClientData());
               router.replace("/admin");
             }}
           >
@@ -160,7 +163,7 @@ export default function NewDevice() {
             initialData={
               currentFunctions.find(
                 (data) => data.id === functionId,
-              ) as newDeviceFunctionData
+              ) as deviceFunctionClientData
             }
           />
         </>

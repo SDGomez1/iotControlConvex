@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppDispatch } from "lib/hooks";
-import { update } from "lib/features/databaseData/dataBaseDataSlice";
+import { updateDataBaseData } from "lib/features/databaseData/dataBaseDataSlice";
 
 import { useSession } from "@clerk/clerk-react";
 
@@ -35,7 +35,7 @@ export default function AdminLayout({
     currentUser: user.session,
   };
 
-  dispatch(update(databaseData));
+  dispatch(updateDataBaseData(databaseData));
 
   return <>{children}</>;
 }

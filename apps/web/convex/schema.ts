@@ -13,7 +13,8 @@ export default defineSchema({
   }),
   command: defineTable({
     deviceFunctionId: v.id("deviceFunction"),
-    status: v.optional(v.string()),
+    status: v.string(),
+    payload: v.optional(v.string()),
   }),
   device: defineTable({
     teamId: v.id("team"),
@@ -35,7 +36,9 @@ export default defineSchema({
     maxInterval: v.optional(v.number()),
     minInterval: v.optional(v.number()),
     scaleData: v.optional(v.array(v.number())),
+    sendData: v.boolean(),
     message: v.optional(v.string()),
+
     streaming: v.boolean(),
   }),
   team: defineTable({

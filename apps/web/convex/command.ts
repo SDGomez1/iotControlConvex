@@ -4,11 +4,13 @@ import { mutation, query } from "./_generated/server";
 export const createCommand = mutation({
   args: {
     deviceFunctionId: v.id("deviceFunction"),
+    payload: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     await ctx.db.insert("command", {
       deviceFunctionId: args.deviceFunctionId,
       status: "PENDING",
+      payload: args.payload,
     });
   },
 });

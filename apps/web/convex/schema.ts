@@ -14,6 +14,7 @@ export default defineSchema({
   command: defineTable({
     deviceFunctionId: v.id("deviceFunction"),
     status: v.string(),
+    payload: v.optional(v.string()),
   }),
   device: defineTable({
     teamId: v.id("team"),

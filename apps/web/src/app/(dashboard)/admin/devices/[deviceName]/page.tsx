@@ -28,6 +28,7 @@ import { useQuery } from "convex/react";
 import type { conectedDeviceData } from "types/serial";
 import EditView from "components/dashboard/admin/device/EditView";
 import { cleanDeviceFunctionClientData } from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
+import ExecutionAlert from "components/dashboard/ExecutionAlert";
 
 export default function Device() {
   const params = useParams<{ deviceName: string }>();
@@ -88,15 +89,7 @@ export default function Device() {
   });
 
   const functionscom = functions?.map((e, i) => {
-    return (
-      <FunctionCard
-        name={e.name}
-        description={e.description}
-        key={i}
-        serialPort={selectedPort}
-        command={e.command}
-      />
-    );
+    return <FunctionCard functionData={e} key={i} serialPort={selectedPort} />;
   });
 
   return (

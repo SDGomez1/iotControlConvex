@@ -71,7 +71,7 @@ export const getFiles = mutation({
     storageId: v.id("_storage"),
   },
   handler: async (ctx, args) => {
-    await ctx.storage.getUrl(args.storageId);
+    return await ctx.storage.getUrl(args.storageId);
   },
 });
 

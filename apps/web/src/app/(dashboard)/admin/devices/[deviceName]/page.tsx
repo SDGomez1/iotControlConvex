@@ -28,7 +28,6 @@ import { useQuery } from "convex/react";
 import type { conectedDeviceData } from "types/serial";
 import EditView from "components/dashboard/admin/device/EditView";
 import { cleanDeviceFunctionClientData } from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
-import ExecutionAlert from "components/dashboard/ExecutionAlert";
 
 export default function Device() {
   const params = useParams<{ deviceName: string }>();
@@ -136,27 +135,32 @@ export default function Device() {
                 Editar
               </button>
             )}
+            {"serial" in navigator ? (
+              <>
+                <button
+                  className={`rounded  px-8 py-2 text-sm text-white ${!selectedPort ? "bg-accent" : "bg-danger"}`}
+                  onClick={async () => {
+                    if (!selectedPort) {
+                      const serialPort = await connectToSerial(9600);
+                      const reader = await getReader(serialPort);
 
-            <button
-              className={`rounded  px-8 py-2 text-sm text-white ${!selectedPort ? "bg-accent" : "bg-danger"}`}
-              onClick={async () => {
-                if (!selectedPort) {
-                  const serialPort = await connectToSerial(9600);
-                  const reader = await getReader(serialPort);
-
-                  setSelectedPort(serialPort);
-                  setReader(reader);
-                  startReading(serialPort, reader, deviceId);
-                } else {
-                  closePort(selectedPort, reader);
-                  dispatch(removeConectedDevice(deviceId));
-                  setReader(undefined);
-                  setSelectedPort(undefined);
-                }
-              }}
-            >
-              {selectedPort ? "Desconectar" : "Conectar"}
-            </button>
+                      setSelectedPort(serialPort);
+                      setReader(reader);
+                      startReading(serialPort, reader, deviceId);
+                    } else {
+                      closePort(selectedPort, reader);
+                      dispatch(removeConectedDevice(deviceId));
+                      setReader(undefined);
+                      setSelectedPort(undefined);
+                    }
+                  }}
+                >
+                  {selectedPort ? "Desconectar" : "Conectar"}
+                </button>
+              </>
+            ) : (
+              <></>
+            )}
           </div>
         </>
       )}

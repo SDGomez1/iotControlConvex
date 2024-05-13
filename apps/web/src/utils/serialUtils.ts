@@ -120,11 +120,12 @@ async function closePort(
   port: SerialPort | undefined,
   reader: ReadableStreamDefaultReader | undefined,
 ) {
-  if (port && reader) {
-    reader.cancel();
-    reader.releaseLock();
-    await port.close();
+  if (!port || !reader) {
+    throw new Error("No hay un puerto seleccionado");
   }
+  reader.cancel();
+  reader.releaseLock();
+  await port.close();
 }
 /**
  * Continuously reads data from a given serial port and processes it based on predefined triggers.

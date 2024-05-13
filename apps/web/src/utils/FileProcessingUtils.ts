@@ -1,6 +1,8 @@
 import { addFileQueue } from "lib/features/fileQueue/fileQueueSlice";
 import { storeInstace } from "../lib/store";
-import { fileEnque } from "types/fileEnqueu";
+import { fileQueue } from "types/fileEnqueu";
+import { updateFilteredSerialData } from "lib/features/filteredSerialData/filteredSerialDataSlice";
+import { generateUUID } from "./uuidUtils";
 
 interface GraphItem {
   [key: string]: number | string;
@@ -35,13 +37,16 @@ function createDataBlob(deviceId: string) {
     }
   });
 
+  const newState = data.filter((value) => !value.id.includes(deviceId));
+  storeInstace.dispatch(updateFilteredSerialData(newState));
   if (!filteredData) {
     return "No hay datos";
   }
   const filteredArray = filteredData.map((item) => `${item}\n`);
   const csvContent = filteredArray.join("");
   const csvBlob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
-  const payload: fileEnque = {
+  const payload: fileQueue = {
+    id: generateUUID(),
     deviceId: deviceId,
     file: csvBlob,
     uploaded: false,

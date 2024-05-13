@@ -6,7 +6,10 @@ import { useAppSelector } from "lib/hooks";
 
 import { useState } from "react";
 
-export default function Skeleton(props: { children: React.ReactNode }) {
+export default function Skeleton(props: {
+  children: React.ReactNode;
+  isAdmin: boolean;
+}) {
   const userTeams = useAppSelector((state) => state.databaseData.userTeams);
   const userActiveTeamInfo = useAppSelector(
     (state) => state.databaseData.userActiveTeamInfo,
@@ -20,7 +23,7 @@ export default function Skeleton(props: { children: React.ReactNode }) {
       <Sidebar
         setIsOpen={setIsOpen}
         isOpen={isOpen}
-        isAdmin={true}
+        isAdmin={props.isAdmin}
         userTeams={userTeams}
         userActiveTeamInfo={userActiveTeamInfo}
         currentUser={currentUser}

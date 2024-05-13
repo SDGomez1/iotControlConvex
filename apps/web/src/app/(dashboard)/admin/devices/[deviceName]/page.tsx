@@ -61,6 +61,7 @@ export default function Device() {
   if (selectedPort === undefined) {
     if (isConected) {
       setSelectedPort(isConected.device);
+      setReader(isConected.reader);
     }
   }
 
@@ -119,7 +120,10 @@ export default function Device() {
           <div className="mb-8 flex w-full auto-rows-max grid-cols-2 flex-col justify-items-center gap-4 lg:grid 2xl:grid-cols-3">
             {functionscom}
           </div>
-          <h4 className="mb-2 text-sm lg:text-xl">Consola de comandos</h4>
+          <h4 className="text-sm lg:text-xl">Consola de comandos</h4>
+          <p className="mb-4 text-xs italic text-lightText lg:text-sm dark:text-darkText">
+            Datos recibidos del microcontrolador
+          </p>
 
           <div className="dark:border-darkTex relative mb-4 max-h-32 min-h-20 w-full overflow-y-scroll rounded border border-lightText p-2 text-sm">
             <ul>{serialDataCard}</ul>
@@ -148,7 +152,7 @@ export default function Device() {
                       setReader(reader);
                       startReading(serialPort, reader, deviceId);
                     } else {
-                      closePort(selectedPort, reader);
+                      await closePort(selectedPort, reader);
                       dispatch(removeConectedDevice(deviceId));
                       setReader(undefined);
                       setSelectedPort(undefined);

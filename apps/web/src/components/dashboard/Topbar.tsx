@@ -35,27 +35,26 @@ export default function Topbar(props: {
           <p className="font-bold">Usuario</p>
         ) : (
           <select
-            value={adminUrl ? "admin" : "user"}
+            value={adminUrl ? "/admin" : "/user"}
             className="border-none bg-transparent pl-0 font-bold ring-0 focus:ring-0"
             onChange={(e) => {
               const value = e.currentTarget.value;
               const route = currentUrl.includes(value);
+
               if (!route) {
-                router.push(`/${value}`);
+                const newRoute = currentUrl.replace(
+                  /\/admin|\/user/g,
+                  `${value}/`,
+                );
+                router.push(`${newRoute}`);
               }
             }}
           >
-            <option
-              value={"user"}
-              className="dark:bg-dark"
-              onClick={() => {
-                router.push("/user");
-              }}
-            >
+            <option value={"/user"} className="dark:bg-dark">
               Usuario
             </option>
 
-            <option value={"admin"} className="dark:bg-dark">
+            <option value={"/admin"} className="dark:bg-dark">
               Admin
             </option>
           </select>

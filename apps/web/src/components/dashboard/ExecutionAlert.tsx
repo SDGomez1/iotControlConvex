@@ -1,5 +1,7 @@
 import { InformationCircle } from "components/icons/InformationCircle";
-import { Doc } from "convex/_generated/dataModel";
+import { api } from "convex/_generated/api";
+import { Doc, Id } from "convex/_generated/dataModel";
+import { useMutation } from "convex/react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { typeOfFormat } from "types/deviceFunctionClientData";
 import { writeToPort } from "utils/serialUtils";
@@ -10,6 +12,7 @@ export default function ExecutionAlert(props: {
   serialPort: SerialPort | undefined;
   isAdmin: boolean;
 }) {
+  const createCommand = useMutation(api.command.createCommand);
   const [value, setValue] = useState(props.functionData.minInterval); // Initialize state with the default value
   const [payload, setPayload] = useState<number | undefined>(undefined);
   let inputReactNode = <></>;
@@ -95,11 +98,17 @@ export default function ExecutionAlert(props: {
           onSubmit={(e) => {
             e.preventDefault();
             if (props.isAdmin) {
-              console.log(`${props.functionData.command}${payload}`);
               writeToPort(
                 props.serialPort,
                 `${props.functionData.command}${payload}`,
               );
+              props.setSendConfirmation(false);
+            } else {
+              createCommand({
+                deviceFunctionId: props.functionData
+                  ._id as Id<"deviceFunction">,
+                payload: payload?.toString(),
+              });
               props.setSendConfirmation(false);
             }
           }}

@@ -1,23 +1,18 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import type { fileEnque } from "types/fileEnqueu";
+import type { fileQueue } from "types/fileEnqueu";
 
-const initialState: fileEnque[] = [];
+const initialState: fileQueue[] = [];
 
 const fileQueueSlice = createSlice({
   name: "fileQueue",
   initialState,
   reducers: {
-    addFileQueue: (state, action: PayloadAction<fileEnque>) => [
+    addFileQueue: (state, action: PayloadAction<fileQueue>) => [
       ...state,
       action.payload,
     ],
     updateFileQueue: (state, action: PayloadAction<string>) =>
-      state.map((value) => {
-        if (value.deviceId === action.payload) {
-          return { ...value, uploaded: true };
-        }
-        return value;
-      }),
+      state.filter((data) => data.id !== action.payload),
   },
 });
 export const { addFileQueue, updateFileQueue } = fileQueueSlice.actions;

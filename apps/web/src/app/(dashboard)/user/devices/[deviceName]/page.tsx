@@ -38,7 +38,7 @@ export default function Device() {
 
   const getFileUrl = useMutation(api.device.getFiles);
   const functionscom = functions?.map((e, i) => {
-    return <FunctionCardExecution functionData={e} key={i} id={e._id} />;
+    return <FunctionCardExecution functionData={e} key={i} />;
   });
 
   useEffect(() => {

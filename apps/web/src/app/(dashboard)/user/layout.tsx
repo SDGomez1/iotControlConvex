@@ -5,5 +5,5 @@ export default function AdminLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <Skeleton>{children}</Skeleton>;
+  return <Skeleton isAdmin={false}>{children}</Skeleton>;
 }

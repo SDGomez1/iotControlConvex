@@ -77,6 +77,7 @@ export const getCommandsByDeviceId = query({
       return {
         commandId: commandData._id,
         status: commandData.status,
+        creationTime: commandData._creationTime,
         functionData: functionData,
       };
     });

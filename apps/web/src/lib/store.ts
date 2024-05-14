@@ -5,7 +5,6 @@ import databaseDataReducer from "./features/databaseData/dataBaseDataSlice";
 import deviceFunctionClientDataSlice from "./features/deviceFunctionClientData/deviceFunctionClientDataSlice";
 import fileEnqueuReducer from "./features/fileQueue/fileQueueSlice";
 import rawSerialDataReducer from "./features/rawSerialData/rawSerialDataSlice";
-
 const makeStore = () => {
   return configureStore({
     reducer: {

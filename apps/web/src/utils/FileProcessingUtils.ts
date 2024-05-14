@@ -204,7 +204,7 @@ function getDownloadData(input: string) {
   let startIndex = lines.findIndex((line) => line.includes(":"));
 
   if (startIndex === -1) {
-    return "";
+    return lines.join("");
   }
 
   lines.slice(startIndex).forEach((line, index) => {
@@ -276,6 +276,9 @@ function getCardsData(data: string[]) {
   const lastItem = joinFormatedData[joinFormatedData.length - 1];
   let result: CardItem[] = [];
 
+  if (!lastItem) {
+    return;
+  }
   const pairs = lastItem.split(";");
   pairs.forEach((pair) => {
     const match = pair.match(/<([^:]+):(.+)/);

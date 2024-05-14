@@ -20,7 +20,11 @@ export default defineSchema({
     teamId: v.id("team"),
     name: v.string(),
     description: v.string(),
-    files: v.optional(v.id("_storage")),
+    files: v.array(v.union(v.id("_storage"), v.null())),
+    isOnline: v.object({
+      isOnline: v.boolean(),
+      lastCheck: v.number(),
+    }),
   }),
   deviceFunction: defineTable({
     deviceId: v.id("device"),
@@ -38,7 +42,6 @@ export default defineSchema({
     scaleData: v.optional(v.array(v.number())),
     sendData: v.boolean(),
     message: v.optional(v.string()),
-
     streaming: v.boolean(),
   }),
   team: defineTable({

@@ -13,3 +13,8 @@ export type databaseDataFormat = {
   userTeams: Doc<"team">[];
   currentUser: ActiveSessionResource;
 };
+
+export type teamDeviceStatus = {
+  deviceId: Id<"device">;
+  isOnline: boolean;
+};

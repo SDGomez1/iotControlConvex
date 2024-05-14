@@ -32,7 +32,7 @@ export default function ExecutionAlert(props: {
       <>
         <span className="relative">
           <input
-            className="dark: my-2 w-10/12 shrink-0 border-0 border-b border-b-lightText bg-transparent px-1 py-1 text-sm ring-0 focus:ring-0 dark:border-b-darkText"
+            className="my-2 w-10/12 shrink-0 appearance-none border-0 border-b border-b-lightText bg-transparent px-1 py-1 text-sm ring-0 focus:ring-0 dark:border-b-darkText"
             type="number"
             value={value}
             onBlur={() => {
@@ -105,6 +105,7 @@ export default function ExecutionAlert(props: {
               props.setSendConfirmation(false);
             } else {
               createCommand({
+                deviceId: props.functionData.deviceId,
                 deviceFunctionId: props.functionData
                   ._id as Id<"deviceFunction">,
                 payload: payload?.toString(),

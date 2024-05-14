@@ -25,6 +25,11 @@ export default function AdminLayout({
   const conectedDeviceIds = deviceConected.map(
     (data) => data.id as Id<"device">,
   );
+  const currentTeam = useAppSelector(
+    (state) => state.databaseData.userActiveTeam,
+  );
+
+  const devices = useQuery(api.device.getdevices, { teamId: currentTeam });
 
   const pendingCommands = useQuery(api.command.getPendingCommandsByDeviceId, {
     deviceId: conectedDeviceIds,
@@ -35,8 +40,25 @@ export default function AdminLayout({
   });
 
   const getFileUrl = useMutation(api.device.generateUploadUrl);
-  const writeFileToDb = useMutation(api.device.sendFile);
+  const writeFileToDb = useMutation(api.device.sendFileIdentifier);
   const updateCommandStatus = useMutation(api.command.updateCommandStatus);
+  const setDeviceActive = useMutation(api.device.setDeviceActive);
+
+  useEffect(() => {
+    if (!devices) {
+      return;
+    }
+    const filteredDevices = devices.filter((device) =>
+      conectedDeviceIds.includes(device._id),
+    );
+    filteredDevices.forEach((device) => {
+      if (device.isOnline.isOnline) {
+        return;
+      } else {
+        setDeviceActive({ deviceId: device._id });
+      }
+    });
+  }, [devices, conectedDeviceIds]);
 
   useEffect(() => {
     if (!("serial" in navigator)) {
@@ -59,6 +81,7 @@ export default function AdminLayout({
       );
 
       const formattedCommand = `${command.functionData?.command}${command.payload}`;
+
       writeToPort(targetDevice?.device, formattedCommand);
 
       if (command.functionData?.sendData) {
@@ -71,6 +94,7 @@ export default function AdminLayout({
           commandId: command.commandId,
           status: posibleStatus.FINISHED,
         });
+        writeFileToDb({ deviceId: targetDevice?.id as Id<"device"> });
       }
     });
   });
@@ -94,6 +118,7 @@ export default function AdminLayout({
           body: data.file,
         });
         const { storageId } = await result.json();
+
         await writeFileToDb({
           storageId: storageId,
           deviceId: data.deviceId as Id<"device">,

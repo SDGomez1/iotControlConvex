@@ -23,7 +23,7 @@ import { useEffect, useState } from "react";
 
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 
 import type { conectedDeviceData } from "types/serial";
 import EditView from "components/dashboard/admin/device/EditView";
@@ -55,6 +55,8 @@ export default function Device() {
   const functions = useQuery(api.deviceFunction.getFunctionByDeviceId, {
     deviceId: deviceId as Id<"device">,
   });
+
+  const setDeviceInactive = useMutation(api.device.setDeviceInactive);
 
   const isConected = devicesList.find((item) => item.id === deviceId);
 
@@ -156,6 +158,7 @@ export default function Device() {
                       dispatch(removeConectedDevice(deviceId));
                       setReader(undefined);
                       setSelectedPort(undefined);
+                      setDeviceInactive({ deviceId: deviceId as Id<"device"> });
                     }
                   }}
                 >

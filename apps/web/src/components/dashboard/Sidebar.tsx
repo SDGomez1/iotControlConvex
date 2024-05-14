@@ -89,15 +89,15 @@ export default function Sidebar(props: {
             </Link>
           </li>
           <li className="py-2">
-            <Link href={`/${props.isAdmin ? "admin" : "user"}/newDevice`}>
+            <Link href={`/${props.isAdmin ? "admin" : "user"}/team`}>
               Miembros
             </Link>
           </li>
-          <li className="py-2">
+          {/* <li className="py-2">
             <Link href={`/${props.isAdmin ? "admin" : "user"}`}>
               Configuración
             </Link>
-          </li>
+          </li> */}
         </ul>
       </div>
       <div>

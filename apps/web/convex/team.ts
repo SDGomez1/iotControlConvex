@@ -68,6 +68,29 @@ export const getActiveTeamInfo = query({
   },
 });
 
+export const getTeamUsersInfo = query({
+  args: {
+    teamId: v.id("team"),
+  },
+  handler: async (ctx, args) => {
+    const teamInfo = await ctx.db.get(args.teamId);
+    const adminUser = ctx.db
+      .query("user")
+      .filter((q) => q.eq(q.field("userId"), teamInfo?.adminId))
+      .unique();
+    const userInfoPromises = teamInfo?.userRegistered.map(async (userId) => {
+      const user = await ctx.db
+        .query("user")
+        .filter((q) => q.eq(q.field("userId"), userId))
+        .unique();
+      if (!user) {
+        return null;
+      }
+      return user;
+    });
+  },
+});
+
 //----------------------------------------
 //  Server Actions for usage with middleware
 //----------------------------------------

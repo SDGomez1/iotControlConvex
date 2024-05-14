@@ -1,6 +1,7 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { Doc } from "./_generated/dataModel";
+import { internal } from "./_generated/api";
 
 export const createInvitation = mutation({
   args: {
@@ -8,10 +9,35 @@ export const createInvitation = mutation({
     userId: v.id("user"),
   },
   handler: async (ctx, args) => {
-    await ctx.db.insert("invitations", {
+    const userInvited = await ctx.db
+      .query("user")
+      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .unique();
+
+    if (!userInvited) {
+      return;
+    }
+
+    const teamData = await ctx.db.get(args.teamId);
+    if (!teamData) {
+      return;
+    }
+    const isUserInTeam = teamData.userRegistered.find(
+      (users) => users === args.userId,
+    );
+    if (isUserInTeam) {
+      return;
+    }
+    const newInvitation = await ctx.db.insert("invitations", {
       teamId: args.teamId,
       userId: args.userId,
     });
+
+    await ctx.scheduler.runAfter(
+      600000000,
+      internal.invitations.timerInvitation,
+      { invitationID: newInvitation },
+    );
   },
 });
 
@@ -68,5 +94,44 @@ export const setInvitationRejected = mutation({
       return;
     }
     await ctx.db.delete(invitation._id);
+  },
+});
+
+export const getUserInvitationInfoByTeamId = query({
+  args: {
+    teamId: v.id("team"),
+  },
+  handler: async (ctx, args) => {
+    const invitationsByTeam = await ctx.db
+      .query("invitations")
+      .filter((q) => q.eq(q.field("teamId"), args.teamId))
+      .collect();
+
+    const userInfoPromises = invitationsByTeam.map(async (invitation) => {
+      return await ctx.db
+        .query("user")
+        .filter((q) => q.eq(q.field("userId"), invitation.userId))
+        .unique();
+    });
+
+    const userInfo = await Promise.all(userInfoPromises);
+    if (!userInfo) {
+      return [];
+    }
+
+    const userInfoName = userInfo.map((user) => {
+      return user?.userName;
+    });
+
+    return userInfoName;
+  },
+});
+
+export const timerInvitation = internalMutation({
+  args: {
+    invitationID: v.id("invitations"),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.delete(args.invitationID);
   },
 });

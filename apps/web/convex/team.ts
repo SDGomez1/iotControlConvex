@@ -74,11 +74,14 @@ export const getTeamUsersInfo = query({
   },
   handler: async (ctx, args) => {
     const teamInfo = await ctx.db.get(args.teamId);
-    const adminUser = ctx.db
+    if (!teamInfo) {
+      return;
+    }
+    const adminUser = await ctx.db
       .query("user")
-      .filter((q) => q.eq(q.field("userId"), teamInfo?.adminId))
+      .filter((q) => q.eq(q.field("userId"), teamInfo.adminId))
       .unique();
-    const userInfoPromises = teamInfo?.userRegistered.map(async (userId) => {
+    const userInfoPromises = teamInfo.userRegistered.map(async (userId) => {
       const user = await ctx.db
         .query("user")
         .filter((q) => q.eq(q.field("userId"), userId))
@@ -88,6 +91,26 @@ export const getTeamUsersInfo = query({
       }
       return user;
     });
+
+    const userInfo = await Promise.all(userInfoPromises);
+    if (!userInfo) {
+      return {
+        adminUser: adminUser?.userName,
+        teamUsers: [],
+      };
+    }
+    const filteredUserInfo = userInfo.filter(
+      (user) => user?._id !== adminUser?._id,
+    );
+
+    const userNameData = filteredUserInfo.map((user) => {
+      return user?.userName;
+    });
+
+    return {
+      adminUser: adminUser?.userName,
+      teamUsers: userNameData,
+    };
   },
 });
 

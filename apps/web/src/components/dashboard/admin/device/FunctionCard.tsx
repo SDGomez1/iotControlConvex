@@ -26,7 +26,7 @@ export default function FunctionCard(props: {
               writeToPort(props.serialPort, props.functionData.command);
             }
           }}
-          className={`self-end rounded  p-2 text-sm  text-white ${props.serialPort ? "bg-accent " : "bg-neutral-300 dark:bg-neutral-400 dark:text-neutral-800"}`}
+          className={`self-end rounded  bg-accent p-2  text-sm text-white disabled:bg-indigo-300 disabled:text-zinc-100`}
           disabled={props.serialPort ? false : true}
         >
           {props.serialPort ? "Ejecutar localmente" : "Dispostivo no conectado"}

@@ -6,7 +6,7 @@ import { internal } from "./_generated/api";
 export const createInvitation = mutation({
   args: {
     teamId: v.id("team"),
-    userId: v.id("user"),
+    userId: v.string(),
   },
   handler: async (ctx, args) => {
     const userInvited = await ctx.db
@@ -28,16 +28,27 @@ export const createInvitation = mutation({
     if (isUserInTeam) {
       return;
     }
+
+    const invitacionAlreadyExist = await ctx.db
+      .query("invitations")
+      .filter((q) => q.eq(q.field("teamId"), args.teamId))
+      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .unique();
+    if (invitacionAlreadyExist) {
+      return;
+    }
     const newInvitation = await ctx.db.insert("invitations", {
       teamId: args.teamId,
       userId: args.userId,
     });
 
-    await ctx.scheduler.runAfter(
+    const scheduler = await ctx.scheduler.runAfter(
       600000000,
       internal.invitations.timerInvitation,
       { invitationID: newInvitation },
     );
+
+    await ctx.db.patch(newInvitation, { deleteSchedulerId: scheduler });
   },
 });
 
@@ -79,7 +90,9 @@ export const setInvitationAccepted = mutation({
     await ctx.db.patch(invitation.teamId, {
       userRegistered: [...team.userRegistered, invitation.userId],
     });
-
+    if (invitation.deleteSchedulerId) {
+      await ctx.scheduler.cancel(invitation.deleteSchedulerId);
+    }
     await ctx.db.delete(invitation._id);
   },
 });
@@ -92,6 +105,9 @@ export const setInvitationRejected = mutation({
     const invitation = await ctx.db.get(args.invitationId);
     if (!invitation) {
       return;
+    }
+    if (invitation.deleteSchedulerId) {
+      await ctx.scheduler.cancel(invitation.deleteSchedulerId);
     }
     await ctx.db.delete(invitation._id);
   },

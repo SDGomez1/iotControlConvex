@@ -162,13 +162,14 @@ export const setDeviceActive = mutation({
     await ctx.db.patch(args.deviceId, {
       isOnline: { isOnline: true, lastCheck: currentDate.getTime() },
     });
-    await ctx.scheduler.runAfter(
+    const scheduler = await ctx.scheduler.runAfter(
       600000,
       internal.device.setTimerForInActivity,
       {
         deviceId: args.deviceId,
       },
     );
+    await ctx.db.patch(args.deviceId, { conectionSchedulerId: scheduler });
   },
 });
 
@@ -178,10 +179,16 @@ export const setDeviceInactive = mutation({
   },
   handler: async (ctx, args) => {
     const currentDate = new Date();
-
+    const device = await ctx.db.get(args.deviceId);
     await ctx.db.patch(args.deviceId, {
       isOnline: { isOnline: false, lastCheck: currentDate.getTime() },
     });
+    if (device?.conectionSchedulerId) {
+      await ctx.scheduler.cancel(device.conectionSchedulerId);
+      await ctx.db.patch(args.deviceId, {
+        conectionSchedulerId: undefined,
+      });
+    }
   },
 });
 

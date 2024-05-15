@@ -33,11 +33,15 @@ export default function DeviceList(props: { isAdmin: boolean }) {
           >
             Historial
           </Link>
-          <Link
-            href={`/${props.isAdmin ? "admin" : "user"}/devices/${url}`}
-            className="flex w-24 items-center justify-center  rounded bg-accent py-2 text-sm text-white"
-          >
-            Conectar
+          <Link href={`/${props.isAdmin ? "admin" : "user"}/devices/${url}`}>
+            <button
+              className="flex w-24 items-center justify-center  rounded bg-accent py-2 text-sm text-white disabled:bg-indigo-300 disabled:text-zinc-100"
+              disabled={
+                !device.isOnline.isOnline && !props.isAdmin ? true : false
+              }
+            >
+              Conectar
+            </button>
           </Link>
         </span>
         <>

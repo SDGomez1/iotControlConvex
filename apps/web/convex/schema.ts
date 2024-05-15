@@ -25,6 +25,7 @@ export default defineSchema({
       isOnline: v.boolean(),
       lastCheck: v.number(),
     }),
+    conectionSchedulerId: v.optional(v.id("_scheduled_functions")),
   }),
   deviceFunction: defineTable({
     deviceId: v.id("device"),
@@ -53,5 +54,6 @@ export default defineSchema({
   invitations: defineTable({
     teamId: v.id("team"),
     userId: v.string(),
+    deleteSchedulerId: v.optional(v.id("_scheduled_functions")),
   }),
 });

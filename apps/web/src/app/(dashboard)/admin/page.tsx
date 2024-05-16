@@ -5,15 +5,15 @@ import DeviceList from "components/dashboard/DeviceList";
 
 import { Plus } from "components/icons/Plus";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
-import { clean } from "lib/features/newDeviceFunctions/newDeviceFunctionsSlice";
+import { cleanDeviceFunctionClientData } from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
 
 export default function AdminPage() {
   const dispatch = useAppDispatch();
   const currentDeviceFunctions = useAppSelector(
-    (state) => state.newDeviceFunctions,
+    (state) => state.deviceFunctionClientData,
   );
   if (currentDeviceFunctions.length > 0) {
-    dispatch(clean());
+    dispatch(cleanDeviceFunctionClientData());
   }
   return (
     <section className="flex h-full auto-rows-max grid-cols-2 flex-col justify-items-center gap-4 overflow-y-scroll px-5 pb-20 lg:grid 2xl:grid-cols-3 2xl:pb-32">

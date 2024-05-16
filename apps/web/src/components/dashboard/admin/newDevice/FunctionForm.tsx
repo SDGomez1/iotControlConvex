@@ -3,7 +3,7 @@
 import { Plus } from "components/icons/Plus";
 import { XMark } from "components/icons/XMark";
 
-import { add } from "lib/features/newDeviceFunctions/newDeviceFunctionsSlice";
+import { addDeviceFunctionClientData } from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
 import { useAppDispatch } from "lib/hooks";
 
 import { generateUUID } from "utils/uuidUtils";
@@ -11,12 +11,12 @@ import { generateUUID } from "utils/uuidUtils";
 import { useState, type Dispatch, type SetStateAction } from "react";
 
 import {
-  type newDeviceFunctionData,
+  type deviceFunctionClientData,
   typeOfEntry,
   typeOfFormat,
-} from "types/newDeviceFunctions";
+} from "types/deviceFunctionClientData";
 
-const initialState: newDeviceFunctionData = {
+const initialState: deviceFunctionClientData = {
   id: "",
   name: "",
   description: "",
@@ -32,13 +32,14 @@ const initialState: newDeviceFunctionData = {
   minInterval: undefined,
   scaleData: undefined,
   message: undefined,
+  sendData: false,
   streaming: false,
 };
 
 export default function FunctionForm(props: {
   setIsEditing: Dispatch<SetStateAction<boolean>>;
 }) {
-  const [data, setData] = useState<newDeviceFunctionData>(initialState);
+  const [data, setData] = useState<deviceFunctionClientData>(initialState);
   const dispatch = useAppDispatch();
 
   const scaleData = data.scaleData?.map((value, key) => {
@@ -90,7 +91,7 @@ export default function FunctionForm(props: {
         e.preventDefault();
         let sendData = data;
         sendData.id = generateUUID();
-        dispatch(add(sendData));
+        dispatch(addDeviceFunctionClientData(sendData));
         props.setIsEditing(false);
       }}
     >
@@ -370,43 +371,83 @@ export default function FunctionForm(props: {
       <h3 className="text-center text-sm font-bold lg:text-left  lg:text-xl ">
         Datos de Salida
       </h3>
-      <div className="flex flex-col items-center justify-center lg:flex-row lg:justify-start lg:gap-4">
-        <h4 className="  px-1 text-xs font-medium text-lightText lg:text-sm dark:text-darkText">
-          ¿Necesitas tener control total de los datos del dispositivo durante la
-          ejecución de la función?
-        </h4>
-        {/* ------------ Streaming -------------- */}
-        <div className=" flex items-center justify-center gap-5">
-          <button
-            type="button"
-            className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
-            onClick={() => {
-              setData({
-                ...data,
-                streaming: true,
-              });
-            }}
-          >
-            <span
-              className={`size-4 border border-lightText dark:border-darkText ${data.streaming ? "bg-lightText dark:bg-darkText" : ""}`}
-            />
-            Si
-          </button>
-          <button
-            type="button"
-            className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
-            onClick={() => {
-              setData({
-                ...data,
-                streaming: false,
-              });
-            }}
-          >
-            <span
-              className={`size-4 border border-lightText dark:border-darkText ${data.streaming ? "" : "bg-lightText dark:bg-darkText"}`}
-            />
-            No
-          </button>
+
+      <div className="flex flex-col items-center justify-center lg:items-start lg:justify-start lg:gap-4">
+        <div className="mb-4 flex flex-col items-center justify-center lg:flex-row lg:gap-4">
+          <h4 className="mb-2 px-1 text-xs font-medium text-lightText lg:m-0 lg:text-sm dark:text-darkText">
+            ¿Esta funcion envia datos al usuario?
+          </h4>
+          {/* ------------ user data -------------- */}
+          <div className=" flex items-center justify-center gap-5">
+            <button
+              type="button"
+              className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+              onClick={() => {
+                setData({
+                  ...data,
+                  sendData: true,
+                });
+              }}
+            >
+              <span
+                className={`size-4 border border-lightText dark:border-darkText ${data.sendData ? "bg-lightText dark:bg-darkText" : ""}`}
+              />
+              Si
+            </button>
+            <button
+              type="button"
+              className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+              onClick={() => {
+                setData({
+                  ...data,
+                  sendData: false,
+                });
+              }}
+            >
+              <span
+                className={`size-4 border border-lightText dark:border-darkText ${data.sendData ? "" : "bg-lightText dark:bg-darkText"}`}
+              />
+              No
+            </button>
+          </div>
+        </div>
+        <div className="flex flex-col items-center justify-center lg:flex-row lg:gap-4 ">
+          <h4 className="mb-2 px-1 text-xs font-medium text-lightText lg:m-0 lg:text-sm dark:text-darkText">
+            ¿Deseas enviar los datos en tiempo real?
+          </h4>
+          {/* ------------ Streaming -------------- */}
+          <div className=" flex items-center justify-center gap-5">
+            <button
+              type="button"
+              className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+              onClick={() => {
+                setData({
+                  ...data,
+                  streaming: true,
+                });
+              }}
+            >
+              <span
+                className={`size-4 border border-lightText dark:border-darkText ${data.streaming ? "bg-lightText dark:bg-darkText" : ""}`}
+              />
+              Si
+            </button>
+            <button
+              type="button"
+              className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+              onClick={() => {
+                setData({
+                  ...data,
+                  streaming: false,
+                });
+              }}
+            >
+              <span
+                className={`size-4 border border-lightText dark:border-darkText ${data.streaming ? "" : "bg-lightText dark:bg-darkText"}`}
+              />
+              No
+            </button>
+          </div>
         </div>
       </div>
       {/* ------------ Global Buttons -------------- */}

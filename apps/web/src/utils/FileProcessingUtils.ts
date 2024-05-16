@@ -1,4 +1,4 @@
-import { add } from "lib/features/fileEnqueu/fileEnqueuSlice";
+import { addFileQueue } from "lib/features/fileQueue/fileQueueSlice";
 import { storeInstace } from "../lib/store";
 import { fileEnque } from "types/fileEnqueu";
 
@@ -27,7 +27,7 @@ interface CardItem {
  */
 
 function createDataBlob(deviceId: string) {
-  const data = storeInstace.getState().serialData;
+  const data = storeInstace.getState().filteredSerialData;
 
   const filteredData = data.map((value) => {
     if (value.id.includes(deviceId)) {
@@ -46,7 +46,7 @@ function createDataBlob(deviceId: string) {
     file: csvBlob,
     uploaded: false,
   };
-  storeInstace.dispatch(add(payload));
+  storeInstace.dispatch(addFileQueue(payload));
 }
 
 /**

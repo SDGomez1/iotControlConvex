@@ -12,3 +12,9 @@ export type serialData = {
   id: string;
   data: string;
 };
+
+export enum posibleStatus {
+  PENDING = "PENDING",
+  INPROCESS = "INPROCESS",
+  FINISHED = "FINISHED",
+}

@@ -114,7 +114,7 @@ export default function NewDevice() {
 
         <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
           <button
-            className="rounded border border-danger bg-transparent px-8 py-2 text-sm text-danger"
+            className="rounded border border-danger bg-transparent px-8 py-2 text-sm text-danger transition hover:bg-red-50"
             type="button"
             onClick={() => {
               dispatch(cleanDeviceFunctionClientData());
@@ -123,7 +123,7 @@ export default function NewDevice() {
           >
             Cancelar
           </button>
-          <button className="rounded border border-accent bg-transparent px-8 py-2 text-sm text-accent dark:text-indigo-400">
+          <button className="rounded border border-accent bg-transparent px-8 py-2 text-sm text-accent transition hover:bg-indigo-50/30 dark:text-indigo-400">
             Crear Dispositivo
           </button>
         </div>
@@ -148,7 +148,7 @@ export default function NewDevice() {
               onClick={() => {
                 setIsCreating(true);
               }}
-              className=" flex w-full items-center justify-center gap-2 rounded border border-lightText bg-white py-2  text-sm  text-lightText lg:text-base dark:border-darkText dark:bg-dark dark:text-darkText"
+              className=" flex w-full items-center justify-center gap-2 rounded border border-lightText bg-white py-2 text-sm text-lightText  transition  hover:bg-neutral-50 lg:text-base dark:border-darkText dark:bg-dark dark:text-darkText"
             >
               <Plus className="size-4" />
               Añadir nueva funcion

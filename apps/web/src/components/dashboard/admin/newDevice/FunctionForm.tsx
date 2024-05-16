@@ -293,21 +293,6 @@ export default function FunctionForm(props: {
           </select>
           {data.format === typeOfFormat.interval ? (
             <div className="flex items-center justify-center gap-4 2xl:w-1/4">
-              {/* ------------Intervalo Maximo-------------- */}
-              <input
-                required
-                placeholder="Intervalo Maximo"
-                name={`maxInterval`}
-                type="number"
-                onChange={(e) => {
-                  setData({
-                    ...data,
-                    maxInterval: Number(e.target.value),
-                  });
-                }}
-                className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
-              />
-
               {/* ------------ Intervalo minimo -------------- */}
               <input
                 required
@@ -318,6 +303,20 @@ export default function FunctionForm(props: {
                   setData({
                     ...data,
                     minInterval: Number(e.target.value),
+                  });
+                }}
+                className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
+              />
+              {/* ------------Intervalo Maximo-------------- */}
+              <input
+                required
+                placeholder="Intervalo Maximo"
+                name={`maxInterval`}
+                type="number"
+                onChange={(e) => {
+                  setData({
+                    ...data,
+                    maxInterval: Number(e.target.value),
                   });
                 }}
                 className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"

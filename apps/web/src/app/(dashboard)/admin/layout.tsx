@@ -25,91 +25,111 @@ export default function AdminLayout({
   const conectedDeviceIds = deviceConected.map(
     (data) => data.id as Id<"device">,
   );
+  const currentTeam = useAppSelector(
+    (state) => state.databaseData.userActiveTeam,
+  );
+
+  const devices = useQuery(api.device.getdevices, { teamId: currentTeam });
+
+  const pendingCommands = useQuery(api.command.getPendingCommandsByDeviceId, {
+    deviceId: conectedDeviceIds,
+  });
 
   const commands = useQuery(api.command.getCommandsByDeviceId, {
     deviceId: conectedDeviceIds,
   });
 
   const getFileUrl = useMutation(api.device.generateUploadUrl);
-  const writeFileToDb = useMutation(api.device.sendFile);
-  const deleteCommand = useMutation(api.command.deleteCommandById);
+  const writeFileToDb = useMutation(api.device.sendFileIdentifier);
   const updateCommandStatus = useMutation(api.command.updateCommandStatus);
+  const setDeviceActive = useMutation(api.device.setDeviceActive);
 
   useEffect(() => {
-    if ("serial" in navigator) {
-      if (commands && deviceConected.length > 0) {
-        if (commands.length > 0) {
-          type commandData = (typeof commands)[0];
-          const latestCommandsMap = new Map<string, commandData>();
-
-          for (const command of commands) {
-            if (!command.functionData || !command.functionData.deviceId)
-              continue;
-            const deviceId = command.functionData.deviceId;
-
-            const existingCommand = latestCommandsMap.get(deviceId);
-            if (
-              !existingCommand ||
-              existingCommand.functionData!._creationTime <
-                command.functionData._creationTime
-            ) {
-              latestCommandsMap.set(deviceId, command);
-            }
-          }
-
-          const latestCommandsArrayFromMap: commandData[] = Array.from(
-            latestCommandsMap.values(),
-          );
-
-          latestCommandsArrayFromMap.forEach((command) => {
-            switch (command.status) {
-              case posibleStatus.PENDING: {
-                const targetDevice = deviceConected.find(
-                  (device) => device.id === command.functionData?.deviceId,
-                );
-                writeToPort(
-                  targetDevice?.device,
-                  command.functionData?.command as string,
-                );
-                if (command.functionData?.sendData) {
-                  updateCommandStatus({
-                    commandId: command.commandId,
-                    status: posibleStatus.INPROCESS,
-                  });
-                } else {
-                  deleteCommand({ commandId: command.commandId });
-                }
-                break;
-              }
-              case posibleStatus.FINISHED: {
-                deleteCommand({ commandId: command.commandId });
-                break;
-              }
-              default:
-                break;
-            }
-          });
-        }
-      }
+    if (!devices) {
+      return;
     }
+    const filteredDevices = devices.filter((device) =>
+      conectedDeviceIds.includes(device._id),
+    );
+    filteredDevices.forEach((device) => {
+      if (device.isOnline.isOnline) {
+        return;
+      } else {
+        setDeviceActive({ deviceId: device._id });
+      }
+    });
+  }, [devices, conectedDeviceIds]);
+
+  useEffect(() => {
+    if (!("serial" in navigator)) {
+      return;
+    }
+    if (!pendingCommands || deviceConected.length <= 0) {
+      return;
+    }
+    if (pendingCommands.length <= 0) {
+      return;
+    }
+
+    pendingCommands.forEach((command) => {
+      if (!command) {
+        return;
+      }
+
+      const targetDevice = deviceConected.find(
+        (device) => device.id === command.functionData?.deviceId,
+      );
+
+      const formattedCommand = `${command.functionData?.command}${command.payload}`;
+
+      writeToPort(targetDevice?.device, formattedCommand);
+
+      if (command.functionData?.sendData) {
+        updateCommandStatus({
+          commandId: command.commandId,
+          status: posibleStatus.INPROCESS,
+        });
+      } else {
+        updateCommandStatus({
+          commandId: command.commandId,
+          status: posibleStatus.FINISHED,
+        });
+        writeFileToDb({ deviceId: targetDevice?.id as Id<"device"> });
+      }
+    });
   });
 
   useEffect(() => {
-    dataToSend.forEach(async (data) => {
-      if (!data.uploaded) {
+    dataToSend.forEach((data) => {
+      if (!commands) {
+        return;
+      }
+      if (commands.length <= 0) {
+        dispatch(updateFileQueue(data.id));
+        return;
+      }
+      const commandInProcess = commands.filter(
+        (command) => command.status === posibleStatus.INPROCESS,
+      );
+      commandInProcess.forEach(async (command) => {
         const url = await getFileUrl();
         const result = await fetch(url, {
           method: "POST",
           body: data.file,
         });
         const { storageId } = await result.json();
+
         await writeFileToDb({
           storageId: storageId,
           deviceId: data.deviceId as Id<"device">,
         });
-        dispatch(updateFileQueue(data.deviceId));
-      }
+        updateCommandStatus({
+          commandId: command.commandId,
+          status: posibleStatus.FINISHED,
+        });
+      });
+      dispatch(updateFileQueue(data.id));
     });
   }, [dataToSend]);
-  return <Skeleton>{children}</Skeleton>;
+  return <Skeleton isAdmin={true}>{children}</Skeleton>;
 }

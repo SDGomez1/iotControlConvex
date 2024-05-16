@@ -22,7 +22,6 @@ export default function AdminLayout({
   const userActiveTeam = useQuery(api.user.getUserActiveTeam);
   const userActiveTeamInfo = useQuery(api.team.getActiveTeamInfo);
   const userTeams = useQuery(api.team.getUserTeams);
-
   if (!userActiveTeam || !userActiveTeamInfo || !userTeams || !user.session) {
     return;
   }

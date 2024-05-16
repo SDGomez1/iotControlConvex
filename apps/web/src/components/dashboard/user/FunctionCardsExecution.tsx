@@ -1,11 +1,13 @@
 import { api } from "convex/_generated/api";
 import { Doc, Id } from "convex/_generated/dataModel";
 import { useMutation } from "convex/react";
+import { useState } from "react";
+import ExecutionAlert from "../ExecutionAlert";
 
 export default function FunctionCardExecution(props: {
   functionData: Doc<"deviceFunction">;
-  id: string;
 }) {
+  const [sendConfirmation, setSendConfirmation] = useState(false);
   const createCommand = useMutation(api.command.createCommand);
   return (
     <div className="flex  w-full shrink-0 flex-col gap-2 rounded border border-lightText p-4 lg:h-40 2xl:h-44 2xl:w-full dark:border-darkText">
@@ -18,15 +20,31 @@ export default function FunctionCardExecution(props: {
       <span className="flex h-full items-end justify-end">
         <button
           onClick={() => {
-            createCommand({
-              deviceFunctionId: props.id as Id<"deviceFunction">,
-            });
+            if (props.functionData.userInfo) {
+              setSendConfirmation(true);
+            } else {
+              createCommand({
+                deviceFunctionId: props.functionData
+                  ._id as Id<"deviceFunction">,
+                deviceId: props.functionData.deviceId,
+              });
+            }
           }}
-          className="self-end rounded bg-accent p-2 text-sm text-white"
+          className="self-end rounded bg-accent p-2 text-sm text-white hover:bg-indigo-700"
         >
           Ejecutar
         </button>
       </span>
+      {sendConfirmation ? (
+        <ExecutionAlert
+          setSendConfirmation={setSendConfirmation}
+          functionData={props.functionData}
+          serialPort={undefined}
+          isAdmin={false}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

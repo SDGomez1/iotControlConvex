@@ -24,38 +24,49 @@ export default function Topbar(props: {
   const isAdmin = props.currentTeam.adminId === props.currentUser.user.id;
   const adminUrl = currentUrl.includes("admin");
 
+  let navigationIndicator = "Dispositivos";
+  if (currentUrl.includes("devices")) {
+    navigationIndicator = "Dispositivos";
+  }
+  if (currentUrl.includes("logs")) {
+    navigationIndicator = "Historial";
+  }
+  if (currentUrl.includes("team")) {
+    navigationIndicator = "Equipo";
+  }
   return (
     <nav className="flex w-full items-center justify-between px-4 py-4 lg:px-0 lg:py-6">
       <div className="flex items-center justify-center gap-4">
         <span onClick={() => props.setIsOpen(true)} className="lg:hidden">
           <BurguerMenu className="size-6 stroke-lightText dark:stroke-darkText" />
         </span>
-        <h1 className="text-sm font-bold lg:text-base">Dispositivos /</h1>
+        <h1 className="text-sm font-bold lg:text-base">
+          {navigationIndicator} /
+        </h1>
         {!isAdmin ? (
           <p className="font-bold">Usuario</p>
         ) : (
           <select
-            value={adminUrl ? "admin" : "user"}
+            value={adminUrl ? "/admin" : "/user"}
             className="border-none bg-transparent pl-0 font-bold ring-0 focus:ring-0"
             onChange={(e) => {
               const value = e.currentTarget.value;
               const route = currentUrl.includes(value);
+
               if (!route) {
-                router.push(`/${value}`);
+                const newRoute = currentUrl.replace(
+                  /\/admin|\/user/g,
+                  `${value}/`,
+                );
+                router.push(`${newRoute}`);
               }
             }}
           >
-            <option
-              value={"user"}
-              className="dark:bg-dark"
-              onClick={() => {
-                router.push("/user");
-              }}
-            >
+            <option value={"/user"} className="dark:bg-dark">
               Usuario
             </option>
 
-            <option value={"admin"} className="dark:bg-dark">
+            <option value={"/admin"} className="dark:bg-dark">
               Admin
             </option>
           </select>

@@ -10,9 +10,13 @@ const filteredSerialDataSlice = createSlice({
       ...state,
       action.payload,
     ],
+    updateFilteredSerialData: (state, action: PayloadAction<serialData[]>) => {
+      return action.payload;
+    },
   },
 });
 
-export const { addFilteredSerialData } = filteredSerialDataSlice.actions;
+export const { addFilteredSerialData, updateFilteredSerialData } =
+  filteredSerialDataSlice.actions;
 
 export default filteredSerialDataSlice.reducer;

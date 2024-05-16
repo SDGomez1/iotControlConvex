@@ -20,12 +20,16 @@ export default function FunctionCard(props: {
       <span className="flex h-full items-end justify-end">
         <button
           onClick={() => {
-            //setSendConfirmation(true);
-            writeToPort(props.serialPort, props.functionData.command);
+            if (props.functionData.userInfo) {
+              setSendConfirmation(true);
+            } else {
+              writeToPort(props.serialPort, props.functionData.command);
+            }
           }}
-          className="self-end rounded bg-accent p-2 text-sm text-white"
+          className={`self-end rounded  bg-accent p-2  text-sm text-white disabled:bg-indigo-300 disabled:text-zinc-100`}
+          disabled={props.serialPort ? false : true}
         >
-          Ejecutar localmente
+          {props.serialPort ? "Ejecutar localmente" : "Dispostivo no conectado"}
         </button>
       </span>
 
@@ -33,6 +37,8 @@ export default function FunctionCard(props: {
         <ExecutionAlert
           setSendConfirmation={setSendConfirmation}
           functionData={props.functionData}
+          serialPort={props.serialPort}
+          isAdmin={true}
         />
       ) : (
         <></>

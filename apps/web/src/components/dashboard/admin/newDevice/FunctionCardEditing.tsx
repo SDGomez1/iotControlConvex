@@ -125,7 +125,8 @@ export default function FunctionCardEditing(props: {
     >
       <input
         required={data.name === "" ? true : false}
-        placeholder={data.name === "" ? "Nombre de la función" : data.name}
+        value={data.name}
+        placeholder="Nombre de la función"
         name="name"
         onChange={(e) => {
           setData({
@@ -141,7 +142,8 @@ export default function FunctionCardEditing(props: {
       {/* ------------ Descripcion  -------------- */}
       <input
         required={data.name === "" ? true : false}
-        placeholder={data.description === "" ? "Descripción" : data.description}
+        value={data.description}
+        placeholder="Descripción"
         name="description"
         onChange={(e) => {
           setData({
@@ -157,9 +159,8 @@ export default function FunctionCardEditing(props: {
       {/* ------------ Comando -------------- */}
       <input
         required={data.name === "" ? true : false}
-        placeholder={
-          data.command === "" ? "Comando de ejecución" : data.command.toString()
-        }
+        value={data.command}
+        placeholder="Comando de ejecución"
         name="command"
         onChange={(e) => {
           setData({
@@ -253,11 +254,12 @@ export default function FunctionCardEditing(props: {
           {/* ------------ Tipo de entrada -------------- */}
           <select
             required
+            value={data.userTEntry}
             name={`tEntry`}
             onChange={(e) => {
               setData({
                 ...data,
-                tEntry: e.target.value as typeOfEntry,
+                userTEntry: e.target.value as typeOfEntry,
               });
             }}
             className="border-0 border-b border-lightText/60 p-0 px-1 py-2 text-xs text-lightText focus:border-black focus:ring-0 lg:text-sm 2xl:w-1/4 dark:border-darkText dark:bg-dark dark:text-darkText dark:focus:border-white"
@@ -275,6 +277,7 @@ export default function FunctionCardEditing(props: {
             {/* ------------ Unidad -------------- */}
             <input
               required
+              value={data.unit}
               placeholder="Unidad de de medida"
               name={"unit"}
               onChange={(e) => {
@@ -289,6 +292,7 @@ export default function FunctionCardEditing(props: {
             <input
               required
               placeholder="Simbolo"
+              value={data.symbol}
               name={`symbol`}
               onChange={(e) => {
                 setData({
@@ -322,24 +326,10 @@ export default function FunctionCardEditing(props: {
           </select>
           {data.format === typeOfFormat.interval ? (
             <div className="flex items-center justify-center gap-4 2xl:w-1/4">
-              {/* ------------Intervalo Maximo-------------- */}
-              <input
-                required
-                placeholder="Intervalo Maximo"
-                name={`maxInterval`}
-                type="number"
-                onChange={(e) => {
-                  setData({
-                    ...data,
-                    maxInterval: Number(e.target.value),
-                  });
-                }}
-                className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
-              />
-
               {/* ------------ Intervalo minimo -------------- */}
               <input
                 required
+                value={data.minInterval}
                 placeholder="Intervalo minimo"
                 name={`minInterval`}
                 type="number"
@@ -347,6 +337,21 @@ export default function FunctionCardEditing(props: {
                   setData({
                     ...data,
                     minInterval: Number(e.target.value),
+                  });
+                }}
+                className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
+              />
+              {/* ------------Intervalo Maximo-------------- */}
+              <input
+                required
+                value={data.maxInterval}
+                placeholder="Intervalo Maximo"
+                name={`maxInterval`}
+                type="number"
+                onChange={(e) => {
+                  setData({
+                    ...data,
+                    maxInterval: Number(e.target.value),
                   });
                 }}
                 className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
@@ -383,6 +388,7 @@ export default function FunctionCardEditing(props: {
           {/* ------------ Mensaje -------------- */}
           <input
             required
+            value={data.message}
             placeholder="Mensaje"
             name={`message`}
             onChange={(e) => {

@@ -1,6 +1,7 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
-import { error } from "console";
+import { internalMutation, mutation, query } from "./_generated/server";
+import { internal } from "./_generated/api";
+import { Doc, Id } from "./_generated/dataModel";
 
 export const createDevice = mutation({
   args: { name: v.string(), description: v.string(), teamId: v.id("team") },
@@ -9,11 +10,16 @@ export const createDevice = mutation({
     if (!user) {
       throw new Error("You dont have authorizacion");
     }
-
+    const currentDate = new Date().getTime();
     return await ctx.db.insert("device", {
       teamId: args.teamId,
       name: args.name,
       description: args.description,
+      isOnline: {
+        isOnline: false,
+        lastCheck: currentDate,
+      },
+      files: [null, null, null],
     });
   },
 });
@@ -44,14 +50,41 @@ export const generateUploadUrl = mutation(async (ctx) => {
   return await ctx.storage.generateUploadUrl();
 });
 
-export const sendFile = mutation({
+export const sendFileIdentifier = mutation({
   args: {
-    storageId: v.id("_storage"),
+    storageId: v.optional(v.id("_storage")),
     deviceId: v.id("device"),
   },
   handler: async (ctx, args) => {
+    const currentDevice = await ctx.db.get(args.deviceId);
+
+    const currentFiles = currentDevice?.files;
+
+    let dataTosend = null;
+    if (args.storageId) {
+      dataTosend = args.storageId;
+    }
+    if (!currentFiles) {
+      await ctx.db.patch(args.deviceId, {
+        files: [dataTosend],
+      });
+      return;
+    }
+
+    if (currentFiles.length >= 3) {
+      const firstFile = currentFiles[0];
+      if (firstFile) {
+        await ctx.storage.delete(firstFile);
+      }
+      currentFiles.splice(0, 1);
+      currentFiles.push(dataTosend);
+      await ctx.db.patch(args.deviceId, {
+        files: currentFiles,
+      });
+      return;
+    }
     await ctx.db.patch(args.deviceId, {
-      files: args.storageId,
+      files: [...currentFiles, dataTosend],
     });
   },
 });
@@ -71,7 +104,7 @@ export const getFiles = mutation({
     storageId: v.id("_storage"),
   },
   handler: async (ctx, args) => {
-    await ctx.storage.getUrl(args.storageId);
+    return await ctx.storage.getUrl(args.storageId);
   },
 });
 
@@ -116,5 +149,57 @@ export const deleteDevice = mutation({
       await ctx.db.delete(deviceFunction._id);
     });
     await ctx.db.delete(args.deviceId);
+  },
+});
+
+export const setDeviceActive = mutation({
+  args: {
+    deviceId: v.id("device"),
+  },
+  handler: async (ctx, args) => {
+    const currentDate = new Date();
+
+    await ctx.db.patch(args.deviceId, {
+      isOnline: { isOnline: true, lastCheck: currentDate.getTime() },
+    });
+    const scheduler = await ctx.scheduler.runAfter(
+      600000,
+      internal.device.setTimerForInActivity,
+      {
+        deviceId: args.deviceId,
+      },
+    );
+    await ctx.db.patch(args.deviceId, { conectionSchedulerId: scheduler });
+  },
+});
+
+export const setDeviceInactive = mutation({
+  args: {
+    deviceId: v.id("device"),
+  },
+  handler: async (ctx, args) => {
+    const currentDate = new Date();
+    const device = await ctx.db.get(args.deviceId);
+    await ctx.db.patch(args.deviceId, {
+      isOnline: { isOnline: false, lastCheck: currentDate.getTime() },
+    });
+    if (device?.conectionSchedulerId) {
+      await ctx.scheduler.cancel(device.conectionSchedulerId);
+      await ctx.db.patch(args.deviceId, {
+        conectionSchedulerId: undefined,
+      });
+    }
+  },
+});
+
+export const setTimerForInActivity = internalMutation({
+  args: {
+    deviceId: v.id("device"),
+  },
+  handler: async (ctx, args) => {
+    const currentDate = new Date();
+    await ctx.db.patch(args.deviceId, {
+      isOnline: { isOnline: false, lastCheck: currentDate.getTime() },
+    });
   },
 });

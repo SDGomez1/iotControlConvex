@@ -29,13 +29,13 @@ export default function DeviceList(props: { isAdmin: boolean }) {
         <span className="flex h-full items-end justify-end gap-4">
           <Link
             href={`/${props.isAdmin ? "admin" : "user"}/logs/${url}`}
-            className="flex w-24 items-center justify-center rounded border border-black bg-transparent py-2 text-sm  dark:border-white"
+            className="flex w-24 items-center justify-center rounded border border-black bg-transparent py-2 text-sm  transition hover:bg-neutral-50 dark:border-white"
           >
             Historial
           </Link>
           <Link href={`/${props.isAdmin ? "admin" : "user"}/devices/${url}`}>
             <button
-              className="flex w-24 items-center justify-center  rounded bg-accent py-2 text-sm text-white disabled:bg-indigo-300 disabled:text-zinc-100"
+              className="flex w-24 items-center justify-center rounded bg-accent py-2 text-sm text-white transition hover:bg-indigo-700 disabled:bg-indigo-300 disabled:text-zinc-100"
               disabled={
                 !device.isOnline.isOnline && !props.isAdmin ? true : false
               }

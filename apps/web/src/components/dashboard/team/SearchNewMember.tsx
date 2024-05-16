@@ -85,7 +85,7 @@ export default function SearchNewMember(props: {
             });
             props.setIsSearchUser(false);
           }}
-          className="mb-4 h-10 rounded bg-accent p-2 text-sm text-white disabled:bg-indigo-300 disabled:text-zinc-100"
+          className="mb-4 h-10 rounded bg-accent p-2 text-sm text-white hover:bg-indigo-700 disabled:bg-indigo-300 disabled:text-zinc-100"
         >
           Enviar invitacion
         </button>
@@ -93,7 +93,7 @@ export default function SearchNewMember(props: {
           onClick={() => {
             props.setIsSearchUser(false);
           }}
-          className="h-10 rounded-sm border border-danger p-2 text-sm text-danger  "
+          className="h-10 rounded-sm border border-danger p-2 text-sm text-danger transition hover:bg-red-50 "
         >
           Cancelar
         </button>

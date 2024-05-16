@@ -28,6 +28,12 @@ import { useMutation, useQuery } from "convex/react";
 import type { conectedDeviceData } from "types/serial";
 import EditView from "components/dashboard/admin/device/EditView";
 import { cleanDeviceFunctionClientData } from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
+import {
+  filterAndFormatData,
+  getCardsData,
+  getGraphData,
+} from "utils/FileProcessingUtils";
+import { Card, LineChart } from "@tremor/react";
 
 export default function Device() {
   const params = useParams<{ deviceName: string }>();
@@ -86,10 +92,32 @@ export default function Device() {
     }
   }, [currentDeviceFunctions]);
 
-  const serialDataCard = rawSerialData.map((data, index) => {
-    return <ul key={index}>{data.data}</ul>;
-  });
+  const textSerialData = rawSerialData.map((data) => data.data);
+  const formattedData = filterAndFormatData(textSerialData.join(""));
 
+  const graphData = getGraphData(formattedData);
+  const cardData = getCardsData(formattedData);
+
+  const serialDataCard = formattedData.map((data, index) => {
+    return <ul key={index}>{data}</ul>;
+  });
+  const cardDataComponent = cardData?.map((value, index) => {
+    return (
+      <Card
+        className="max-w-xs shrink-0"
+        decoration="top"
+        decorationColor="indigo"
+        key={index}
+      >
+        <p className="text-center text-xs lg:text-sm dark:text-dark-tremor-content">
+          {value.title}
+        </p>
+        <p className="text-center text-2xl font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
+          {value.data}
+        </p>
+      </Card>
+    );
+  });
   const functionscom = functions?.map((e, i) => {
     return <FunctionCard functionData={e} key={i} serialPort={selectedPort} />;
   });
@@ -130,12 +158,39 @@ export default function Device() {
           <div className="dark:border-darkTex relative mb-4 max-h-32 min-h-20 w-full overflow-y-scroll rounded border border-lightText p-2 text-sm">
             <ul>{serialDataCard}</ul>
           </div>
+          <h4 className="mb-2 text-sm lg:text-xl">Últimos datos recibidos</h4>
+          <p className="mb-4 text-xs italic text-lightText lg:text-sm dark:text-darkText">
+            Para ver datos en esta seccion envialos con el formato
+            "&lt;variable:"
+          </p>
+          <div className="mb-4 flex h-auto w-full max-w-full items-start justify-start gap-4 overflow-x-scroll p-2">
+            {(cardDataComponent?.length as number) > 0 ? (
+              <>{cardDataComponent}</>
+            ) : (
+              <p>No hay datos configurados para mostrar su ultimo valor</p>
+            )}
+          </div>
+          <h4 className="mb-2 text-sm lg:text-xl">Graficas</h4>
+          <p className="mb-4 text-xs italic text-lightText lg:text-sm dark:text-darkText">
+            Para ver datos en esta seccion envialos con el formato
+            "&gt;variable:"
+          </p>
+          {graphData.jsonResult.length > 0 ? (
+            <LineChart
+              data={graphData.jsonResult}
+              index="index"
+              categories={graphData.variableNames}
+              onValueChange={(v) => console.log(v)}
+            />
+          ) : (
+            <p>No hay datos configurados para graficar</p>
+          )}
           <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
             {selectedPort ? (
               <></>
             ) : (
               <button
-                className="rounded border border-lightText bg-transparent px-8 py-2 text-sm text-lightText dark:border-darkText dark:text-darkText"
+                className="rounded border border-lightText bg-transparent px-8 py-2 text-sm text-lightText transition hover:bg-gray-50 dark:border-darkText dark:text-darkText"
                 onClick={() => setIsEditing(true)}
               >
                 Editar
@@ -144,7 +199,7 @@ export default function Device() {
             {"serial" in navigator ? (
               <>
                 <button
-                  className={`rounded  px-8 py-2 text-sm text-white ${!selectedPort ? "bg-accent" : "bg-danger"}`}
+                  className={`rounded  px-8 py-2 text-sm text-white ${!selectedPort ? "bg-accent hover:bg-indigo-700" : "bg-danger hover:bg-red-600"} transition`}
                   onClick={async () => {
                     if (!selectedPort) {
                       const serialPort = await connectToSerial(9600);

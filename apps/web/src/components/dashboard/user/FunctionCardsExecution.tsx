@@ -30,7 +30,7 @@ export default function FunctionCardExecution(props: {
               });
             }
           }}
-          className="self-end rounded bg-accent p-2 text-sm text-white"
+          className="self-end rounded bg-accent p-2 text-sm text-white hover:bg-indigo-700"
         >
           Ejecutar
         </button>

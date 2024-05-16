@@ -71,15 +71,15 @@ export default function Device() {
   const cardDataComponent = cardData?.map((value, index) => {
     return (
       <Card
-        className="mx-auto max-w-xs"
+        className=" max-w-xs"
         decoration="top"
         decorationColor="indigo"
         key={index}
       >
-        <p className="text-xs lg:text-sm dark:text-dark-tremor-content">
+        <p className="text-center text-xs lg:text-sm dark:text-dark-tremor-content">
           {value.title}
         </p>
-        <p className="text-2xl font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
+        <p className="text-center text-2xl font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
           {value.data}
         </p>
       </Card>
@@ -158,8 +158,8 @@ export default function Device() {
       <p className="mb-2 text-xs text-lightText lg:text-base dark:text-darkText ">
         Esta sección muestra los datos configurados como “mostrar ultimo”
       </p>
-      <div className="mb-4 flex h-auto items-start justify-start gap-4 overflow-x-scroll p-2">
-        {cardDataComponent ? (
+      <div className="mb-4 flex h-auto items-start justify-start gap-4 overflow-x-scroll ">
+        {(cardDataComponent?.length as number) > 0 ? (
           <>{cardDataComponent}</>
         ) : (
           <p>No hay datos configurados para mostrar su ultimo valor</p>

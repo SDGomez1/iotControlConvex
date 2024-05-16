@@ -19,7 +19,7 @@ export default function Skeleton(props: {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <main className="flex h-screen w-screen lg:max-h-screen dark:bg-dark">
+    <main className="flex h-svh w-screen lg:max-h-screen dark:bg-dark">
       <Sidebar
         setIsOpen={setIsOpen}
         isOpen={isOpen}

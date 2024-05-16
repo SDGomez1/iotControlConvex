@@ -65,7 +65,7 @@ export default function TeamPage(props: { isAdmin: boolean }) {
             onClick={() => {
               setIsSearchUser(true);
             }}
-            className="flex w-full  items-center justify-center gap-4 rounded-md border  border-lightText p-4 text-sm text-lightText dark:border-darkText dark:text-darkText"
+            className="flex w-full  items-center justify-center gap-4 rounded-md border border-lightText  p-4 text-sm text-lightText hover:bg-neutral-50 dark:border-darkText dark:text-darkText"
           >
             <Plus className="size-5 stroke-lightText  dark:stroke-darkText " />
             Añadir nuevo integrante

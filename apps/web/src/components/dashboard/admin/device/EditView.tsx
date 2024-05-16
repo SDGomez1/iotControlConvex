@@ -1,10 +1,10 @@
 import { Doc, Id } from "convex/_generated/dataModel";
 import { type Dispatch, type SetStateAction, useState, useEffect } from "react";
 import type {
-  newDeviceFunctionData,
+  deviceFunctionClientData,
   typeOfEntry,
   typeOfFormat,
-} from "types/newDeviceFunctions";
+} from "types/deviceFunctionClientData";
 import FunctionCardEditing from "../newDevice/FunctionCardEditing";
 import { Plus } from "components/icons/Plus";
 import FunctionCardView from "../newDevice/FunctionCardView";
@@ -13,7 +13,7 @@ import { api } from "convex/_generated/api";
 import { useRouter } from "next/navigation";
 import FunctionForm from "../newDevice/FunctionForm";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
-import { clean } from "lib/features/newDeviceFunctions/newDeviceFunctionsSlice";
+import { cleanDeviceFunctionClientData } from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
 
 export default function EditView(props: {
   deviceId: string;
@@ -35,7 +35,9 @@ export default function EditView(props: {
   const deleteDevice = useMutation(api.device.deleteDevice);
   const updateDevice = useMutation(api.device.updateDevice);
   const addDeviceFunction = useMutation(api.deviceFunction.createFunction);
-  const localFunctions = useAppSelector((state) => state.newDeviceFunctions);
+  const localFunctions = useAppSelector(
+    (state) => state.deviceFunctionClientData,
+  );
 
   if (localFunctions.length > 0) {
     localFunctions.forEach((functionData) => {
@@ -54,10 +56,11 @@ export default function EditView(props: {
         minInterval: functionData.minInterval,
         scaleData: functionData.scaleData,
         message: functionData.message,
+        sendData: functionData.sendData,
         streaming: functionData.streaming,
       });
     });
-    dispatch(clean());
+    dispatch(cleanDeviceFunctionClientData());
   }
 
   const currentFunctionsCards = props.deviceFunctions?.map((functionData) => {
@@ -149,7 +152,7 @@ export default function EditView(props: {
               <FunctionForm setIsEditing={setIsCreating} />
             </div>
           ) : (
-            <div className=" flex w-full flex-col gap-4">
+            <div className=" mb-4 flex w-full flex-col gap-4">
               {currentFunctionsCards}
             </div>
           )}
@@ -177,7 +180,7 @@ export default function EditView(props: {
               createDeviceFunctionData(
                 props.deviceFunctions,
                 functionId,
-              ) as newDeviceFunctionData
+              ) as deviceFunctionClientData
             }
           />
         </>
@@ -194,7 +197,7 @@ function createDeviceFunctionData(
   if (!functionData) {
     return;
   }
-  const initialState: newDeviceFunctionData = {
+  const initialState: deviceFunctionClientData = {
     id: functionData._id,
     name: functionData.name,
     description: functionData.description,
@@ -210,6 +213,7 @@ function createDeviceFunctionData(
     minInterval: functionData.minInterval,
     scaleData: functionData.scaleData,
     message: functionData.message,
+    sendData: functionData.sendData,
     streaming: functionData.streaming,
   };
 

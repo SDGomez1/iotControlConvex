@@ -1,4 +1,4 @@
-export type newDeviceFunctionData = {
+export type deviceFunctionClientData = {
   id: string;
   name: string;
   description: string;
@@ -14,6 +14,7 @@ export type newDeviceFunctionData = {
   minInterval: number | undefined;
   scaleData: number[] | undefined;
   message: string | undefined;
+  sendData: boolean;
   streaming: boolean;
 };
 

@@ -14,11 +14,11 @@ const databaseDataSlice = createSlice({
   name: "dataBaseData",
   initialState: initialState,
   reducers: {
-    update: (state, action: PayloadAction<databaseDataFormat>) =>
+    updateDataBaseData: (state, action: PayloadAction<databaseDataFormat>) =>
       action.payload,
   },
 });
 
-export const { update } = databaseDataSlice.actions;
+export const { updateDataBaseData } = databaseDataSlice.actions;
 
 export default databaseDataSlice.reducer;

@@ -13,29 +13,32 @@ import {
 import { deFormatUrl } from "utils/urlUtils";
 
 import { useAppDispatch, useAppSelector } from "lib/hooks";
-import { add, remove } from "lib/features/conectedDevices/conectedDevicesSlice";
+import {
+  addConectedDevice,
+  removeConectedDevice,
+} from "lib/features/conectedDevices/conectedDevicesSlice";
+import { cleanRawSerialData } from "lib/features/rawSerialData/rawSerialDataSlice";
 
 import { useEffect, useState } from "react";
 
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 
 import type { conectedDeviceData } from "types/serial";
 import EditView from "components/dashboard/admin/device/EditView";
-import { clean } from "lib/features/newDeviceFunctions/newDeviceFunctionsSlice";
+import { cleanDeviceFunctionClientData } from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
+import {
+  filterAndFormatData,
+  getCardsData,
+  getGraphData,
+} from "utils/FileProcessingUtils";
+import { Card, LineChart } from "@tremor/react";
 
 export default function Device() {
-  const dispatch = useAppDispatch();
-  const currentDeviceFunctions = useAppSelector(
-    (state) => state.newDeviceFunctions,
-  );
+  const params = useParams<{ deviceName: string }>();
+  const deviceId = deFormatUrl(params.deviceName);
 
-  useEffect(() => {
-    if (currentDeviceFunctions.length > 0) {
-      dispatch(clean());
-    }
-  }, [currentDeviceFunctions]);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedPort, setSelectedPort] = useState<SerialPort | undefined>(
     undefined,
@@ -43,8 +46,14 @@ export default function Device() {
   const [reader, setReader] = useState<ReadableStreamDefaultReader | undefined>(
     undefined,
   );
-  const params = useParams<{ deviceName: string }>();
-  const deviceId = deFormatUrl(params.deviceName);
+
+  const dispatch = useAppDispatch();
+
+  const currentDeviceFunctions = useAppSelector(
+    (state) => state.deviceFunctionClientData,
+  );
+  const rawSerialData = useAppSelector((state) => state.rawSerialData);
+  const devicesList = useAppSelector((state) => state.conectedDevice);
 
   const device = useQuery(api.device.getdeviceById, {
     deviceId: deviceId as Id<"device">,
@@ -53,21 +62,16 @@ export default function Device() {
     deviceId: deviceId as Id<"device">,
   });
 
-  const functionscom = functions?.map((e, i) => {
-    return (
-      <FunctionCard
-        name={e.name}
-        description={e.description}
-        key={i}
-        serialPort={selectedPort}
-        command={e.command}
-      />
-    );
-  });
-
-  const devicesList = useAppSelector((state) => state.conectedDevice);
+  const setDeviceInactive = useMutation(api.device.setDeviceInactive);
 
   const isConected = devicesList.find((item) => item.id === deviceId);
+
+  if (selectedPort === undefined) {
+    if (isConected) {
+      setSelectedPort(isConected.device);
+      setReader(isConected.reader);
+    }
+  }
 
   useEffect(() => {
     if (selectedPort !== undefined) {
@@ -76,18 +80,50 @@ export default function Device() {
         device: selectedPort,
         reader: reader as ReadableStreamDefaultReader,
       };
-      dispatch(add(data));
+      dispatch(addConectedDevice(data));
+    } else {
+      dispatch(cleanRawSerialData(deviceId));
     }
   }, [selectedPort]);
 
-  if (selectedPort === undefined) {
-    if (isConected) {
-      setSelectedPort(isConected.device);
+  useEffect(() => {
+    if (currentDeviceFunctions.length > 0) {
+      dispatch(cleanDeviceFunctionClientData());
     }
-  }
+  }, [currentDeviceFunctions]);
+
+  const textSerialData = rawSerialData.map((data) => data.data);
+  const formattedData = filterAndFormatData(textSerialData.join(""));
+
+  const graphData = getGraphData(formattedData);
+  const cardData = getCardsData(formattedData);
+
+  const serialDataCard = formattedData.map((data, index) => {
+    return <ul key={index}>{data}</ul>;
+  });
+  const cardDataComponent = cardData?.map((value, index) => {
+    return (
+      <Card
+        className="max-w-xs shrink-0"
+        decoration="top"
+        decorationColor="indigo"
+        key={index}
+      >
+        <p className="text-center text-xs lg:text-sm dark:text-dark-tremor-content">
+          {value.title}
+        </p>
+        <p className="text-center text-2xl font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
+          {value.data}
+        </p>
+      </Card>
+    );
+  });
+  const functionscom = functions?.map((e, i) => {
+    return <FunctionCard functionData={e} key={i} serialPort={selectedPort} />;
+  });
 
   return (
-    <section className="flex h-full  flex-col items-start gap-4 px-4 py-4">
+    <section className="h-full overflow-y-scroll px-4 pb-40">
       {isEditing ? (
         <EditView
           deviceId={deviceId}
@@ -98,55 +134,95 @@ export default function Device() {
         />
       ) : (
         <>
-          <h2 className="my-0 border-none bg-transparent px-0 font-semibold outline-none focus:ring-0 lg:text-4xl">
+          <h2 className="my-0 mb-2 border-none bg-transparent px-0 font-semibold outline-none focus:ring-0 lg:text-4xl">
             {device?.name}
           </h2>
           <p
-            className={`border-0 bg-transparent px-0 text-sm text-lightText  outline-none lg:text-base dark:text-darkText`}
+            className={`mb-4 border-0 bg-transparent px-0 text-sm  text-lightText outline-none lg:text-base dark:text-darkText`}
           >
             {device?.description}
           </p>
 
-          <h3 className="text-xl  font-medium lg:text-2xl">
+          <h3 className="mb-2 text-xl font-medium lg:text-2xl">
             Funciones Disponibles
           </h3>
 
-          <div className="flex h-full w-full auto-rows-max grid-cols-2 flex-col justify-items-center gap-4 overflow-y-scroll pb-32 lg:grid 2xl:grid-cols-3 2xl:pb-32 ">
+          <div className="mb-8 flex w-full auto-rows-max grid-cols-2 flex-col justify-items-center gap-4 lg:grid 2xl:grid-cols-3">
             {functionscom}
           </div>
+          <h4 className="text-sm lg:text-xl">Consola de comandos</h4>
+          <p className="mb-4 text-xs italic text-lightText lg:text-sm dark:text-darkText">
+            Datos recibidos del microcontrolador
+          </p>
 
+          <div className="dark:border-darkTex relative mb-4 max-h-32 min-h-20 w-full overflow-y-scroll rounded border border-lightText p-2 text-sm">
+            <ul>{serialDataCard}</ul>
+          </div>
+          <h4 className="mb-2 text-sm lg:text-xl">Últimos datos recibidos</h4>
+          <p className="mb-4 text-xs italic text-lightText lg:text-sm dark:text-darkText">
+            Para ver datos en esta seccion envialos con el formato
+            "&lt;variable:"
+          </p>
+          <div className="mb-4 flex h-auto w-full max-w-full items-start justify-start gap-4 overflow-x-scroll p-2">
+            {(cardDataComponent?.length as number) > 0 ? (
+              <>{cardDataComponent}</>
+            ) : (
+              <p>No hay datos configurados para mostrar su ultimo valor</p>
+            )}
+          </div>
+          <h4 className="mb-2 text-sm lg:text-xl">Graficas</h4>
+          <p className="mb-4 text-xs italic text-lightText lg:text-sm dark:text-darkText">
+            Para ver datos en esta seccion envialos con el formato
+            "&gt;variable:"
+          </p>
+          {graphData.jsonResult.length > 0 ? (
+            <LineChart
+              data={graphData.jsonResult}
+              index="index"
+              categories={graphData.variableNames}
+              onValueChange={(v) => console.log(v)}
+            />
+          ) : (
+            <p>No hay datos configurados para graficar</p>
+          )}
           <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
             {selectedPort ? (
               <></>
             ) : (
               <button
-                className="rounded border border-lightText bg-transparent px-8 py-2 text-sm text-lightText dark:border-darkText dark:text-darkText"
+                className="rounded border border-lightText bg-transparent px-8 py-2 text-sm text-lightText transition hover:bg-gray-50 dark:border-darkText dark:text-darkText"
                 onClick={() => setIsEditing(true)}
               >
                 Editar
               </button>
             )}
+            {"serial" in navigator ? (
+              <>
+                <button
+                  className={`rounded  px-8 py-2 text-sm text-white ${!selectedPort ? "bg-accent hover:bg-indigo-700" : "bg-danger hover:bg-red-600"} transition`}
+                  onClick={async () => {
+                    if (!selectedPort) {
+                      const serialPort = await connectToSerial(9600);
+                      const reader = await getReader(serialPort);
 
-            <button
-              className={`rounded  px-8 py-2 text-sm text-white ${!selectedPort ? "bg-accent" : "bg-danger"}`}
-              onClick={async () => {
-                if (!selectedPort) {
-                  const serialPort = await connectToSerial();
-                  const reader = await getReader(serialPort);
-
-                  setSelectedPort(serialPort);
-                  setReader(reader);
-                  startReading(serialPort, reader, deviceId);
-                } else {
-                  closePort(selectedPort, reader);
-                  dispatch(remove(deviceId));
-                  setReader(undefined);
-                  setSelectedPort(undefined);
-                }
-              }}
-            >
-              {selectedPort ? "Desconectar" : "Conectar"}
-            </button>
+                      setSelectedPort(serialPort);
+                      setReader(reader);
+                      startReading(serialPort, reader, deviceId);
+                    } else {
+                      await closePort(selectedPort, reader);
+                      dispatch(removeConectedDevice(deviceId));
+                      setReader(undefined);
+                      setSelectedPort(undefined);
+                      setDeviceInactive({ deviceId: deviceId as Id<"device"> });
+                    }
+                  }}
+                >
+                  {selectedPort ? "Desconectar" : "Conectar"}
+                </button>
+              </>
+            ) : (
+              <></>
+            )}
           </div>
         </>
       )}

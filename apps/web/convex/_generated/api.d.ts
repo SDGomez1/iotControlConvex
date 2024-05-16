@@ -15,7 +15,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as clerk from "../clerk.js";
-import type * as commands from "../commands.js";
+import type * as command from "../command.js";
 import type * as device from "../device.js";
 import type * as deviceFunction from "../deviceFunction.js";
 import type * as http from "../http.js";
@@ -33,7 +33,7 @@ import type * as user from "../user.js";
  */
 declare const fullApi: ApiFromModules<{
   clerk: typeof clerk;
-  commands: typeof commands;
+  command: typeof command;
   device: typeof device;
   deviceFunction: typeof deviceFunction;
   http: typeof http;

@@ -6,7 +6,7 @@ import FunctionForm from "components/dashboard/admin/newDevice/FunctionForm";
 
 import { Plus } from "components/icons/Plus";
 
-import { clean } from "lib/features/newDeviceFunctions/newDeviceFunctionsSlice";
+import { cleanDeviceFunctionClientData } from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
 
 import { formatUrl } from "utils/urlUtils";
@@ -16,7 +16,7 @@ import { useState } from "react";
 import { api } from "convex/_generated/api";
 import { useMutation } from "convex/react";
 import FunctionCardEditing from "components/dashboard/admin/newDevice/FunctionCardEditing";
-import { newDeviceFunctionData } from "types/newDeviceFunctions";
+import { deviceFunctionClientData } from "types/deviceFunctionClientData";
 
 export default function NewDevice() {
   const router = useRouter();
@@ -32,7 +32,9 @@ export default function NewDevice() {
   const [isCreating, setIsCreating] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [functionId, setFunctionId] = useState("");
-  const currentFunctions = useAppSelector((state) => state.newDeviceFunctions);
+  const currentFunctions = useAppSelector(
+    (state) => state.deviceFunctionClientData,
+  );
 
   const currentFunctionsCards = currentFunctions.map((functionData) => {
     return (
@@ -76,11 +78,12 @@ export default function NewDevice() {
               minInterval: functionData.minInterval,
               scaleData: functionData.scaleData,
               message: functionData.message,
+              sendData: functionData.sendData,
               streaming: functionData.streaming,
             });
           });
           const url = formatUrl(deviceName, deviceId);
-          dispatch(clean());
+          dispatch(cleanDeviceFunctionClientData());
 
           router.replace(`/admin/devices/${url}`);
         }}
@@ -111,16 +114,16 @@ export default function NewDevice() {
 
         <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
           <button
-            className="rounded border border-danger bg-transparent px-8 py-2 text-sm text-danger"
+            className="rounded border border-danger bg-transparent px-8 py-2 text-sm text-danger transition hover:bg-red-50"
             type="button"
             onClick={() => {
-              dispatch(clean());
+              dispatch(cleanDeviceFunctionClientData());
               router.replace("/admin");
             }}
           >
             Cancelar
           </button>
-          <button className="rounded border border-accent bg-transparent px-8 py-2 text-sm text-accent dark:text-indigo-400">
+          <button className="rounded border border-accent bg-transparent px-8 py-2 text-sm text-accent transition hover:bg-indigo-50/30 dark:text-indigo-400">
             Crear Dispositivo
           </button>
         </div>
@@ -145,7 +148,7 @@ export default function NewDevice() {
               onClick={() => {
                 setIsCreating(true);
               }}
-              className=" flex w-full items-center justify-center gap-2 rounded border border-lightText bg-white py-2  text-sm  text-lightText lg:text-base dark:border-darkText dark:bg-dark dark:text-darkText"
+              className=" flex w-full items-center justify-center gap-2 rounded border border-lightText bg-white py-2 text-sm text-lightText  transition  hover:bg-neutral-50 lg:text-base dark:border-darkText dark:bg-dark dark:text-darkText"
             >
               <Plus className="size-4" />
               Añadir nueva funcion
@@ -160,7 +163,7 @@ export default function NewDevice() {
             initialData={
               currentFunctions.find(
                 (data) => data.id === functionId,
-              ) as newDeviceFunctionData
+              ) as deviceFunctionClientData
             }
           />
         </>

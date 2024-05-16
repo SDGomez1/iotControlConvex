@@ -163,7 +163,7 @@ export default function Device() {
             Para ver datos en esta seccion envialos con el formato
             "&lt;variable:"
           </p>
-          <div className="mb-4 flex h-auto w-full max-w-full items-start justify-start gap-4 overflow-x-scroll p-2">
+          <div className="mb-4 flex h-auto w-full max-w-full items-start justify-start gap-4 overflow-x-scroll">
             {(cardDataComponent?.length as number) > 0 ? (
               <>{cardDataComponent}</>
             ) : (

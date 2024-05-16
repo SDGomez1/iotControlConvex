@@ -13,7 +13,13 @@ import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 
-import { Listbox, Transition } from "@headlessui/react";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+  Transition,
+} from "@headlessui/react";
 
 export default function SelectTeam() {
   const router = useRouter();
@@ -34,7 +40,7 @@ export default function SelectTeam() {
     const teamInfo = queryData?.teams.find((team) => team._id === data.teamId);
 
     return (
-      <Listbox.Option
+      <ListboxOption
         value={`${teamInfo?.name};${data._id}:${teamInfo?._id}`}
         key={data._id as string}
         className={({ active }) =>
@@ -46,7 +52,7 @@ export default function SelectTeam() {
         }
       >
         {teamInfo?.name}
-      </Listbox.Option>
+      </ListboxOption>
     );
   });
 
@@ -121,23 +127,23 @@ export default function SelectTeam() {
           }}
         >
           <div className="relative mb-4 w-full">
-            <Listbox.Button className="relative mt-2 w-full rounded-lg border border-lightText/60 p-2 text-left text-sm dark:border-darkText/60 ">
+            <ListboxButton className="relative mt-2 w-full rounded-lg border border-lightText/60 p-2 text-left text-sm dark:border-darkText/60 ">
               <span className="text-lightText lg:text-base dark:text-darkText">
                 {selected !== "" ? selected : placeholder}
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronUpDown className="size-6 stroke-lightText dark:stroke-darkText" />
               </span>
-            </Listbox.Button>
+            </ListboxButton>
             <Transition
               as={Fragment}
               leave="transition ease-in duration-100"
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm ring-1 ring-black/5 focus:outline-none lg:text-base ">
+              <ListboxOptions className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm ring-1 ring-black/5 focus:outline-none lg:text-base ">
                 {teams}
-              </Listbox.Options>
+              </ListboxOptions>
             </Transition>
           </div>
         </Listbox>
@@ -145,6 +151,7 @@ export default function SelectTeam() {
           className="mb-10 w-full rounded bg-accent py-2 text-xs text-white lg:text-base"
           onClick={() => {
             const [invitationID, teamID] = selectedId.split(":");
+            router.replace("/user");
             selectTeam({
               teamId: teamID as Id<"team">,
               userID: user.user?.id as string,

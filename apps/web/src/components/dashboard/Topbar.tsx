@@ -73,7 +73,7 @@ export default function Topbar(props: {
       <div className="flex items-center justify-center gap-4">
         <ThemeSwitch />
         <a href="https://iot-control-convex-docs.vercel.app/" target="_blank">
-          <InfoCircledIcon className="size-6 stroke-lightText dark:stroke-darkText" />
+          <InfoCircledIcon className="size-6 text-lightText dark:text-darkText" />
         </a>
         <Notifications />
       </div>

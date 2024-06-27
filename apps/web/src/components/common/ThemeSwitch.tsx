@@ -26,11 +26,11 @@ export default function ThemeSwitch() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger className="hidden lg:block">
         {resolvedTheme === "light" ? (
-          <SunIcon className="size-5" />
+          <SunIcon className="size-6 text-lightText dark:text-darkText" />
         ) : (
-          <MoonIcon className="size-5 " />
+          <MoonIcon className="size-6 text-lightText dark:text-darkText " />
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="animate-openMenu">

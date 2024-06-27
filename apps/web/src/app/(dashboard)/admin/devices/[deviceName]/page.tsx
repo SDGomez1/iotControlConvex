@@ -33,7 +33,6 @@ import {
   getCardsData,
   getGraphData,
 } from "utils/FileProcessingUtils";
-import { Card, LineChart } from "@tremor/react";
 
 export default function Device() {
   const params = useParams<{ deviceName: string }>();
@@ -101,23 +100,7 @@ export default function Device() {
   const serialDataCard = formattedData.map((data, index) => {
     return <ul key={index}>{data}</ul>;
   });
-  const cardDataComponent = cardData?.map((value, index) => {
-    return (
-      <Card
-        className="max-w-xs shrink-0"
-        decoration="top"
-        decorationColor="indigo"
-        key={index}
-      >
-        <p className="text-center text-xs lg:text-sm dark:text-dark-tremor-content">
-          {value.title}
-        </p>
-        <p className="text-center text-2xl font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-          {value.data}
-        </p>
-      </Card>
-    );
-  });
+  const cardDataComponent = cardData?.map((value, index) => {});
   const functionscom = functions?.map((e, i) => {
     return <FunctionCard functionData={e} key={i} serialPort={selectedPort} />;
   });
@@ -175,16 +158,7 @@ export default function Device() {
             Para ver datos en esta seccion envialos con el formato
             "&gt;variable:"
           </p>
-          {graphData.jsonResult.length > 0 ? (
-            <LineChart
-              data={graphData.jsonResult}
-              index="index"
-              categories={graphData.variableNames}
-              onValueChange={(v) => console.log(v)}
-            />
-          ) : (
-            <p>No hay datos configurados para graficar</p>
-          )}
+
           <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
             {selectedPort ? (
               <></>

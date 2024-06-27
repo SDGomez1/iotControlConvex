@@ -18,7 +18,6 @@ import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 
-import { Card, LineChart } from "@tremor/react";
 import LastCheckedOnline from "components/dashboard/user/LastCheckedOnline";
 import { DownloadIcon } from "@radix-ui/react-icons";
 
@@ -69,21 +68,7 @@ export default function Device() {
   const cardData = getCardsData(filteredData);
 
   const cardDataComponent = cardData?.map((value, index) => {
-    return (
-      <Card
-        className=" max-w-xs"
-        decoration="top"
-        decorationColor="indigo"
-        key={index}
-      >
-        <p className="text-center text-xs lg:text-sm dark:text-dark-tremor-content">
-          {value.title}
-        </p>
-        <p className="text-center text-2xl font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-          {value.data}
-        </p>
-      </Card>
-    );
+    return <></>;
   });
 
   return (
@@ -169,16 +154,6 @@ export default function Device() {
       <p className="mb-2 text-xs text-lightText lg:text-base dark:text-darkText">
         Esta sección muestra los datos configurados como “Graficar”{" "}
       </p>
-      {graphData.jsonResult.length > 0 ? (
-        <LineChart
-          data={graphData.jsonResult}
-          index="index"
-          categories={graphData.variableNames}
-          onValueChange={(v) => console.log(v)}
-        />
-      ) : (
-        <p>No hay datos configurados para graficar</p>
-      )}
     </section>
   );
 }

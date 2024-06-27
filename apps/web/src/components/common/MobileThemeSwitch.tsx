@@ -20,9 +20,9 @@ export default function MobileThemeSwitch() {
     <div className="flex items-center gap-1 lg:hidden">
       <span>
         {resolvedTheme === "light" ? (
-          <SunIcon className="size-5 stroke-lightText" />
+          <SunIcon className="size-5 text-lightText dark:text-darkText" />
         ) : (
-          <MoonIcon className="size-5 stroke-darkText" />
+          <MoonIcon className="size-5 text-lightText dark:text-darkText" />
         )}
       </span>
       <select
@@ -35,7 +35,7 @@ export default function MobileThemeSwitch() {
         <option value="system">Sistema</option>
       </select>
       <span>
-        <CaretSortIcon className="size-5 stroke-lightText dark:stroke-darkText" />
+        <CaretSortIcon className="size-5 text-lightText dark:text-darkText" />
       </span>
     </div>
   );

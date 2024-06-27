@@ -1,12 +1,11 @@
 import { Doc, Id } from "convex/_generated/dataModel";
-import { type Dispatch, type SetStateAction, useState, useEffect } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import type {
   deviceFunctionClientData,
   typeOfEntry,
   typeOfFormat,
 } from "types/deviceFunctionClientData";
 import FunctionCardEditing from "../newDevice/FunctionCardEditing";
-import { Plus } from "components/icons/Plus";
 import FunctionCardView from "../newDevice/FunctionCardView";
 import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
@@ -14,6 +13,7 @@ import { useRouter } from "next/navigation";
 import FunctionForm from "../newDevice/FunctionForm";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
 import { cleanDeviceFunctionClientData } from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
+import { PlusIcon } from "@radix-ui/react-icons";
 
 export default function EditView(props: {
   deviceId: string;
@@ -166,7 +166,7 @@ export default function EditView(props: {
               }}
               className=" flex w-full items-center justify-center gap-2 rounded border border-lightText bg-white py-2  text-sm  text-lightText lg:text-base dark:border-darkText dark:bg-dark dark:text-darkText"
             >
-              <Plus className="size-4" />
+              <PlusIcon className="size-4" />
               Añadir nueva funcion
             </button>
           )}

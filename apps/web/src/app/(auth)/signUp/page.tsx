@@ -2,8 +2,8 @@ import { SignUp } from "@clerk/nextjs";
 import logo from "img/Logo.png";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLong } from "components/icons/ArrowLong";
 import heroImage from "img/HeroImage.png";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
 
 export default function LogIn() {
   return (
@@ -57,7 +57,7 @@ export default function LogIn() {
             href="/"
             className=" flex w-full items-center justify-center gap-2 rounded border border-lightText bg-transparent py-2 text-center text-xs text-lightText lg:text-sm  dark:border-darkText dark:text-darkText"
           >
-            <ArrowLong className="size-5" />
+            <ArrowLeftIcon className="size-5" />
             Volver
           </Link>
         </div>

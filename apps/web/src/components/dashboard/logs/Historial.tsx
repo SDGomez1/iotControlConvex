@@ -1,7 +1,7 @@
 "use client";
 import { Select } from "@headlessui/react";
+import { DownloadIcon } from "@radix-ui/react-icons";
 import { Card, LineChart } from "@tremor/react";
-import { ArrowDownTray } from "components/icons/ArrowDownTray";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
@@ -193,7 +193,7 @@ export default function Historial() {
                   window.URL.revokeObjectURL(url);
                 }}
               >
-                Descargar Datos <ArrowDownTray className="size-5" />
+                Descargar Datos <DownloadIcon className="size-5" />
               </button>
             ) : (
               <></>

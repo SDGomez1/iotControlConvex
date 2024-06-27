@@ -3,8 +3,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import logo from "img/Logo.png";
 
-import { ChevronUpDown } from "components/icons/ChevronUpDown";
-
 import { useUser } from "@clerk/clerk-react";
 
 import { Fragment, useState } from "react";
@@ -20,6 +18,7 @@ import {
   ListboxOptions,
   Transition,
 } from "@headlessui/react";
+import { CaretSortIcon } from "@radix-ui/react-icons";
 
 export default function SelectTeam() {
   const router = useRouter();
@@ -132,7 +131,7 @@ export default function SelectTeam() {
                 {selected !== "" ? selected : placeholder}
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                <ChevronUpDown className="size-6 stroke-lightText dark:stroke-darkText" />
+                <CaretSortIcon className="size-6 stroke-lightText dark:stroke-darkText" />
               </span>
             </ListboxButton>
             <Transition

@@ -1,4 +1,4 @@
-import { PencilSquare } from "components/icons/PencilSquare";
+import { Pencil2Icon } from "@radix-ui/react-icons";
 import type { Dispatch, SetStateAction } from "react";
 
 export default function FunctionCardView(props: {
@@ -16,7 +16,7 @@ export default function FunctionCardView(props: {
       }}
     >
       <h3>{props.name}</h3>
-      <PencilSquare className="absolute right-3 top-2 size-5 stroke-lightText dark:stroke-darkText" />
+      <Pencil2Icon className="absolute right-3 top-2 size-5 stroke-lightText dark:stroke-darkText" />
     </div>
   );
 }

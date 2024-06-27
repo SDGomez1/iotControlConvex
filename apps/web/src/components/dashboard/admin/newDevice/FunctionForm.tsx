@@ -1,8 +1,5 @@
 "use client";
 
-import { Plus } from "components/icons/Plus";
-import { XMark } from "components/icons/XMark";
-
 import { addDeviceFunctionClientData } from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
 import { useAppDispatch } from "lib/hooks";
 
@@ -15,6 +12,7 @@ import {
   typeOfEntry,
   typeOfFormat,
 } from "types/deviceFunctionClientData";
+import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
 
 const initialState: deviceFunctionClientData = {
   id: "",
@@ -77,7 +75,7 @@ export default function FunctionForm(props: {
             }
           }}
         >
-          <XMark className="size-4 stroke-lightText dark:stroke-darkText" />
+          <Cross2Icon className="size-4 stroke-lightText dark:stroke-darkText" />
         </span>
       </div>
     );
@@ -341,7 +339,7 @@ export default function FunctionForm(props: {
                   });
                 }}
               >
-                <Plus className="dark:stroke-darkTe size-3  stroke-lightText" />
+                <PlusIcon className="dark:stroke-darkTe size-3  stroke-lightText" />
                 Añadir
               </button>
             </div>

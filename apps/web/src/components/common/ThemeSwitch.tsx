@@ -1,7 +1,4 @@
 "use client";
-import { Desktop } from "components/icons/Desktop";
-import { Moon } from "components/icons/Moon";
-import { Sun } from "components/icons/Sun";
 
 import { useTheme } from "next-themes";
 
@@ -14,6 +11,7 @@ import {
   MenuItems,
   Transition,
 } from "@headlessui/react";
+import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
 
 export default function ThemeSwitch() {
   const [mounted, setMounted] = useState(false);
@@ -30,9 +28,9 @@ export default function ThemeSwitch() {
     <Menu as="div" className="relative hidden lg:block">
       <MenuButton className="flex items-center justify-center">
         {resolvedTheme === "light" ? (
-          <Sun className="size-6 stroke-lightText" />
+          <SunIcon className="size-6 stroke-lightText" />
         ) : (
-          <Moon className="size-6 stroke-darkText" />
+          <MoonIcon className="size-6 stroke-darkText" />
         )}
       </MenuButton>
       <Transition
@@ -50,7 +48,7 @@ export default function ThemeSwitch() {
               onClick={() => setTheme("light")}
               className="flex h-full items-center gap-2 px-2 py-1 text-sm text-lightText data-[focus]:bg-black/10 dark:text-darkText dark:data-[focus]:bg-white/10 "
             >
-              <Sun className="size-6 stroke-lightText dark:stroke-darkText" />
+              <SunIcon className="size-6 stroke-lightText dark:stroke-darkText" />
               Modo claro
             </button>
           </MenuItem>
@@ -59,7 +57,7 @@ export default function ThemeSwitch() {
               onClick={() => setTheme("dark")}
               className="flex items-center gap-2 px-2 py-1 text-sm text-lightText data-[focus]:bg-black/10 dark:text-darkText dark:data-[focus]:bg-white/10"
             >
-              <Moon className="size-6 stroke-lightText  dark:stroke-darkText" />
+              <MoonIcon className="size-6 stroke-lightText  dark:stroke-darkText" />
               Modo Oscuro
             </button>
           </MenuItem>
@@ -68,7 +66,7 @@ export default function ThemeSwitch() {
               onClick={() => setTheme("system")}
               className="flex items-center gap-2 px-2 py-1 text-sm text-lightText data-[focus]:bg-black/10 dark:text-darkText dark:data-[focus]:bg-white/10"
             >
-              <Desktop className="size-6 stroke-lightText dark:stroke-darkText" />
+              <DesktopIcon className="size-6 stroke-lightText dark:stroke-darkText" />
               Sistema
             </button>
           </MenuItem>

@@ -1,6 +1,6 @@
 "use client";
-import { Plus } from "components/icons/Plus";
-import { XMark } from "components/icons/XMark";
+import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
+
 import { api } from "convex/_generated/api";
 import { Doc, Id } from "convex/_generated/dataModel";
 import { useMutation } from "convex/react";
@@ -85,7 +85,7 @@ export default function FunctionCardEditing(props: {
             }
           }}
         >
-          <XMark className="size-4 stroke-lightText dark:stroke-darkText" />
+          <Cross2Icon className="size-4 stroke-lightText dark:stroke-darkText" />
         </span>
       </div>
     );
@@ -376,7 +376,7 @@ export default function FunctionCardEditing(props: {
                   });
                 }}
               >
-                <Plus className="dark:stroke-darkTe size-3  stroke-lightText" />
+                <PlusIcon className="dark:stroke-darkTe size-3  stroke-lightText" />
                 Añadir
               </button>
             </div>

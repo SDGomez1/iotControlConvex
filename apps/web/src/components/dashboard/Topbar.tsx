@@ -4,14 +4,12 @@ import { usePathname, useRouter } from "next/navigation";
 import Notifications from "components/dashboard/Notifications";
 import ThemeSwitch from "components/common/ThemeSwitch";
 
-import { BurguerMenu } from "components/icons/BurgerMenu";
-import { InformationCircle } from "components/icons/InformationCircle";
-
 import type { ActiveSessionResource } from "@clerk/types";
 
 import type { Dispatch, SetStateAction } from "react";
 
 import { Doc } from "convex/_generated/dataModel";
+import { HamburgerMenuIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 
 export default function Topbar(props: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -38,7 +36,7 @@ export default function Topbar(props: {
     <nav className="flex w-full items-center justify-between px-4 py-4 lg:px-0 lg:py-6">
       <div className="flex items-center justify-center gap-4">
         <span onClick={() => props.setIsOpen(true)} className="lg:hidden">
-          <BurguerMenu className="size-6 stroke-lightText dark:stroke-darkText" />
+          <HamburgerMenuIcon className="size-6 fill-lightText stroke-[0px] lg:hidden dark:fill-darkText" />
         </span>
         <h1 className="text-sm font-bold lg:text-base">
           {navigationIndicator} /
@@ -75,7 +73,7 @@ export default function Topbar(props: {
       <div className="flex items-center justify-center gap-4">
         <ThemeSwitch />
         <a href="https://iot-control-convex-docs.vercel.app/" target="_blank">
-          <InformationCircle className="size-6 stroke-lightText dark:stroke-darkText" />
+          <InfoCircledIcon className="size-6 stroke-lightText dark:stroke-darkText" />
         </a>
         <Notifications />
       </div>

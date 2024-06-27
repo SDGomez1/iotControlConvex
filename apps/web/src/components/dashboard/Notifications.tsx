@@ -1,7 +1,3 @@
-import { Bell } from "components/icons/Bell";
-import { Check } from "components/icons/Check";
-import { XMark } from "components/icons/XMark";
-
 import { useAppSelector } from "lib/hooks";
 
 import { Fragment } from "react";
@@ -17,6 +13,7 @@ import {
   MenuItems,
   Transition,
 } from "@headlessui/react";
+import { BellIcon, CheckIcon, Cross2Icon } from "@radix-ui/react-icons";
 
 export default function Notifications() {
   const invitationsByUser = useAppSelector(
@@ -43,12 +40,12 @@ export default function Notifications() {
             <button
               onClick={() => acceptInvitation({ invitationId: data._id })}
             >
-              <Check className="size-5 stroke-green-600" />
+              <CheckIcon className="size-5 stroke-green-600" />
             </button>
             <button
               onClick={() => rejectInvitation({ invitationId: data._id })}
             >
-              <XMark className="size-5 stroke-red-600" />
+              <Cross2Icon className="size-5 stroke-red-600" />
             </button>
           </div>
         </div>
@@ -59,7 +56,7 @@ export default function Notifications() {
   return (
     <Menu as="div" className="relative ">
       <MenuButton className="relative flex items-center justify-center">
-        <Bell className="size-6 stroke-lightText dark:stroke-darkText " />
+        <BellIcon className="size-6 stroke-lightText dark:stroke-darkText " />
         {currentInvitations !== undefined && currentInvitations?.length > 0 ? (
           <span className="absolute right-15% top-10% size-2 rounded-full bg-danger" />
         ) : (

@@ -4,8 +4,6 @@ import { useRouter } from "next/navigation";
 import FunctionCardView from "components/dashboard/admin/newDevice/FunctionCardView";
 import FunctionForm from "components/dashboard/admin/newDevice/FunctionForm";
 
-import { Plus } from "components/icons/Plus";
-
 import { cleanDeviceFunctionClientData } from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
 
@@ -17,6 +15,7 @@ import { api } from "convex/_generated/api";
 import { useMutation } from "convex/react";
 import FunctionCardEditing from "components/dashboard/admin/newDevice/FunctionCardEditing";
 import { deviceFunctionClientData } from "types/deviceFunctionClientData";
+import { PlusIcon } from "@radix-ui/react-icons";
 
 export default function NewDevice() {
   const router = useRouter();
@@ -150,7 +149,7 @@ export default function NewDevice() {
               }}
               className=" flex w-full items-center justify-center gap-2 rounded border border-lightText bg-white py-2 text-sm text-lightText  transition  hover:bg-neutral-50 lg:text-base dark:border-darkText dark:bg-dark dark:text-darkText"
             >
-              <Plus className="size-4" />
+              <PlusIcon className="size-4" />
               Añadir nueva funcion
             </button>
           )}

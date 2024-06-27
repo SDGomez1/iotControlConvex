@@ -1,4 +1,4 @@
-import { InformationCircle } from "components/icons/InformationCircle";
+import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { api } from "convex/_generated/api";
 import { Doc, Id } from "convex/_generated/dataModel";
 import { useMutation } from "convex/react";
@@ -86,7 +86,7 @@ export default function ExecutionAlert(props: {
       className={`fixed left-0 top-0 z-10 flex h-screen w-screen items-center justify-center bg-black/15 px-4 transition-all dark:bg-black/65`}
     >
       <div className="flex h-fit w-screen flex-col items-center  rounded-lg bg-white px-5 py-8 lg:w-500px dark:bg-dark">
-        <InformationCircle className="mb-2 size-8 stroke-accent dark:stroke-white" />
+        <InfoCircledIcon className="mb-2 size-8 stroke-accent dark:stroke-white" />
         <p className="mb-4 text-sm font-bold">
           Esta función requiere información adicional
         </p>

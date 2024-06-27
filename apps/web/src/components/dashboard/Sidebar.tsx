@@ -7,9 +7,6 @@ import { useRouter } from "next/navigation";
 
 import MobileThemeSwitch from "components/common/MobileThemeSwitch";
 
-import { XMark } from "components/icons/XMark";
-import { ChevronUpDown } from "components/icons/ChevronUpDown";
-
 import { SignOutButton } from "@clerk/clerk-react";
 import type { ActiveSessionResource } from "@clerk/types";
 
@@ -32,6 +29,7 @@ import {
   ListboxOptions,
   Transition,
 } from "@headlessui/react";
+import { CaretSortIcon, Cross2Icon } from "@radix-ui/react-icons";
 
 export default function Sidebar(props: {
   isAdmin: boolean;
@@ -85,7 +83,7 @@ export default function Sidebar(props: {
       <div className="flex items-center justify-between px-4 lg:hidden">
         <Image src={logo} alt="" className="h-6 w-8 " />
         <span onClick={() => props.setIsOpen(false)}>
-          <XMark className="size-6 stroke-lightText dark:stroke-darkText" />
+          <Cross2Icon className="size-6 stroke-lightText dark:stroke-darkText" />
         </span>
       </div>
       <div className="px-4 py-2 font-medium">
@@ -100,7 +98,7 @@ export default function Sidebar(props: {
         >
           <ListboxButton className="flex w-full items-center justify-between">
             {props.userActiveTeamInfo.name}
-            <ChevronUpDown className="size-5 stroke-lightText dark:stroke-darkText" />
+            <CaretSortIcon className="size-5 stroke-lightText dark:stroke-darkText" />
           </ListboxButton>
           <Transition
             as={Fragment}

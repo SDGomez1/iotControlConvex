@@ -20,7 +20,7 @@ import { useMutation, useQuery } from "convex/react";
 
 import { Card, LineChart } from "@tremor/react";
 import LastCheckedOnline from "components/dashboard/user/LastCheckedOnline";
-import { ArrowDownTray } from "components/icons/ArrowDownTray";
+import { DownloadIcon } from "@radix-ui/react-icons";
 
 export default function Device() {
   const [recievedData, setRecievedData] = useState("");
@@ -137,7 +137,7 @@ export default function Device() {
             }}
           >
             <p className="hidden shrink-0 lg:block">Descargar Datos</p>
-            <ArrowDownTray className=" size-5 shrink-0 stroke-lightText lg:stroke-white dark:stroke-darkText" />
+            <DownloadIcon className=" size-5 shrink-0 stroke-lightText lg:stroke-white dark:stroke-darkText" />
           </button>
         ) : (
           <></>

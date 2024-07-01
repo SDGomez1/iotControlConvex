@@ -25,7 +25,10 @@ export default function Notifications() {
       (team: any) => team._id === data.teamId,
     );
     return (
-      <DropdownMenuItem className="flex items-center gap-6 p-0 px-4 pt-4  text-sm font-light focus:bg-white dark:focus:bg-dark">
+      <DropdownMenuItem
+        className="flex items-center gap-6 p-0 px-4 pt-4  text-sm font-light focus:bg-white dark:focus:bg-dark"
+        key={data._id}
+      >
         <span className="dark:text-darktext flex size-8 shrink-0 items-center justify-center rounded-full border border-accent text-xs text-accent lg:text-base dark:border-darkText dark:text-darkText">
           {teamInfo?.name.charAt(0)}
         </span>
@@ -48,10 +51,8 @@ export default function Notifications() {
     <DropdownMenu>
       <DropdownMenuTrigger className="relative">
         <BellIcon className="size-6 text-lightText dark:text-darkText " />
-        {currentInvitations !== undefined && currentInvitations?.length > 0 ? (
+        {!currentInvitations ?? (
           <span className="absolute right-[12%] top-[12%] size-2 rounded-full bg-danger" />
-        ) : (
-          <></>
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -66,7 +67,7 @@ export default function Notifications() {
           Acepta o Rechaza las invitaciones a otros equipos
         </p>
 
-        {currentInvitations !== undefined && currentInvitations?.length > 0 ? (
+        {currentInvitations ? (
           currentInvitations
         ) : (
           <p className=" flex items-center justify-center pt-4 text-center text-xs text-lightText lg:text-sm dark:text-darkText">

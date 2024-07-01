@@ -38,7 +38,7 @@ export default function SelectTeam() {
       <SelectItem
         value={`${teamInfo?.name};${data._id}:${teamInfo?._id}`}
         key={data._id as string}
-        className="focus:bg-black/10 dark:bg-white/10 "
+        className="focus:bg-black/10 dark:focus:bg-white/10 "
       >
         {teamInfo?.name}
       </SelectItem>
@@ -122,12 +122,10 @@ export default function SelectTeam() {
               }
             />
           </SelectTrigger>
-          {teamsInvitation ? (
-            <SelectContent className="bg-white dark:bg-dark">
+          {!teamsInvitation ?? (
+            <SelectContent className="animate-openMenu bg-white dark:bg-dark">
               <SelectGroup>{teamsInvitation}</SelectGroup>
             </SelectContent>
-          ) : (
-            <></>
           )}
         </Select>
 

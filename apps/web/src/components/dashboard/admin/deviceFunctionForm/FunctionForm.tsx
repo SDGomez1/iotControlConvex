@@ -35,8 +35,13 @@ export default function FunctionForm(props: {
 
   console.log(watchScale);
   return (
-    <div className="flex flex-col gap-2 rounded border border-lightText/60 bg-white px-4 py-4 dark:border-darkText dark:bg-dark">
-      <Form {...form}>
+    <Form {...form}>
+      <form
+        className="flex flex-col gap-2 rounded border border-lightText/60 bg-white px-4 py-4 dark:border-darkText dark:bg-dark"
+        onSubmit={(e) => {
+          e.preventDefault();
+        }}
+      >
         <Name />
         <Description />
         <TypeOfFunction />
@@ -103,7 +108,7 @@ export default function FunctionForm(props: {
             Guardar Funcion
           </Button>
         </div>
-      </Form>
-    </div>
+      </form>
+    </Form>
   );
 }

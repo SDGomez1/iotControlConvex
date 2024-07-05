@@ -1,6 +1,7 @@
 import ExecutionAlert from "components/dashboard/ExecutionAlert";
 import { Doc } from "convex/_generated/dataModel";
 import { useState } from "react";
+import { typeOfFunction } from "types/deviceFunctionClientData";
 import { writeToPort } from "utils/serialUtils";
 
 export default function FunctionCard(props: {
@@ -20,7 +21,10 @@ export default function FunctionCard(props: {
       <span className="flex h-full items-end justify-end">
         <button
           onClick={() => {
-            if (props.functionData.userInfo) {
+            if (
+              props.functionData.userInfo ||
+              props.functionData.tEntry === typeOfFunction.free
+            ) {
               setSendConfirmation(true);
             } else {
               writeToPort(props.serialPort, props.functionData.command);

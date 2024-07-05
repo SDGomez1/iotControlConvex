@@ -14,7 +14,7 @@ export default defineSchema({
   command: defineTable({
     deviceFunctionId: v.id("deviceFunction"),
     status: v.string(),
-    payload: v.optional(v.string()),
+    payload: v.optional(v.union(v.string(), v.number())),
   }),
   device: defineTable({
     teamId: v.id("team"),
@@ -31,6 +31,7 @@ export default defineSchema({
     deviceId: v.id("device"),
     name: v.string(),
     description: v.string(),
+    tEntry: v.optional(v.string()),
     command: v.string(),
     blocking: v.boolean(),
     userInfo: v.boolean(),

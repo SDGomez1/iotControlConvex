@@ -3,6 +3,7 @@ import { Doc, Id } from "convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 import { useState } from "react";
 import ExecutionAlert from "../ExecutionAlert";
+import { typeOfFunction } from "types/deviceFunctionClientData";
 
 export default function FunctionCardExecution(props: {
   functionData: Doc<"deviceFunction">;
@@ -20,7 +21,10 @@ export default function FunctionCardExecution(props: {
       <span className="flex h-full items-end justify-end">
         <button
           onClick={() => {
-            if (props.functionData.userInfo) {
+            if (
+              props.functionData.userInfo ||
+              props.functionData.tEntry === typeOfFunction.free
+            ) {
               setSendConfirmation(true);
             } else {
               createCommand({

@@ -1,9 +1,10 @@
 import { Doc, Id } from "convex/_generated/dataModel";
 import { type Dispatch, type SetStateAction, useState, useEffect } from "react";
-import type {
-  deviceFunctionClientData,
-  typeOfEntry,
-  typeOfFormat,
+import {
+  typeOfFunction,
+  type deviceFunctionClientData,
+  type typeOfEntry,
+  type typeOfFormat,
 } from "types/deviceFunctionClientData";
 import FunctionCardEditing from "../newDevice/FunctionCardEditing";
 import { Plus } from "components/icons/Plus";
@@ -45,6 +46,7 @@ export default function EditView(props: {
         deviceId: props.deviceId as Id<"device">,
         name: functionData.name,
         description: functionData.description,
+        tEntry: functionData.tEntry,
         command: functionData.command as string,
         blocking: functionData.blocking,
         userInfo: functionData.userInfo,
@@ -201,7 +203,7 @@ function createDeviceFunctionData(
     id: functionData._id,
     name: functionData.name,
     description: functionData.description,
-    tEntry: "" as typeOfEntry,
+    tEntry: typeOfFunction.free,
     command: functionData.command,
     blocking: functionData.blocking,
     userInfo: functionData.userInfo,

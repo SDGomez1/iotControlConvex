@@ -3,7 +3,7 @@ import { api } from "convex/_generated/api";
 import { Doc, Id } from "convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { typeOfFormat } from "types/deviceFunctionClientData";
+import { typeOfFormat, typeOfFunction } from "types/deviceFunctionClientData";
 import { writeToPort } from "utils/serialUtils";
 
 export default function ExecutionAlert(props: {
@@ -13,8 +13,12 @@ export default function ExecutionAlert(props: {
   isAdmin: boolean;
 }) {
   const createCommand = useMutation(api.command.createCommand);
-  const [value, setValue] = useState(props.functionData.minInterval); // Initialize state with the default value
-  const [payload, setPayload] = useState<number | undefined>(undefined);
+  const [value, setValue] = useState<number | string | undefined>(
+    props.functionData.minInterval,
+  ); // Initialize state with the default value
+  const [payload, setPayload] = useState<number | string | undefined>(
+    undefined,
+  );
   let inputReactNode = <></>;
 
   useEffect(() => {
@@ -81,6 +85,27 @@ export default function ExecutionAlert(props: {
     );
     inputReactNode = newReactNode;
   }
+  if (props.functionData.tEntry === typeOfFunction.free) {
+    const newReactNode = (
+      <>
+        <span className="relative">
+          <input
+            className="my-2 w-10/12 shrink-0 appearance-none border-0 border-b border-b-lightText bg-transparent px-1 py-1 text-sm ring-0 focus:ring-0 dark:border-b-darkText"
+            value={value}
+            onBlur={() => {
+              setValue(value);
+              setPayload(value);
+            }}
+            onChange={(event) => {
+              const inputValue = event.target.value;
+              setValue(inputValue);
+            }}
+          />
+        </span>
+      </>
+    );
+    inputReactNode = newReactNode;
+  }
   return (
     <span
       className={`fixed left-0 top-0 z-10 flex h-screen w-screen items-center justify-center bg-black/15 px-4 transition-all dark:bg-black/65`}
@@ -91,7 +116,9 @@ export default function ExecutionAlert(props: {
           Esta función requiere información adicional
         </p>
         <p className=" w-full text-left text-sm">
-          {`${props.functionData.message}: `}
+          {props.functionData.tEntry === typeOfFunction.free
+            ? "Escribe lo que quieras mandar al microcontrolador"
+            : `${props.functionData.message}: `}
         </p>
         <form
           className="flex h-full w-full flex-col"

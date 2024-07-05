@@ -2,7 +2,7 @@ export type deviceFunctionClientData = {
   id: string;
   name: string;
   description: string;
-  tEntry: typeOfEntry;
+  tEntry: typeOfFunction;
   command: string | number;
   blocking: boolean;
   userInfo: boolean;
@@ -26,4 +26,9 @@ export enum typeOfEntry {
 export enum typeOfFormat {
   interval = "INTERVAL",
   scale = "SCALE",
+}
+
+export enum typeOfFunction {
+  command = "COMMAND",
+  free = "FREE",
 }

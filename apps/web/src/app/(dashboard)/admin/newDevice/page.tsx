@@ -67,6 +67,7 @@ export default function NewDevice() {
               deviceId: deviceId,
               name: functionData.name,
               description: functionData.description,
+              tEntry: functionData.tEntry,
               command: functionData.command as string,
               blocking: functionData.blocking,
               userInfo: functionData.userInfo,

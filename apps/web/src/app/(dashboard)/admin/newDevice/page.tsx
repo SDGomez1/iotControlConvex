@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 
 import FunctionCardView from "components/dashboard/admin/newDevice/FunctionCardView";
-import FunctionForm from "components/dashboard/admin/newDevice/FunctionForm";
+import FunctionForm from "components/dashboard/admin/deviceFunctionForm/FunctionForm";
 
 import { cleanDeviceFunctionClientData } from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
@@ -14,7 +14,6 @@ import { useState } from "react";
 import { api } from "convex/_generated/api";
 import { useMutation } from "convex/react";
 import FunctionCardEditing from "components/dashboard/admin/newDevice/FunctionCardEditing";
-import { deviceFunctionClientData } from "types/deviceFunctionClientData";
 import { PlusIcon } from "@radix-ui/react-icons";
 
 export default function NewDevice() {
@@ -156,7 +155,7 @@ export default function NewDevice() {
         </>
       ) : (
         <>
-          <FunctionCardEditing
+          {/* <FunctionCardEditing
             isCreating={true}
             setIsEditing={setIsEditing}
             initialData={
@@ -164,7 +163,7 @@ export default function NewDevice() {
                 (data) => data.id === functionId,
               ) as deviceFunctionClientData
             }
-          />
+          /> */}
         </>
       )}
     </section>

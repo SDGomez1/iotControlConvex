@@ -1,0 +1,27 @@
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "components/primitives/Form";
+import { Input } from "components/primitives/Input";
+
+export default function Unit() {
+  return (
+    <FormField
+      name="unit"
+      render={({ field }) => (
+        <FormItem className="lg:w-1/2">
+          <FormLabel className="text-sm lg:text-base">Unidad</FormLabel>
+          <FormControl>
+            <Input
+              className="text-sm focus:border-accent lg:text-base dark:bg-dark"
+              {...field}
+              autoComplete="off"
+            />
+          </FormControl>
+        </FormItem>
+      )}
+    />
+  );
+}

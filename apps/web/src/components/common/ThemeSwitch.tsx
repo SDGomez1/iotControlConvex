@@ -33,7 +33,10 @@ export default function ThemeSwitch() {
           <MoonIcon className="size-6 text-lightText dark:text-darkText " />
         )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="animate-openMenu">
+      <DropdownMenuContent
+        align="end"
+        className="animate-openMenu bg-white dark:bg-dark"
+      >
         <DropdownMenuItem
           className="flex  items-center gap-2 px-2 py-1 text-sm text-lightText focus:bg-black/10 dark:text-darkText dark:focus:bg-white/10"
           onSelect={() => setTheme("light")}

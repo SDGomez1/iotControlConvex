@@ -29,7 +29,9 @@ import type { conectedDeviceData } from "types/serial";
 import EditView from "components/dashboard/admin/device/EditView";
 import { cleanDeviceFunctionClientData } from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
 import {
+  ejex,
   filterAndFormatData,
+  generarListaNumeros,
   getCardsData,
   getGraphData,
 } from "utils/FileProcessingUtils";
@@ -121,6 +123,11 @@ export default function Device() {
   const functionscom = functions?.map((e, i) => {
     return <FunctionCard functionData={e} key={i} serialPort={selectedPort} />;
   });
+
+  const array = [
+    -100, 1000, -30, 500, -29.8, 150, 300, 1000, 200, 500, 600, 150,
+  ];
+  const ejexData = ejex(array);
 
   return (
     <section className="h-full overflow-y-scroll px-4 pb-40">

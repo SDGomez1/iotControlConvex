@@ -14,13 +14,14 @@ import {
   type deviceFunctionClientData,
   typeOfEntry,
   typeOfFormat,
+  typeOfFunction,
 } from "types/deviceFunctionClientData";
 
 const initialState: deviceFunctionClientData = {
   id: "",
   name: "",
   description: "",
-  tEntry: typeOfEntry.string,
+  tEntry: typeOfFunction.free,
   command: "",
   blocking: false,
   userInfo: false,
@@ -124,103 +125,83 @@ export default function FunctionForm(props: {
         }}
         className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1  py-1 text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
       />
-      <h3 className="text-center text-sm font-bold lg:text-left lg:text-xl">
-        Datos de entrada
-      </h3>
-      {/* ------------ Comando -------------- */}
-      <input
+      {/* ------------ Tipo de entrada -------------- */}
+      <select
         required
-        placeholder="Comando de ejecución"
-        name="command"
+        name={`tEntry`}
         onChange={(e) => {
           setData({
             ...data,
-            command: e.target.value,
+            tEntry: e.target.value as typeOfFunction,
           });
         }}
-        className="mb-2 block w-full  border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
-      />
-      <div className="flex flex-col items-center justify-center lg:flex-row lg:justify-start lg:gap-4">
-        <h4 className=" mb-2 px-1 text-xs  font-medium text-lightText lg:text-sm dark:text-darkText">
-          ¿Deseas bloquear otras funciones al ejecutar esta función?
-        </h4>
-        {/* ------------ blocking -------------- */}
-        <div className=" mb-2 flex items-center justify-center gap-5">
-          <button
-            className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
-            onClick={() => {
+        className="border-0 border-b border-lightText/60 p-0 px-1 py-2 text-xs text-lightText focus:border-black focus:ring-0 lg:text-sm 2xl:w-1/4 dark:border-darkText dark:bg-dark dark:text-darkText dark:focus:border-white"
+      >
+        <option value="" selected disabled hidden>
+          Tipo de función
+        </option>
+
+        <option className="bg-transparent" value={typeOfFunction.command}>
+          Por comandos
+        </option>
+        <option value={typeOfFunction.free}> Libre</option>
+      </select>
+      {data.tEntry === typeOfFunction.command && (
+        <>
+          <h3 className="text-center text-sm font-bold lg:text-left lg:text-xl">
+            Datos de entrada
+          </h3>
+          {/* ------------ Comando -------------- */}
+          <input
+            required
+            placeholder="Comando de ejecución"
+            name="command"
+            onChange={(e) => {
               setData({
                 ...data,
-                blocking: true,
+                command: e.target.value,
               });
             }}
-            type="button"
-          >
-            <span
-              className={`size-4 border border-lightText dark:border-darkText ${data.blocking ? "bg-lightText dark:bg-darkText" : ""}`}
-            />
-            Si
-          </button>
-          <button
-            className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
-            type="button"
-            onClick={() => {
-              setData({
-                ...data,
-                blocking: false,
-              });
-            }}
-          >
-            <span
-              className={`size-4 border border-lightText dark:border-darkText ${data.blocking ? "" : "bg-lightText dark:bg-darkText"}`}
-            />
-            No
-          </button>
-        </div>
-      </div>
-      <h3 className="text-center text-sm font-bold lg:text-left  lg:text-xl ">
-        Datos del Usuario
-      </h3>
-      <div className="flex flex-col items-center justify-center gap-2 lg:flex-row lg:justify-start lg:gap-4">
-        <h4 className="  mb-2 px-1 text-xs font-medium text-lightText lg:text-sm dark:text-darkText">
-          ¿Deseas recibir información del usuario para ejecutar la función?
-        </h4>
-        {/* ------------ User Info -------------- */}
-        <div className=" flex items-center justify-center gap-5">
-          <button
-            type="button"
-            onClick={() => {
-              setData({
-                ...data,
-                userInfo: true,
-              });
-            }}
-            className="flex items-center justify-center  gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
-          >
-            <span
-              className={`size-4 border border-lightText dark:border-darkText ${data.userInfo ? "bg-lightText dark:bg-darkText" : ""}`}
-            />
-            Si
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setData({
-                ...data,
-                userInfo: false,
-              });
-            }}
-            className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
-          >
-            <span
-              className={`size-4 border border-lightText dark:border-darkText ${data.userInfo ? "" : "bg-lightText dark:bg-darkText"}`}
-            />
-            No
-          </button>
-        </div>
-      </div>
-      {data.userInfo ? (
-        <div className="flex flex-col gap-4">
+            className="mb-2 block w-full  border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
+          />
+          <div className="flex flex-col items-center justify-center lg:flex-row lg:justify-start lg:gap-4">
+            <h4 className=" mb-2 px-1 text-xs  font-medium text-lightText lg:text-sm dark:text-darkText">
+              ¿Deseas bloquear otras funciones al ejecutar esta función?
+            </h4>
+            {/* ------------ blocking -------------- */}
+            <div className=" mb-2 flex items-center justify-center gap-5">
+              <button
+                className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+                onClick={() => {
+                  setData({
+                    ...data,
+                    blocking: true,
+                  });
+                }}
+                type="button"
+              >
+                <span
+                  className={`size-4 border border-lightText dark:border-darkText ${data.blocking ? "bg-lightText dark:bg-darkText" : ""}`}
+                />
+                Si
+              </button>
+              <button
+                className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+                type="button"
+                onClick={() => {
+                  setData({
+                    ...data,
+                    blocking: false,
+                  });
+                }}
+              >
+                <span
+                  className={`size-4 border border-lightText dark:border-darkText ${data.blocking ? "" : "bg-lightText dark:bg-darkText"}`}
+                />
+                No
+              </button>
+            </div>
+          </div>
           {/* ------------ Tipo de entrada -------------- */}
           <select
             required
@@ -228,7 +209,7 @@ export default function FunctionForm(props: {
             onChange={(e) => {
               setData({
                 ...data,
-                tEntry: e.target.value as typeOfEntry,
+                userTEntry: e.target.value as typeOfEntry,
               });
             }}
             className="border-0 border-b border-lightText/60 p-0 px-1 py-2 text-xs text-lightText focus:border-black focus:ring-0 lg:text-sm 2xl:w-1/4 dark:border-darkText dark:bg-dark dark:text-darkText dark:focus:border-white"
@@ -242,130 +223,200 @@ export default function FunctionForm(props: {
             </option>
             <option value={typeOfEntry.string}> Texto</option>
           </select>
-          <div className="flex items-center justify-center gap-4 2xl:w-1/4">
-            {/* ------------ Unidad -------------- */}
-            <input
-              required
-              placeholder="Unidad de de medida"
-              name={"unit"}
-              onChange={(e) => {
-                setData({
-                  ...data,
-                  unit: e.target.value,
-                });
-              }}
-              className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
-            />
-            {/* ------------ Simbolo -------------- */}
-            <input
-              required
-              placeholder="Simbolo"
-              name={`symbol`}
-              onChange={(e) => {
-                setData({
-                  ...data,
-                  symbol: e.target.value,
-                });
-              }}
-              className="block w-full border-0 border-b  border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
-            />
-          </div>
-          {/* ------------ Formato -------------- */}
-          <select
-            value={data.format}
-            name={`format`}
-            onChange={(e) => {
-              setData({
-                ...data,
-                format: e.target.value as typeOfFormat,
-              });
-            }}
-            className="border-0 border-b border-lightText/60 p-0 px-1 py-2 text-xs text-lightText focus:border-black focus:ring-0 lg:text-sm 2xl:w-1/4 dark:border-darkText dark:bg-dark dark:text-darkText dark:focus:border-white"
-          >
-            <option value="" selected disabled hidden>
-              Formato
-            </option>
 
-            <option className="bg-transparent" value={typeOfFormat.interval}>
-              Intervalo
-            </option>
-            <option value={typeOfFormat.scale}> Escala</option>
-          </select>
-          {data.format === typeOfFormat.interval ? (
-            <div className="flex items-center justify-center gap-4 2xl:w-1/4">
-              {/* ------------ Intervalo minimo -------------- */}
-              <input
-                required
-                placeholder="Intervalo minimo"
-                name={`minInterval`}
-                type="number"
-                onChange={(e) => {
+          <h3 className="text-center text-sm font-bold lg:text-left  lg:text-xl ">
+            Datos del Usuario
+          </h3>
+          <div className="flex flex-col items-center justify-center gap-2 lg:flex-row lg:justify-start lg:gap-4">
+            <h4 className="  mb-2 px-1 text-xs font-medium text-lightText lg:text-sm dark:text-darkText">
+              ¿Deseas recibir información del usuario para ejecutar la función?
+            </h4>
+            {/* ------------ User Info -------------- */}
+            <div className=" flex items-center justify-center gap-5">
+              <button
+                type="button"
+                onClick={() => {
                   setData({
                     ...data,
-                    minInterval: Number(e.target.value),
+                    userInfo: true,
                   });
                 }}
-                className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
-              />
-              {/* ------------Intervalo Maximo-------------- */}
-              <input
+                className="flex items-center justify-center  gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+              >
+                <span
+                  className={`size-4 border border-lightText dark:border-darkText ${data.userInfo ? "bg-lightText dark:bg-darkText" : ""}`}
+                />
+                Si
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setData({
+                    ...data,
+                    userInfo: false,
+                  });
+                }}
+                className="flex items-center justify-center gap-1 text-xs text-lightText lg:text-sm dark:text-darkText"
+              >
+                <span
+                  className={`size-4 border border-lightText dark:border-darkText ${data.userInfo ? "" : "bg-lightText dark:bg-darkText"}`}
+                />
+                No
+              </button>
+            </div>
+          </div>
+          {data.userInfo ? (
+            <div className="flex flex-col gap-4">
+              {/* ------------ Tipo de entrada -------------- */}
+              <select
                 required
-                placeholder="Intervalo Maximo"
-                name={`maxInterval`}
-                type="number"
+                name={`tEntry`}
                 onChange={(e) => {
                   setData({
                     ...data,
-                    maxInterval: Number(e.target.value),
+                    userTEntry: e.target.value as typeOfEntry,
+                  });
+                }}
+                className="border-0 border-b border-lightText/60 p-0 px-1 py-2 text-xs text-lightText focus:border-black focus:ring-0 lg:text-sm 2xl:w-1/4 dark:border-darkText dark:bg-dark dark:text-darkText dark:focus:border-white"
+              >
+                <option value="" selected disabled hidden>
+                  Tipo de entrada
+                </option>
+
+                <option className="bg-transparent" value={typeOfEntry.number}>
+                  Numerica
+                </option>
+                <option value={typeOfEntry.string}> Texto</option>
+              </select>
+              <div className="flex items-center justify-center gap-4 2xl:w-1/4">
+                {/* ------------ Unidad -------------- */}
+                <input
+                  required
+                  placeholder="Unidad de de medida"
+                  name={"unit"}
+                  onChange={(e) => {
+                    setData({
+                      ...data,
+                      unit: e.target.value,
+                    });
+                  }}
+                  className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
+                />
+                {/* ------------ Simbolo -------------- */}
+                <input
+                  required
+                  placeholder="Simbolo"
+                  name={`symbol`}
+                  onChange={(e) => {
+                    setData({
+                      ...data,
+                      symbol: e.target.value,
+                    });
+                  }}
+                  className="block w-full border-0 border-b  border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
+                />
+              </div>
+              {/* ------------ Formato -------------- */}
+              <select
+                value={data.format}
+                name={`format`}
+                onChange={(e) => {
+                  setData({
+                    ...data,
+                    format: e.target.value as typeOfFormat,
+                  });
+                }}
+                className="border-0 border-b border-lightText/60 p-0 px-1 py-2 text-xs text-lightText focus:border-black focus:ring-0 lg:text-sm 2xl:w-1/4 dark:border-darkText dark:bg-dark dark:text-darkText dark:focus:border-white"
+              >
+                <option value="" selected disabled hidden>
+                  Formato
+                </option>
+
+                <option
+                  className="bg-transparent"
+                  value={typeOfFormat.interval}
+                >
+                  Intervalo
+                </option>
+                <option value={typeOfFormat.scale}> Escala</option>
+              </select>
+              {data.format === typeOfFormat.interval ? (
+                <div className="flex items-center justify-center gap-4 2xl:w-1/4">
+                  {/* ------------ Intervalo minimo -------------- */}
+                  <input
+                    required
+                    placeholder="Intervalo minimo"
+                    name={`minInterval`}
+                    type="number"
+                    onChange={(e) => {
+                      setData({
+                        ...data,
+                        minInterval: Number(e.target.value),
+                      });
+                    }}
+                    className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
+                  />
+                  {/* ------------Intervalo Maximo-------------- */}
+                  <input
+                    required
+                    placeholder="Intervalo Maximo"
+                    name={`maxInterval`}
+                    type="number"
+                    onChange={(e) => {
+                      setData({
+                        ...data,
+                        maxInterval: Number(e.target.value),
+                      });
+                    }}
+                    className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
+                  />
+                </div>
+              ) : (
+                <div className="flex flex-wrap  items-center justify-between 2xl:w-1/4">
+                  {/* ------------ escala -------------- */}
+                  {scaleData}
+                  <button
+                    type="button"
+                    className="2xl:text- mt-2 flex w-1/2 items-center justify-center gap-2 rounded border border-lightText/60 py-2 text-xs text-lightText dark:border-darkText dark:text-darkText"
+                    onClick={() => {
+                      let newData: number[] = [];
+                      if (data.scaleData !== undefined) {
+                        newData = data.scaleData;
+                      }
+                      newData.push(0);
+                      setData({
+                        ...data,
+                        scaleData: newData,
+                      });
+                    }}
+                  >
+                    <Plus className="dark:stroke-darkTe size-3  stroke-lightText" />
+                    Añadir
+                  </button>
+                </div>
+              )}
+
+              <h4 className="  px-1 text-xs font-medium text-lightText lg:text-sm dark:text-darkText">
+                Redacta un mensaje para el usuario
+              </h4>
+              {/* ------------ Mensaje -------------- */}
+              <input
+                required
+                placeholder="Mensaje"
+                name={`message`}
+                onChange={(e) => {
+                  setData({
+                    ...data,
+                    message: e.target.value,
                   });
                 }}
                 className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
               />
             </div>
           ) : (
-            <div className="flex flex-wrap  items-center justify-between 2xl:w-1/4">
-              {/* ------------ escala -------------- */}
-              {scaleData}
-              <button
-                type="button"
-                className="2xl:text- mt-2 flex w-1/2 items-center justify-center gap-2 rounded border border-lightText/60 py-2 text-xs text-lightText dark:border-darkText dark:text-darkText"
-                onClick={() => {
-                  let newData: number[] = [];
-                  if (data.scaleData !== undefined) {
-                    newData = data.scaleData;
-                  }
-                  newData.push(0);
-                  setData({
-                    ...data,
-                    scaleData: newData,
-                  });
-                }}
-              >
-                <Plus className="dark:stroke-darkTe size-3  stroke-lightText" />
-                Añadir
-              </button>
-            </div>
+            <></>
           )}
-
-          <h4 className="  px-1 text-xs font-medium text-lightText lg:text-sm dark:text-darkText">
-            Redacta un mensaje para el usuario
-          </h4>
-          {/* ------------ Mensaje -------------- */}
-          <input
-            required
-            placeholder="Mensaje"
-            name={`message`}
-            onChange={(e) => {
-              setData({
-                ...data,
-                message: e.target.value,
-              });
-            }}
-            className="block w-full border-0 border-b border-lightText/60 bg-transparent px-1 py-1  text-xs focus:border-black focus:ring-0 lg:text-sm  dark:border-darkText dark:focus:border-white"
-          />
-        </div>
-      ) : (
-        <></>
+        </>
       )}
       <h3 className="text-center text-sm font-bold lg:text-left  lg:text-xl ">
         Datos de Salida

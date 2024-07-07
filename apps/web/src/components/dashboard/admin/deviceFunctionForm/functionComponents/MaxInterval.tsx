@@ -5,10 +5,15 @@ import {
   FormLabel,
 } from "components/primitives/Form";
 import { Input } from "components/primitives/Input";
+import { Control } from "react-hook-form";
+import { deviceFunctionFormType } from "types/deviceFunctionClientData";
 
-export default function MaxInterval() {
+export default function MaxInterval(props: {
+  control: Control<deviceFunctionFormType>;
+}) {
   return (
     <FormField
+      control={props.control}
       name="maxInterval"
       render={({ field }) => (
         <FormItem className="w-full">

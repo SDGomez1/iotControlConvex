@@ -5,10 +5,15 @@ import {
   FormLabel,
 } from "components/primitives/Form";
 import { Input } from "components/primitives/Input";
+import { Control } from "react-hook-form";
+import type { deviceFunctionFormType } from "types/deviceFunctionClientData";
 
-export default function Name() {
+export default function Name(props: {
+  control: Control<deviceFunctionFormType>;
+}) {
   return (
     <FormField
+      control={props.control}
       name="name"
       render={({ field }) => (
         <FormItem>

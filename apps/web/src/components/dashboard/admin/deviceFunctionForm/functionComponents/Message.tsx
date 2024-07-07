@@ -5,10 +5,15 @@ import {
   FormLabel,
 } from "components/primitives/Form";
 import { Textarea } from "components/primitives/TextArea";
+import { Control } from "react-hook-form";
+import { deviceFunctionFormType } from "types/deviceFunctionClientData";
 
-export default function Message() {
+export default function Message(props: {
+  control: Control<deviceFunctionFormType>;
+}) {
   return (
     <FormField
+      control={props.control}
       name="message"
       render={({ field }) => (
         <FormItem>

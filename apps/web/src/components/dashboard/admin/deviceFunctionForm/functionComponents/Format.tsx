@@ -11,8 +11,13 @@ import {
   SelectContent,
   SelectValue,
 } from "components/primitives/Select";
+import { Control } from "react-hook-form";
+import { deviceFunctionFormType } from "types/deviceFunctionClientData";
 
-export default function Format(props: { isText: boolean }) {
+export default function Format(props: {
+  isText: boolean;
+  control: Control<deviceFunctionFormType>;
+}) {
   return (
     <FormField
       name="format"

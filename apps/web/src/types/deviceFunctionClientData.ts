@@ -7,11 +7,10 @@ const typeOfEntry = z.enum(["STRING", "NUMBER"]);
 const typeOfFormat = z.enum(["INTERVAL", "SCALE", "FREE"]);
 
 export const deviceFunctionForm = z.object({
-  id: z.string(),
   name: z
     .string()
     .min(2, { message: "El nombre debe tener por lo menos dos caracteres" }),
-  description: z.string({ message: "Escriba una descripción" }),
+  description: z.string({ required_error: "Escriba una descripción" }),
   typeOfFunction: typeOfFunction,
   command: z.string().min(1, { message: "Escriba por lo menos un caracter" }),
   userInfo: z.boolean(),
@@ -34,22 +33,19 @@ export const deviceFunctionForm = z.object({
   sendData: z.boolean(),
 });
 
-// export type deviceFunctionClientData = {
-//   id: string;
+export type deviceFunctionFormType = z.infer<typeof deviceFunctionForm>;
+// export type deviceFunctionInitialState = {
 //   name: string;
 //   description: string;
-//   tEntry: typeOfEntry;
+//   typeOfFunction: typeOfEntry;
 //   command: string | number;
-//   blocking: boolean;
 //   userInfo: boolean;
-//   userTEntry: typeOfEntry | undefined;
+//   userTypeOfEntry: typeOfEntry | undefined;
 //   unit: string | undefined;
-//   symbol: string | undefined;
 //   format: typeOfFormat | undefined;
 //   maxInterval: number | undefined;
 //   minInterval: number | undefined;
 //   scaleData: number[] | undefined;
 //   message: string | undefined;
 //   sendData: boolean;
-//   streaming: boolean;
-//};
+// };

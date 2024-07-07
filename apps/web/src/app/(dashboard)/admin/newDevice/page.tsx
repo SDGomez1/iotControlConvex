@@ -15,6 +15,24 @@ import { api } from "convex/_generated/api";
 import { useMutation } from "convex/react";
 import FunctionCardEditing from "components/dashboard/admin/newDevice/FunctionCardEditing";
 import { PlusIcon } from "@radix-ui/react-icons";
+import { z } from "zod";
+import { deviceFunctionForm } from "types/deviceFunctionClientData";
+
+const initialState: z.infer<typeof deviceFunctionForm> = {
+  name: "",
+  description: "",
+  typeOfFunction: "FREE",
+  command: "",
+  userInfo: false,
+  userTypeOfEntry: "NUMBER",
+  unit: "",
+  format: "FREE",
+  maxInterval: 0,
+  minInterval: 0,
+  scaleData: [],
+  message: "",
+  sendData: false,
+};
 
 export default function NewDevice() {
   const router = useRouter();
@@ -131,7 +149,10 @@ export default function NewDevice() {
         <>
           {isCreating ? (
             <div className="  h-min max-h-min overflow-y-scroll pb-32 lg:pb-40">
-              <FunctionForm setIsEditing={setIsCreating} />
+              <FunctionForm
+                setIsEditing={setIsCreating}
+                initialState={initialState}
+              />
             </div>
           ) : (
             <div className="mb-4 flex flex-col gap-4">

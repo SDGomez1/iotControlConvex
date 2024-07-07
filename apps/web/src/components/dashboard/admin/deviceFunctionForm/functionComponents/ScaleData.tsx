@@ -6,17 +6,14 @@ import {
 } from "components/primitives/Form";
 import { Input } from "components/primitives/Input";
 import { type Control, type FieldValues, useFieldArray } from "react-hook-form";
+import { deviceFunctionFormType } from "types/deviceFunctionClientData";
 
-export default function ScaleData(props: { control: any }) {
-  const { fields, append, remove } = useFieldArray({
-    name: "scaleData",
-    rules: { minLength: 1 },
-    control: props.control,
-  });
-
+export default function ScaleData(props: {
+  control: Control<deviceFunctionFormType>;
+}) {
   return (
     <>
-      {fields.map((field, index) => {
+      {/* {fields.map((field, index) => {
         return (
           <FormField
             key={field.id}
@@ -31,10 +28,8 @@ export default function ScaleData(props: { control: any }) {
             )}
           />
         );
-      })}
-      <button type="button" onClick={() => append(0)}>
-        Add Number
-      </button>
+      })} */}
+      <button type="button">Add Number</button>
     </>
   );
 }

@@ -11,10 +11,15 @@ import {
   SelectContent,
   SelectValue,
 } from "components/primitives/Select";
+import { Control } from "react-hook-form";
+import { deviceFunctionFormType } from "types/deviceFunctionClientData";
 
-export default function TypeOfFunction() {
+export default function TypeOfFunction(props: {
+  control: Control<deviceFunctionFormType>;
+}) {
   return (
     <FormField
+      control={props.control}
       name="typeOfFunction"
       render={({ field }) => (
         <FormItem>

@@ -5,10 +5,15 @@ import {
   FormLabel,
 } from "components/primitives/Form";
 import { Input } from "components/primitives/Input";
+import { Control } from "react-hook-form";
+import { deviceFunctionFormType } from "types/deviceFunctionClientData";
 
-export default function Unit() {
+export default function Unit(props: {
+  control: Control<deviceFunctionFormType>;
+}) {
   return (
     <FormField
+    control={props.control}
       name="unit"
       render={({ field }) => (
         <FormItem className="lg:w-1/2">

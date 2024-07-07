@@ -25,6 +25,7 @@ import { Button } from "components/primitives/Button";
 export default function FunctionForm(props: {
   setIsEditing: Dispatch<SetStateAction<boolean>>;
   initialState: deviceFunctionFormType;
+  submitHandler: (data: deviceFunctionFormType) => void;
 }) {
   const form = useForm<deviceFunctionFormType>({
     resolver: zodResolver(deviceFunctionForm),
@@ -45,7 +46,7 @@ export default function FunctionForm(props: {
     <Form {...form}>
       <form
         className="flex flex-col gap-2 rounded border border-lightText/60 bg-white px-4 py-4 dark:border-darkText dark:bg-dark"
-        onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))}
+        onSubmit={form.handleSubmit(props.submitHandler, (e) => console.log(e))}
       >
         <Name control={form.control} />
         <Description control={form.control} />

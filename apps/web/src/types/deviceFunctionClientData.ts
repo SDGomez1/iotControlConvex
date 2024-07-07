@@ -10,6 +10,7 @@ const typeOfFormat = z.enum(["INTERVAL", "SCALE", "FREE"]);
 
 export const deviceFunctionForm = z
   .object({
+    id: z.string(),
     name: z
       .string()
       .min(2, { message: "El nombre debe tener por lo menos dos caracteres" }),
@@ -29,7 +30,6 @@ export const deviceFunctionForm = z
     sendData: z.boolean(),
   })
   .partial()
-
   .superRefine((values, ctx) => {
     if (values.typeOfFunction === "FREE" || values.userInfo) {
       if (!values.message || values.message.length < 2) {

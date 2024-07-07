@@ -4,7 +4,10 @@ import { useRouter } from "next/navigation";
 import FunctionCardView from "components/dashboard/admin/newDevice/FunctionCardView";
 import FunctionForm from "components/dashboard/admin/deviceFunctionForm/FunctionForm";
 
-import { cleanDeviceFunctionClientData } from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
+import {
+  addDeviceFunctionClientData,
+  cleanDeviceFunctionClientData,
+} from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
 
 import { formatUrl } from "utils/urlUtils";
@@ -13,12 +16,10 @@ import { useState } from "react";
 
 import { api } from "convex/_generated/api";
 import { useMutation } from "convex/react";
-import FunctionCardEditing from "components/dashboard/admin/newDevice/FunctionCardEditing";
 import { PlusIcon } from "@radix-ui/react-icons";
-import { z } from "zod";
-import { deviceFunctionForm } from "types/deviceFunctionClientData";
+import { type deviceFunctionFormType } from "types/deviceFunctionClientData";
 
-const initialState: z.infer<typeof deviceFunctionForm> = {
+const initialState: deviceFunctionFormType = {
   name: "",
   description: "",
   typeOfFunction: "FREE",
@@ -52,17 +53,22 @@ export default function NewDevice() {
     (state) => state.deviceFunctionClientData,
   );
 
-  const currentFunctionsCards = currentFunctions.map((functionData) => {
-    return (
-      <FunctionCardView
-        name={functionData.name}
-        key={functionData.id}
-        functionId={functionData.id}
-        setIsEditing={setIsEditing}
-        setFunctionId={setFunctionId}
-      />
-    );
-  });
+  // const currentFunctionsCards = currentFunctions.map((functionData) => {
+  //   return (
+  //     <FunctionCardView
+  //       name={functionData.name}
+  //       key={functionData.id}
+  //       functionId={functionData.id}
+  //       setIsEditing={setIsEditing}
+  //       setFunctionId={setFunctionId}
+  //     />
+  //   );
+  // });
+
+  function submitHandler(data: deviceFunctionFormType) {
+    dispatch(addDeviceFunctionClientData(data));
+  }
+
   return (
     <section className=" flex max-h-screen flex-col px-5">
       <form
@@ -78,26 +84,26 @@ export default function NewDevice() {
             teamId: currentTeam._id,
           });
 
-          currentFunctions.forEach((functionData) => {
-            createNewFunction({
-              deviceId: deviceId,
-              name: functionData.name,
-              description: functionData.description,
-              command: functionData.command as string,
-              blocking: functionData.blocking,
-              userInfo: functionData.userInfo,
-              userTypeOfEntry: functionData.userTEntry,
-              unit: functionData.unit,
-              symbol: functionData.symbol,
-              format: functionData.format,
-              maxInterval: functionData.maxInterval,
-              minInterval: functionData.minInterval,
-              scaleData: functionData.scaleData,
-              message: functionData.message,
-              sendData: functionData.sendData,
-              streaming: functionData.streaming,
-            });
-          });
+          // currentFunctions.forEach((functionData) => {
+          //   createNewFunction({
+          //     deviceId: deviceId,
+          //     name: functionData.name,
+          //     description: functionData.description,
+          //     command: functionData.command as string,
+          //     blocking: functionData.blocking,
+          //     userInfo: functionData.userInfo,
+          //     userTypeOfEntry: functionData.userTEntry,
+          //     unit: functionData.unit,
+          //     symbol: functionData.symbol,
+          //     format: functionData.format,
+          //     maxInterval: functionData.maxInterval,
+          //     minInterval: functionData.minInterval,
+          //     scaleData: functionData.scaleData,
+          //     message: functionData.message,
+          //     sendData: functionData.sendData,
+          //     streaming: functionData.streaming,
+          //   });
+          // });
           const url = formatUrl(deviceName, deviceId);
           dispatch(cleanDeviceFunctionClientData());
 
@@ -152,12 +158,11 @@ export default function NewDevice() {
               <FunctionForm
                 setIsEditing={setIsCreating}
                 initialState={initialState}
+                submitHandler={submitHandler}
               />
             </div>
           ) : (
-            <div className="mb-4 flex flex-col gap-4">
-              {currentFunctionsCards}
-            </div>
+            <div className="mb-4 flex flex-col gap-4"></div>
           )}
           {isCreating ? (
             <></>

@@ -3,6 +3,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "components/primitives/Form";
 import { Textarea } from "components/primitives/TextArea";
 import { Control } from "react-hook-form";
@@ -26,6 +27,7 @@ export default function Message(props: {
               {...field}
             />
           </FormControl>
+          <FormMessage />
         </FormItem>
       )}
     />

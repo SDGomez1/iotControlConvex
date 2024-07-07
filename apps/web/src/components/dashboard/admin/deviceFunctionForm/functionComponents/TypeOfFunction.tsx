@@ -3,6 +3,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "components/primitives/Form";
 import {
   Select,
@@ -47,6 +48,7 @@ export default function TypeOfFunction(props: {
               </SelectContent>
             </Select>
           </FormControl>
+          <FormMessage />
         </FormItem>
       )}
     />

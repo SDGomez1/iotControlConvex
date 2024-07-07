@@ -1,11 +1,11 @@
-import { Form, FormField, FormItem } from "components/primitives/Form";
+"use client";
+import { Form } from "components/primitives/Form";
 import { useForm } from "react-hook-form";
 import {
   deviceFunctionForm,
-  deviceFunctionFormType,
+  type deviceFunctionFormType,
 } from "types/deviceFunctionClientData";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import Name from "./functionComponents/Name";
 import Description from "./functionComponents/Description";
 import TypeOfFunction from "./functionComponents/TypeOfFunction";
@@ -19,7 +19,7 @@ import Unit from "./functionComponents/Unit";
 import MinInterval from "./functionComponents/MinInterval";
 import MaxInterval from "./functionComponents/MaxInterval";
 import ScaleData from "./functionComponents/ScaleData";
-import type { Dispatch, SetStateAction } from "react";
+import { useEffect, type Dispatch, type SetStateAction } from "react";
 import { Button } from "components/primitives/Button";
 
 export default function FunctionForm(props: {
@@ -34,6 +34,7 @@ export default function FunctionForm(props: {
   function onSubmit(values: deviceFunctionFormType) {
     console.log(values);
   }
+
   const watchTypeOfFunction = form.watch("typeOfFunction");
   const watchUserInfo = form.watch("userInfo");
   const watchTypeOfEntry = form.watch("userTypeOfEntry");
@@ -44,7 +45,7 @@ export default function FunctionForm(props: {
     <Form {...form}>
       <form
         className="flex flex-col gap-2 rounded border border-lightText/60 bg-white px-4 py-4 dark:border-darkText dark:bg-dark"
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))}
       >
         <Name control={form.control} />
         <Description control={form.control} />
@@ -65,6 +66,7 @@ export default function FunctionForm(props: {
                         <ScaleData control={form.control} />
                       </>
                     )}
+                    <Message control={form.control} />
                   </>
                 ) : (
                   <>
@@ -83,6 +85,7 @@ export default function FunctionForm(props: {
                         <Unit control={form.control} />
                       </>
                     )}
+                    <Message control={form.control} />
                   </>
                 )}
               </>

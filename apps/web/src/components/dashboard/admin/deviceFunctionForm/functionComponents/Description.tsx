@@ -3,6 +3,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "components/primitives/Form";
 import { Input } from "components/primitives/Input";
 import { Control } from "react-hook-form";
@@ -27,6 +28,7 @@ export default function Description(props: {
               autoComplete="off"
             />
           </FormControl>
+          <FormMessage />
         </FormItem>
       )}
     />

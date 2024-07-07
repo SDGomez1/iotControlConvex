@@ -3,6 +3,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "components/primitives/Form";
 import { Input } from "components/primitives/Input";
 import { Control } from "react-hook-form";
@@ -13,7 +14,7 @@ export default function Unit(props: {
 }) {
   return (
     <FormField
-    control={props.control}
+      control={props.control}
       name="unit"
       render={({ field }) => (
         <FormItem className="lg:w-1/2">
@@ -25,6 +26,7 @@ export default function Unit(props: {
               autoComplete="off"
             />
           </FormControl>
+          <FormMessage />
         </FormItem>
       )}
     />

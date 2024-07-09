@@ -17,8 +17,9 @@ import {
   formSchemaType,
 } from "types/deviceFunctionClientData";
 import { PlusIcon } from "@radix-ui/react-icons";
-import FunctionCardView from "../newDevice/FunctionCardView";
+
 import { Button } from "components/primitives/Button";
+import FunctionCardView from "./FunctionCardView";
 
 export default function DeviceFormManager(props: {
   submitHandler: (data: formSchemaType) => void;
@@ -29,6 +30,7 @@ export default function DeviceFormManager(props: {
   cancelHandler: () => void;
   functionDeleteHandler: (id: string) => void;
   deviceInitialState: formSchemaType;
+  deviceCancelHandler: undefined | (() => void);
 }) {
   const [functionId, setFunctionId] = useState<undefined | string>(undefined);
   const functionDataByID = props.functionData.find(

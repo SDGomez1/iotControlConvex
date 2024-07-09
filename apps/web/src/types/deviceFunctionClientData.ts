@@ -73,6 +73,7 @@ export const deviceFunctionForm = z
 export type deviceFunctionFormType = z.infer<typeof deviceFunctionForm>;
 export type typeOfEntry = z.infer<typeof zodTypeOfEntry>;
 export type typeOfFormat = z.infer<typeof zodTypeOfFormat>;
+export type typeofFunction = z.infer<typeof zodTypeOfFunction>;
 
 export const formSchema = z.object({
   deviceName: z

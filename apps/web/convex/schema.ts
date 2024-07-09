@@ -32,6 +32,7 @@ export default defineSchema({
     name: v.string(),
     description: v.string(),
     command: v.string(),
+    typeOfFunction: v.string(),
     blocking: v.boolean(),
     userInfo: v.boolean(),
     userTypeOfEntry: v.optional(v.string()),

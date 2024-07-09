@@ -64,6 +64,7 @@ export default function NewDevice() {
         name: functionData.name,
         description: functionData.description,
         command: functionData.command as string,
+        typeOfFunction: functionData.typeOfFunction,
         blocking: false,
         userInfo: functionData.userInfo,
         userTypeOfEntry: functionData.userTypeOfEntry,
@@ -108,6 +109,7 @@ export default function NewDevice() {
       functionDeleteHandler={functionDeleteHandler}
       cancelHandler={deviceCancelHandler}
       deviceInitialState={deviceInitialState}
+      deviceCancelHandler={undefined}
     />
   );
 }

@@ -28,6 +28,7 @@ export default function DeviceFormManager(props: {
   isCreating: boolean;
   cancelHandler: () => void;
   functionDeleteHandler: (id: string) => void;
+  deviceInitialState: formSchemaType;
 }) {
   const [functionId, setFunctionId] = useState<undefined | string>(undefined);
   const functionDataByID = props.functionData.find(
@@ -35,10 +36,7 @@ export default function DeviceFormManager(props: {
   );
   const form = useForm<formSchemaType>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      deviceDescription: "",
-      deviceName: "",
-    },
+    defaultValues: props.deviceInitialState,
   });
 
   const functionComponents = props.functionData.map((data) => {

@@ -1,10 +1,6 @@
 import { Doc, Id } from "convex/_generated/dataModel";
 import { type Dispatch, type SetStateAction, useState } from "react";
-import type {
-  deviceFunctionClientData,
-  typeOfEntry,
-  typeOfFormat,
-} from "types/deviceFunctionClientData";
+
 import FunctionCardEditing from "../newDevice/FunctionCardEditing";
 import FunctionCardView from "../newDevice/FunctionCardView";
 import { useMutation } from "convex/react";
@@ -14,7 +10,13 @@ import FunctionForm from "../newDevice/FunctionForm";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
 import { cleanDeviceFunctionClientData } from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
 import { PlusIcon } from "@radix-ui/react-icons";
+import DeviceFormManager from "../deviceFunctionForm/DeviceFormManager";
+import {
+  deviceFunctionFormType,
+  formSchemaType,
+} from "types/deviceFunctionClientData";
 
+import { typeOfEntry, typeOfFormat } from "types/deviceFunctionClientData";
 export default function EditView(props: {
   deviceId: string;
   name: string;
@@ -25,10 +27,6 @@ export default function EditView(props: {
   const router = useRouter();
 
   const [isCreating, setIsCreating] = useState(false);
-  const [name, setName] = useState(props.name);
-  const [description, setDescription] = useState(props.description);
-  const [isEditing, setIsEditing] = useState(false);
-  const [functionId, setFunctionId] = useState("");
 
   const dispatch = useAppDispatch();
 
@@ -39,45 +37,63 @@ export default function EditView(props: {
     (state) => state.deviceFunctionClientData,
   );
 
-  if (localFunctions.length > 0) {
-    localFunctions.forEach((functionData) => {
-      addDeviceFunction({
-        deviceId: props.deviceId as Id<"device">,
-        name: functionData.name,
-        description: functionData.description,
-        command: functionData.command as string,
-        blocking: functionData.blocking,
-        userInfo: functionData.userInfo,
-        userTypeOfEntry: functionData.userTEntry,
-        unit: functionData.unit,
-        symbol: functionData.symbol,
-        format: functionData.format,
-        maxInterval: functionData.maxInterval,
-        minInterval: functionData.minInterval,
-        scaleData: functionData.scaleData,
-        message: functionData.message,
-        sendData: functionData.sendData,
-        streaming: functionData.streaming,
-      });
+  // if (localFunctions.length > 0) {
+  //   localFunctions.forEach((functionData) => {
+  //     addDeviceFunction({
+  //       deviceId: props.deviceId as Id<"device">,
+  //       name: functionData.name,
+  //       description: functionData.description,
+  //       command: functionData.command as string,
+  //       blocking: functionData.blocking,
+  //       userInfo: functionData.userInfo,
+  //       userTypeOfEntry: functionData.userTEntry,
+  //       unit: functionData.unit,
+  //       symbol: functionData.symbol,
+  //       format: functionData.format,
+  //       maxInterval: functionData.maxInterval,
+  //       minInterval: functionData.minInterval,
+  //       scaleData: functionData.scaleData,
+  //       message: functionData.message,
+  //       sendData: functionData.sendData,
+  //       streaming: functionData.streaming,
+  //     });
+  //   });
+  //   dispatch(cleanDeviceFunctionClientData());
+  // }
+
+  // const currentFunctionsCards = props.deviceFunctions?.map((functionData) => {
+  //   return (
+  //     <FunctionCardView
+  //       name={functionData.name}
+  //       key={functionData._id}
+  //       functionId={functionData._id}
+  //       setIsEditing={setIsEditing}
+  //       setFunctionId={setFunctionId}
+  //     />
+  //   );
+  // });
+
+  function submitHandler(data: formSchemaType) {
+    updateDevice({
+      name: data.deviceName,
+      description: data.deviceDescription,
+      deviceId: props.deviceId as Id<"device">,
     });
-    dispatch(cleanDeviceFunctionClientData());
+    props.setIsEditing(false);
   }
-
-  const currentFunctionsCards = props.deviceFunctions?.map((functionData) => {
-    return (
-      <FunctionCardView
-        name={functionData.name}
-        key={functionData._id}
-        functionId={functionData._id}
-        setIsEditing={setIsEditing}
-        setFunctionId={setFunctionId}
-      />
-    );
-  });
-
   return (
     <>
-      <form
+      <DeviceFormManager
+        submitHandler={submitHandler}
+        functionData={props.deviceFunctions}
+        functionSubmitHandler={functionSubmitHandler}
+        setIsCreating={setIsCreating}
+        isCreating={isCreating}
+        functionDeleteHandler={functionDeleteHandler}
+        cancelHandler={deviceCancelHandler}
+        deviceInitialState={deviceInitialState}
+      />
+      {/* <form
         className="  flex w-full flex-col pt-4"
         onSubmit={(e) => {
           e.preventDefault();
@@ -184,7 +200,7 @@ export default function EditView(props: {
             }
           />
         </>
-      )}
+      )} */}
     </>
   );
 }
@@ -197,24 +213,31 @@ function createDeviceFunctionData(
   if (!functionData) {
     return;
   }
-  const initialState: deviceFunctionClientData = {
+  if (
+    !functionData.userTypeOfEntry ||
+    !functionData.format ||
+    !functionData.maxInterval ||
+    !functionData.minInterval ||
+    !functionData.scaleData ||
+    !functionData.unit
+  ) {
+    return;
+  }
+  const initialState: deviceFunctionFormType = {
     id: functionData._id,
     name: functionData.name,
     description: functionData.description,
-    tEntry: "" as typeOfEntry,
+    typeOfFunction: "FREE",
     command: functionData.command,
-    blocking: functionData.blocking,
     userInfo: functionData.userInfo,
-    userTEntry: functionData.userTypeOfEntry as typeOfEntry,
+    userTypeOfEntry: functionData.userTypeOfEntry as typeOfEntry,
     unit: functionData.unit,
-    symbol: functionData.symbol,
     format: functionData.format as typeOfFormat,
     maxInterval: functionData.maxInterval,
     minInterval: functionData.minInterval,
     scaleData: functionData.scaleData,
     message: functionData.message,
     sendData: functionData.sendData,
-    streaming: functionData.streaming,
   };
 
   return initialState;

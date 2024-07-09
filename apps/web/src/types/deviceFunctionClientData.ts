@@ -1,12 +1,12 @@
 import { z } from "zod";
 
-const typeOfFunction = z.enum(["COMMAND", "FREE"], {
+const zodTypeOfFunction = z.enum(["COMMAND", "FREE"], {
   message: "Seleccione el tipo de función",
 });
-const typeOfEntry = z.enum(["STRING", "NUMBER"], {
+const zodTypeOfEntry = z.enum(["STRING", "NUMBER"], {
   required_error: "Escoja el tipo de función",
 });
-const typeOfFormat = z.enum(["INTERVAL", "SCALE", "FREE"]);
+const zodTypeOfFormat = z.enum(["INTERVAL", "SCALE", "FREE"]);
 
 export const deviceFunctionForm = z
   .object({
@@ -17,12 +17,12 @@ export const deviceFunctionForm = z
     description: z.string().min(2, {
       message: "La descripcion debe tener por lo menos dos caracteres",
     }),
-    typeOfFunction: typeOfFunction,
+    typeOfFunction: zodTypeOfFunction,
     command: z.string(),
     userInfo: z.boolean(),
-    userTypeOfEntry: typeOfEntry,
+    userTypeOfEntry: zodTypeOfEntry,
     unit: z.string(),
-    format: typeOfFormat,
+    format: zodTypeOfFormat,
     maxInterval: z.number(),
     minInterval: z.number(),
     scaleData: z.array(z.number()),
@@ -71,6 +71,8 @@ export const deviceFunctionForm = z
   });
 
 export type deviceFunctionFormType = z.infer<typeof deviceFunctionForm>;
+export type typeOfEntry = z.infer<typeof zodTypeOfEntry>;
+export type typeOfFormat = z.infer<typeof zodTypeOfFormat>;
 
 export const formSchema = z.object({
   deviceName: z

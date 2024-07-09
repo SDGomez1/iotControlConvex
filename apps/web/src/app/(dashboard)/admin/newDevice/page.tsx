@@ -93,6 +93,11 @@ export default function NewDevice() {
     router.replace("/admin");
     dispatch(cleanDeviceFunctionClientData());
   }
+
+  const deviceInitialState: formSchemaType = {
+    deviceName: "",
+    deviceDescription: "",
+  };
   return (
     <DeviceFormManager
       submitHandler={submitHandler}
@@ -102,6 +107,7 @@ export default function NewDevice() {
       isCreating={isCreating}
       functionDeleteHandler={functionDeleteHandler}
       cancelHandler={deviceCancelHandler}
+      deviceInitialState={deviceInitialState}
     />
   );
 }

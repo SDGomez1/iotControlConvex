@@ -17,6 +17,8 @@ import {
 } from "types/deviceFunctionClientData";
 
 import { typeOfEntry, typeOfFormat } from "types/deviceFunctionClientData";
+import { initialState } from "@clerk/nextjs/dist/types/app-router/server/auth";
+import { generateUUID } from "utils/uuidUtils";
 export default function EditView(props: {
   deviceId: string;
   name: string;
@@ -25,14 +27,18 @@ export default function EditView(props: {
   setIsEditing: Dispatch<SetStateAction<boolean>>;
 }) {
   const router = useRouter();
+  const deviceFunctions = createDeviceFunctionData(props.deviceFunctions);
+  console.log(deviceFunctions);
 
   const [isCreating, setIsCreating] = useState(false);
 
   const dispatch = useAppDispatch();
-
   const deleteDevice = useMutation(api.device.deleteDevice);
   const updateDevice = useMutation(api.device.updateDevice);
   const addDeviceFunction = useMutation(api.deviceFunction.createFunction);
+  const updateDeviceFunction = useMutation(
+    api.deviceFunction.updateDeviceFunction,
+  );
   const localFunctions = useAppSelector(
     (state) => state.deviceFunctionClientData,
   );
@@ -81,11 +87,71 @@ export default function EditView(props: {
     });
     props.setIsEditing(false);
   }
+
+  function functionSubmitHandler(data: deviceFunctionFormType) {
+    if (data.id === "") {
+      data.id = generateUUID();
+      addDeviceFunction({
+        deviceId: props.deviceId as Id<"device">,
+        name: data.name,
+        description: data.description,
+        command: data.command as string,
+        blocking: false,
+        userInfo: data.userInfo,
+        userTypeOfEntry: data.userTypeOfEntry,
+        unit: data.unit,
+        symbol: "",
+        format: data.format,
+        maxInterval: data.maxInterval,
+        minInterval: data.minInterval,
+        scaleData: data.scaleData,
+        message: data.message,
+        sendData: data.sendData,
+        streaming: false,
+      });
+    } else {
+      updateDeviceFunction({
+        functionId: data.id as Id<"deviceFunction">,
+        name: data.name,
+        description: data.description,
+        command: data.command as string,
+        blocking: false,
+        userInfo: data.userInfo,
+        userTypeOfEntry: data.userTypeOfEntry,
+        unit: data.unit,
+        symbol: "",
+        format: data.format,
+        maxInterval: data.maxInterval,
+        minInterval: data.minInterval,
+        scaleData: data.scaleData,
+        message: data.message,
+        sendData: data.sendData,
+        streaming: false,
+      });
+      props.setIsEditing(false);
+    }
+    setIsCreating(false);
+  }
+
+  function functionDeleteHandler(id: string) {
+    //dispatch(deleteDeviceFunctionClientData(id));
+    setIsCreating(false);
+  }
+
+  function deviceCancelHandler() {
+    router.replace("/admin");
+    dispatch(cleanDeviceFunctionClientData());
+  }
+
+  const deviceInitialState: formSchemaType = {
+    deviceName: props.name,
+    deviceDescription: props.description,
+  };
   return (
     <>
       <DeviceFormManager
         submitHandler={submitHandler}
-        functionData={props.deviceFunctions}
+        functionData={[]}
         functionSubmitHandler={functionSubmitHandler}
         setIsCreating={setIsCreating}
         isCreating={isCreating}
@@ -205,40 +271,45 @@ export default function EditView(props: {
   );
 }
 
-function createDeviceFunctionData(
-  data: Doc<"deviceFunction">[] | undefined,
-  functionId: string,
-) {
-  const functionData = data?.find((data) => data._id === functionId);
-  if (!functionData) {
-    return;
-  }
-  if (
-    !functionData.userTypeOfEntry ||
-    !functionData.format ||
-    !functionData.maxInterval ||
-    !functionData.minInterval ||
-    !functionData.scaleData ||
-    !functionData.unit
-  ) {
-    return;
-  }
-  const initialState: deviceFunctionFormType = {
-    id: functionData._id,
-    name: functionData.name,
-    description: functionData.description,
-    typeOfFunction: "FREE",
-    command: functionData.command,
-    userInfo: functionData.userInfo,
-    userTypeOfEntry: functionData.userTypeOfEntry as typeOfEntry,
-    unit: functionData.unit,
-    format: functionData.format as typeOfFormat,
-    maxInterval: functionData.maxInterval,
-    minInterval: functionData.minInterval,
-    scaleData: functionData.scaleData,
-    message: functionData.message,
-    sendData: functionData.sendData,
-  };
+function createDeviceFunctionData(data: Doc<"deviceFunction">[] | undefined) {
+  const functionsData = data?.map((functionData) => {
+    if (
+      !functionData.userTypeOfEntry ||
+      !functionData.format ||
+      !functionData.maxInterval ||
+      !functionData.minInterval ||
+      !functionData.scaleData ||
+      !functionData.unit
+    ) {
+      console.log("enter");
+      return;
+    }
+    const initialState: deviceFunctionFormType = {
+      id: functionData._id,
+      name: functionData.name,
+      description: functionData.description,
+      typeOfFunction: "FREE",
+      command: functionData.command,
+      userInfo: functionData.userInfo,
+      userTypeOfEntry: functionData.userTypeOfEntry as typeOfEntry,
+      unit: functionData.unit,
+      format: functionData.format as typeOfFormat,
+      maxInterval: functionData.maxInterval,
+      minInterval: functionData.minInterval,
+      scaleData: functionData.scaleData,
+      message: functionData.message,
+      sendData: functionData.sendData,
+    };
 
-  return initialState;
+    return initialState;
+  });
+  if (functionsData) {
+    const definedFunctions: deviceFunctionFormType[] = functionsData?.filter(
+      (functionData): functionData is deviceFunctionFormType =>
+        functionData !== undefined,
+    );
+
+    return definedFunctions;
+  }
+  return [];
 }

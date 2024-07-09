@@ -29,7 +29,6 @@ export const deviceFunctionForm = z
     message: z.string().optional(),
     sendData: z.boolean(),
   })
-  .partial()
   .superRefine((values, ctx) => {
     if (values.typeOfFunction === "FREE" || values.userInfo) {
       if (!values.message || values.message.length < 2) {
@@ -72,6 +71,17 @@ export const deviceFunctionForm = z
   });
 
 export type deviceFunctionFormType = z.infer<typeof deviceFunctionForm>;
+
+export const formSchema = z.object({
+  deviceName: z
+    .string()
+    .min(2, { message: "El nombre debe tener por lo menos 2 caracteres" }),
+  deviceDescription: z
+    .string()
+    .min(2, { message: "La descripcion debe tener por lo menos 2 caracteres" }),
+});
+
+export type formSchemaType = z.infer<typeof formSchema>;
 
 // export type deviceFunctionInitialState = {
 //   name: string;

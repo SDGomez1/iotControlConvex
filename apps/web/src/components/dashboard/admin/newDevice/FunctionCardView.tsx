@@ -4,8 +4,8 @@ import type { Dispatch, SetStateAction } from "react";
 export default function FunctionCardView(props: {
   name: string;
   setIsEditing: Dispatch<SetStateAction<boolean>>;
-  setFunctionId: Dispatch<SetStateAction<string>>;
-  functionId: string;
+  setFunctionId: Dispatch<SetStateAction<string | undefined>>;
+  functionId: string | undefined;
 }) {
   return (
     <div
@@ -16,7 +16,7 @@ export default function FunctionCardView(props: {
       }}
     >
       <h3>{props.name}</h3>
-      <Pencil2Icon className="absolute right-3 top-2 size-5 stroke-lightText dark:stroke-darkText" />
+      <Pencil2Icon className="absolute right-3 top-2 size-5 text-lightText dark:text-darkText" />
     </div>
   );
 }

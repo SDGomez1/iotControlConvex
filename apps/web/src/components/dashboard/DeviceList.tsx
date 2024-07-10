@@ -29,7 +29,7 @@ export default function DeviceList(props: { isAdmin: boolean }) {
         <span className="flex h-full items-end justify-end gap-4">
           <Link
             href={`/${props.isAdmin ? "admin" : "user"}/logs/${url}`}
-            className="flex w-24 items-center justify-center rounded border border-black bg-transparent py-2 text-sm  transition hover:bg-neutral-50 dark:border-white"
+            className="flex w-24 items-center justify-center rounded border border-black bg-transparent py-2 text-sm transition  hover:bg-neutral-50 dark:border-white dark:hover:bg-white/10"
           >
             Historial
           </Link>

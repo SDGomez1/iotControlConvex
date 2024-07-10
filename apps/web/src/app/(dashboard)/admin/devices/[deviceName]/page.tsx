@@ -105,6 +105,9 @@ export default function Device() {
     return <FunctionCard functionData={e} key={i} serialPort={selectedPort} />;
   });
 
+  const x = [-0.9, -0.8, -0.7, 0.0, 0.7, 0.8, 0.9];
+  const y = [0.12, 0.3, 0.4, 0.1, 0.3, 0.4, 0.5];
+
   return (
     <section className="h-full overflow-y-scroll px-4 pb-40">
       {isEditing ? (
@@ -158,11 +161,9 @@ export default function Device() {
             Para ver datos en esta seccion envialos con el formato
             "&gt;variable:"
           </p>
-
+          <div></div>
           <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
-            {selectedPort ? (
-              <></>
-            ) : (
+            {selectedPort && (
               <button
                 className="rounded border border-lightText bg-transparent px-8 py-2 text-sm text-lightText transition hover:bg-gray-50 dark:border-darkText dark:text-darkText"
                 onClick={() => setIsEditing(true)}
@@ -170,7 +171,7 @@ export default function Device() {
                 Editar
               </button>
             )}
-            {"serial" in navigator ? (
+            {"serial" in navigator && (
               <>
                 <button
                   className={`rounded  px-8 py-2 text-sm text-white ${!selectedPort ? "bg-accent hover:bg-indigo-700" : "bg-danger hover:bg-red-600"} transition`}
@@ -194,8 +195,6 @@ export default function Device() {
                   {selectedPort ? "Desconectar" : "Conectar"}
                 </button>
               </>
-            ) : (
-              <></>
             )}
           </div>
         </>

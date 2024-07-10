@@ -60,16 +60,16 @@ export default function MenuContent(props: { isAdmin: boolean }) {
 
       <div className="h-full ">
         <ul className="font-medium">
-          <li className="py-2 hover:bg-black/10 lg:px-4 dark:hover:bg-white/10">
-            <Link href={`/${props.isAdmin ? "admin" : "user"}`}>
+          <Link href={`/${props.isAdmin ? "admin" : "user"}`}>
+            <li className="py-2 hover:bg-black/10 lg:px-4 dark:hover:bg-white/10">
               Dispositivos
-            </Link>
-          </li>
-          <li className="py-2 hover:bg-black/10 lg:px-4 dark:hover:bg-white/10">
-            <Link href={`/${props.isAdmin ? "admin" : "user"}/team `}>
+            </li>
+          </Link>
+          <Link href={`/${props.isAdmin ? "admin" : "user"}/team `}>
+            <li className="py-2 hover:bg-black/10 lg:px-4 dark:hover:bg-white/10">
               Miembros
-            </Link>
-          </li>
+            </li>
+          </Link>
         </ul>
       </div>
       <MobileThemeSwitch />

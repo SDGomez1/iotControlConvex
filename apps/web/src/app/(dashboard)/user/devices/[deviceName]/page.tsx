@@ -20,6 +20,7 @@ import { useMutation, useQuery } from "convex/react";
 
 import LastCheckedOnline from "components/dashboard/user/LastCheckedOnline";
 import { DownloadIcon } from "@radix-ui/react-icons";
+import DeviceGraph from "components/dashboard/device/DeviceGraph";
 
 export default function Device() {
   const [recievedData, setRecievedData] = useState("");
@@ -154,6 +155,7 @@ export default function Device() {
       <p className="mb-2 text-xs text-lightText lg:text-base dark:text-darkText">
         Esta sección muestra los datos configurados como “Graficar”{" "}
       </p>
+      <DeviceGraph graphData={graphData} />
     </section>
   );
 }

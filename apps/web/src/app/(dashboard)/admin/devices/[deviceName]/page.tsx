@@ -27,18 +27,25 @@ import { useMutation, useQuery } from "convex/react";
 
 import type { conectedDeviceData } from "types/serial";
 import EditView from "components/dashboard/admin/device/EditView";
-import { cleanDeviceFunctionClientData } from "lib/features/deviceFunctionClientData/deviceFunctionClientDataSlice";
 import {
   filterAndFormatData,
   getCardsData,
   getGraphData,
 } from "utils/FileProcessingUtils";
+import GraphComponent from "components/primitives/Chart";
+import DeviceGraph from "components/dashboard/device/DeviceGraph";
 
 export default function Device() {
+  //Set state Functions
+  const dispatch = useAppDispatch();
+  const setDeviceInactive = useMutation(api.device.setDeviceInactive);
+
   const params = useParams<{ deviceName: string }>();
   const deviceId = deFormatUrl(params.deviceName);
 
+  //Get state Functions
   const [isEditing, setIsEditing] = useState(false);
+
   const [selectedPort, setSelectedPort] = useState<SerialPort | undefined>(
     undefined,
   );
@@ -46,11 +53,6 @@ export default function Device() {
     undefined,
   );
 
-  const dispatch = useAppDispatch();
-
-  const currentDeviceFunctions = useAppSelector(
-    (state) => state.deviceFunctionClientData,
-  );
   const rawSerialData = useAppSelector((state) => state.rawSerialData);
   const devicesList = useAppSelector((state) => state.conectedDevice);
 
@@ -61,16 +63,25 @@ export default function Device() {
     deviceId: deviceId as Id<"device">,
   });
 
-  const setDeviceInactive = useMutation(api.device.setDeviceInactive);
+  // Variable Data - recalculated each re render
 
-  const isConected = devicesList.find((item) => item.id === deviceId);
+  const textSerialData = rawSerialData.map((data) => data.data);
+  const formattedData = filterAndFormatData(textSerialData.join(""));
 
-  if (selectedPort === undefined) {
-    if (isConected) {
-      setSelectedPort(isConected.device);
-      setReader(isConected.reader);
+  const graphData = getGraphData(formattedData);
+  const cardData = getCardsData(formattedData);
+
+  // Effects
+
+  useEffect(() => {
+    const isConected = devicesList.find((item) => item.id === deviceId);
+    if (selectedPort === undefined) {
+      if (isConected) {
+        setSelectedPort(isConected.device);
+        setReader(isConected.reader);
+      }
     }
-  }
+  }, []);
 
   useEffect(() => {
     if (selectedPort !== undefined) {
@@ -85,18 +96,7 @@ export default function Device() {
     }
   }, [selectedPort]);
 
-  useEffect(() => {
-    if (currentDeviceFunctions.length > 0) {
-      dispatch(cleanDeviceFunctionClientData());
-    }
-  }, [currentDeviceFunctions]);
-
-  const textSerialData = rawSerialData.map((data) => data.data);
-  const formattedData = filterAndFormatData(textSerialData.join(""));
-
-  const graphData = getGraphData(formattedData);
-  const cardData = getCardsData(formattedData);
-
+  // Component Render
   const serialDataCard = formattedData.map((data, index) => {
     return <ul key={index}>{data}</ul>;
   });
@@ -104,9 +104,6 @@ export default function Device() {
   const functionscom = functions?.map((e, i) => {
     return <FunctionCard functionData={e} key={i} serialPort={selectedPort} />;
   });
-
-  const x = [-0.9, -0.8, -0.7, 0.0, 0.7, 0.8, 0.9];
-  const y = [0.12, 0.3, 0.4, 0.1, 0.3, 0.4, 0.5];
 
   return (
     <section className="h-full overflow-y-scroll px-4 pb-40">
@@ -157,13 +154,15 @@ export default function Device() {
             )}
           </div>
           <h4 className="mb-2 text-sm lg:text-xl">Graficas</h4>
-          <p className="mb-4 text-xs italic text-lightText lg:text-sm dark:text-darkText">
+          <p className=" text-xs italic text-lightText lg:text-sm dark:text-darkText ">
             Para ver datos en esta seccion envialos con el formato
             "&gt;variable:"
           </p>
-          <div></div>
+
+          <DeviceGraph graphData={graphData} />
+
           <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
-            {selectedPort && (
+            {!selectedPort && (
               <button
                 className="rounded border border-lightText bg-transparent px-8 py-2 text-sm text-lightText transition hover:bg-gray-50 dark:border-darkText dark:text-darkText"
                 onClick={() => setIsEditing(true)}

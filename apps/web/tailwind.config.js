@@ -18,6 +18,7 @@ module.exports = {
         darkText: "#898989",
         error: "#FEEBEF",
         errorText: "#C11D45",
+        destructive: "#DC2626",
 
         // light mode
       },

@@ -34,8 +34,10 @@ import {
 } from "utils/FileProcessingUtils";
 import GraphComponent from "components/primitives/Chart";
 import DeviceGraph from "components/dashboard/device/DeviceGraph";
+import { useToast } from "components/primitives/useToast";
 
 export default function Device() {
+  const { toast } = useToast();
   //Set state Functions
   const dispatch = useAppDispatch();
   const setDeviceInactive = useMutation(api.device.setDeviceInactive);
@@ -80,8 +82,13 @@ export default function Device() {
         setSelectedPort(isConected.device);
         setReader(isConected.reader);
       }
+    } else {
+      if (!isConected) {
+        setSelectedPort(undefined);
+        setReader(undefined);
+      }
     }
-  }, []);
+  }, [devicesList]);
 
   useEffect(() => {
     if (selectedPort !== undefined) {
@@ -161,7 +168,7 @@ export default function Device() {
 
           <DeviceGraph graphData={graphData} />
 
-          <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
+          <div className="fixed bottom-0 left-0 flex h-[4.4rem] w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
             {!selectedPort && (
               <button
                 className="rounded border border-lightText bg-transparent px-8 py-2 text-sm text-lightText transition hover:bg-gray-50 dark:border-darkText dark:text-darkText"
@@ -176,18 +183,37 @@ export default function Device() {
                   className={`rounded  px-8 py-2 text-sm text-white ${!selectedPort ? "bg-accent hover:bg-indigo-700" : "bg-danger hover:bg-red-600"} transition`}
                   onClick={async () => {
                     if (!selectedPort) {
-                      const serialPort = await connectToSerial(9600);
-                      const reader = await getReader(serialPort);
+                      try {
+                        const serialPort = await connectToSerial(
+                          9600,
+                          deviceId,
+                        );
+                        const reader = await getReader(serialPort);
 
-                      setSelectedPort(serialPort);
-                      setReader(reader);
-                      startReading(serialPort, reader, deviceId);
+                        setSelectedPort(serialPort);
+                        setReader(reader);
+                        startReading(serialPort, reader, deviceId);
+                        toast({
+                          description: "Dispositivo Conectado correctamente",
+                          variant: "success",
+                        });
+                      } catch (e: any) {
+                        toast({
+                          title: "¡Algo Salio Mal!",
+                          description: e.message,
+                          variant: "destructive",
+                        });
+                      }
                     } else {
                       await closePort(selectedPort, reader);
                       dispatch(removeConectedDevice(deviceId));
                       setReader(undefined);
                       setSelectedPort(undefined);
                       setDeviceInactive({ deviceId: deviceId as Id<"device"> });
+                      toast({
+                        variant: "success",
+                        description: "Dispositivo desconectado con éxito.",
+                      });
                     }
                   }}
                 >

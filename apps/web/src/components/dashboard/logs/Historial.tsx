@@ -14,6 +14,7 @@ import {
   getGraphData,
 } from "utils/FileProcessingUtils";
 import { deFormatUrl } from "utils/urlUtils";
+import DeviceGraph from "../device/DeviceGraph";
 const dateOptions: Intl.DateTimeFormatOptions = {
   year: "numeric", // Full year
   month: "long", // Full month name
@@ -208,6 +209,7 @@ export default function Historial() {
           <p className="mb-2 text-xs text-lightText lg:text-base dark:text-darkText">
             Esta sección muestra los datos configurados como “Graficar”{" "}
           </p>
+          <DeviceGraph graphData={graphData} />
         </>
       ) : (
         <></>

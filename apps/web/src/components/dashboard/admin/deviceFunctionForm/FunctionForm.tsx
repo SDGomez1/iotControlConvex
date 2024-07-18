@@ -31,7 +31,7 @@ const FunctionInitialState: deviceFunctionFormType = {
   userInfo: false,
   userTypeOfEntry: "NUMBER",
   unit: "",
-  format: "FREE",
+  format: "INTERVAL",
   maxInterval: 0,
   minInterval: 0,
   scaleData: [],

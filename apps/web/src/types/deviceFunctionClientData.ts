@@ -6,7 +6,7 @@ const zodTypeOfFunction = z.enum(["COMMAND", "FREE"], {
 const zodTypeOfEntry = z.enum(["STRING", "NUMBER"], {
   required_error: "Escoja el tipo de función",
 });
-const zodTypeOfFormat = z.enum(["INTERVAL", "SCALE", "FREE"]);
+const zodTypeOfFormat = z.enum(["INTERVAL", "SCALE"]);
 
 export const deviceFunctionForm = z
   .object({
@@ -56,7 +56,7 @@ export const deviceFunctionForm = z
       }
     }
 
-    if (values.format !== "FREE" && values.userInfo) {
+    if (values.userInfo) {
       if (!values.unit || values.unit.length < 1) {
         ctx.addIssue({
           code: z.ZodIssueCode.too_small,

@@ -32,12 +32,6 @@ export default function Format(props: {
               <SelectContent className="bg-white dark:bg-dark">
                 <SelectItem
                   className="focus:bg-black/10 dark:focus:bg-white/10"
-                  value="FREE"
-                >
-                  Libre
-                </SelectItem>
-                <SelectItem
-                  className="focus:bg-black/10 dark:focus:bg-white/10"
                   value="SCALE"
                   disabled
                 >

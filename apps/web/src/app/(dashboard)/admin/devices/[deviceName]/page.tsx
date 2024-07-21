@@ -35,9 +35,27 @@ import {
 import GraphComponent from "components/primitives/Chart";
 import DeviceGraph from "components/dashboard/device/DeviceGraph";
 import { useToast } from "components/primitives/useToast";
+import { CheckIcon, GearIcon } from "@radix-ui/react-icons";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "components/primitives/Popover";
+
+import {
+  Command,
+  CommandInput,
+  CommandEmpty,
+  CommandItem,
+  CommandList,
+} from "components/primitives/Command";
 
 export default function Device() {
   const { toast } = useToast();
+  const baudRateData = [
+    300, 600, 750, 1200, 2400, 4800, 9600, 19200, 31250, 38400, 57600, 74880,
+    115200, 230400, 250000, 460800, 500000, 921600, 1000000, 2000000,
+  ];
   //Set state Functions
   const dispatch = useAppDispatch();
   const setDeviceInactive = useMutation(api.device.setDeviceInactive);
@@ -47,7 +65,8 @@ export default function Device() {
 
   //Get state Functions
   const [isEditing, setIsEditing] = useState(false);
-
+  const [baudRate, setBaudRate] = useState(9600);
+  const [popoverOpen, setPopoverOpen] = useState(false);
   const [selectedPort, setSelectedPort] = useState<SerialPort | undefined>(
     undefined,
   );
@@ -178,14 +197,52 @@ export default function Device() {
               </button>
             )}
             {"serial" in navigator && (
-              <>
+              <div className="flex items-center justify-center">
+                <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <button
+                      className={`flex h-full items-center  justify-center rounded-l border-r border-r-indigo-400 bg-accent px-1 py-2 transition hover:bg-indigo-700 ${selectedPort ? "hidden" : ""}`}
+                    >
+                      <GearIcon className="size-5 text-white" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="h-80 w-48 bg-white  text-sm dark:bg-dark">
+                    <Command
+                      defaultValue={baudRate.toString()}
+                      className="h-full"
+                    >
+                      <CommandInput placeholder="Tasa de baudios" />
+                      <CommandEmpty>No se encontro</CommandEmpty>
+                      <CommandList className="h-full">
+                        {baudRateData.map((data, index) => {
+                          return (
+                            <CommandItem
+                              value={data.toString()}
+                              key={data}
+                              onSelect={(value) => {
+                                setPopoverOpen(false);
+                                setBaudRate(Number(value));
+                              }}
+                              className="flex justify-between"
+                            >
+                              {data}
+                              <CheckIcon
+                                className={`${baudRate === data ? "opacity-100" : "opacity-0"}`}
+                              />
+                            </CommandItem>
+                          );
+                        })}
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
                 <button
-                  className={`rounded  px-8 py-2 text-sm text-white ${!selectedPort ? "bg-accent hover:bg-indigo-700" : "bg-danger hover:bg-red-600"} transition`}
+                  className={`rounded-r  px-8 py-2 text-sm text-white  transition ${!selectedPort ? "bg-accent hover:bg-indigo-700" : "bg-danger hover:bg-red-600"}`}
                   onClick={async () => {
                     if (!selectedPort) {
                       try {
                         const serialPort = await connectToSerial(
-                          9600,
+                          baudRate,
                           deviceId,
                         );
                         const reader = await getReader(serialPort);
@@ -219,7 +276,7 @@ export default function Device() {
                 >
                   {selectedPort ? "Desconectar" : "Conectar"}
                 </button>
-              </>
+              </div>
             )}
           </div>
         </>

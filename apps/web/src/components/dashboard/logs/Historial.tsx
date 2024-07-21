@@ -1,5 +1,4 @@
 "use client";
-import { Select } from "@headlessui/react";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
@@ -142,14 +141,6 @@ export default function Historial() {
         {(commands?.length as number) > 0 ? (
           <>
             <div>
-              <Select
-                name="function "
-                className=" mb-2 w-full bg-transparent lg:min-w-80"
-                value={currentCommand}
-                onChange={(e) => setCurrentCommand(e.target.value)}
-              >
-                {commandSelectors}
-              </Select>
               <p
                 className={`border-0 bg-transparent px-0 text-sm  italic text-lightText outline-none lg:text-base dark:text-darkText`}
               >

@@ -109,7 +109,7 @@ export default function NewDevice() {
       functionDeleteHandler={functionDeleteHandler}
       cancelHandler={deviceCancelHandler}
       deviceInitialState={deviceInitialState}
-      deviceCancelHandler={undefined}
+      deviceDeleteHandler={undefined}
     />
   );
 }

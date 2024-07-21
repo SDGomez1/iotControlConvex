@@ -20,6 +20,7 @@ import { PlusIcon } from "@radix-ui/react-icons";
 
 import { Button } from "components/primitives/Button";
 import FunctionCardView from "./FunctionCardView";
+import EliminationAlert from "../EliminationAlert";
 
 export default function DeviceFormManager(props: {
   submitHandler: (data: formSchemaType) => void;
@@ -30,7 +31,7 @@ export default function DeviceFormManager(props: {
   cancelHandler: () => void;
   functionDeleteHandler: (id: string) => void;
   deviceInitialState: formSchemaType;
-  deviceCancelHandler: undefined | (() => void);
+  deviceDeleteHandler: undefined | (() => void);
 }) {
   const [functionId, setFunctionId] = useState<undefined | string>(undefined);
   const functionDataByID = props.functionData.find(
@@ -54,7 +55,7 @@ export default function DeviceFormManager(props: {
   });
 
   return (
-    <section className=" flex max-h-screen flex-col px-5">
+    <>
       <Form {...form}>
         <form
           className="flex flex-col pt-4"
@@ -97,18 +98,24 @@ export default function DeviceFormManager(props: {
 
           {!props.isCreating && (
             <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
-              {props.deviceCancelHandler && (
-                <Button
-                  className="rounded border border-danger bg-transparent px-8 py-2 text-sm text-danger"
-                  type="button"
-                  onClick={() => {
-                    if (props.deviceCancelHandler !== undefined) {
-                      props.deviceCancelHandler();
-                    }
-                  }}
-                >
-                  Eliminar
-                </Button>
+              {props.deviceDeleteHandler && (
+                <EliminationAlert
+                  name={props.deviceInitialState.deviceName}
+                  onSubmitAction={props.deviceDeleteHandler}
+                  isDevice={true}
+                />
+
+                // <Button
+                //   className="rounded border border-danger bg-transparent px-8 py-2 text-sm text-danger"
+                //   type="button"
+                //   onClick={() => {
+                //     if (props.deviceCancelHandler !== undefined) {
+                //       props.deviceCancelHandler();
+                //     }
+                //   }}
+                // >
+                //   Eliminar
+                // </Button>
               )}
               <Button
                 className="rounded border border-danger bg-transparent px-8 py-2 text-sm text-danger transition hover:bg-red-50 dark:hover:bg-danger/10"
@@ -121,7 +128,7 @@ export default function DeviceFormManager(props: {
                 className="rounded border border-accent bg-transparent px-8 py-2 text-sm text-accent transition hover:bg-indigo-50/60 dark:text-indigo-400 hover:dark:bg-accent/10"
                 type="submit"
               >
-                {props.deviceCancelHandler !== undefined
+                {props.deviceDeleteHandler !== undefined
                   ? "Guardar dispositivo"
                   : "Crear Dispositivo"}
               </Button>
@@ -159,6 +166,6 @@ export default function DeviceFormManager(props: {
           deleteHandler={props.functionDeleteHandler}
         />
       )}
-    </section>
+    </>
   );
 }

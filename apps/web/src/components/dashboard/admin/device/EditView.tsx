@@ -12,6 +12,7 @@ import {
 
 import { typeOfEntry, typeOfFormat } from "types/deviceFunctionClientData";
 import { generateUUID } from "utils/uuidUtils";
+import { useRouter } from "next/navigation";
 export default function EditView(props: {
   deviceId: string;
   name: string;
@@ -20,7 +21,7 @@ export default function EditView(props: {
   setIsEditing: Dispatch<SetStateAction<boolean>>;
 }) {
   const deviceFunctions = createDeviceFunctionData(props.deviceFunctions);
-
+  const router = useRouter();
   const [isCreating, setIsCreating] = useState(false);
 
   const deleteDevice = useMutation(api.device.deleteDevice);
@@ -99,7 +100,12 @@ export default function EditView(props: {
     props.setIsEditing(false);
   }
 
-  function deviceDeleteHandler() {}
+  function deviceDeleteHandler() {
+    deleteDevice({
+      deviceId: props.deviceId as Id<"device">,
+    });
+    router.replace("/admin");
+  }
   const deviceInitialState: formSchemaType = {
     deviceName: props.name,
     deviceDescription: props.description,
@@ -114,7 +120,7 @@ export default function EditView(props: {
       functionDeleteHandler={functionDeleteHandler}
       cancelHandler={deviceCancelHandler}
       deviceInitialState={deviceInitialState}
-      deviceCancelHandler={deviceDeleteHandler}
+      deviceDeleteHandler={deviceDeleteHandler}
     />
   );
 }

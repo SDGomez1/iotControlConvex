@@ -21,6 +21,9 @@ import MaxInterval from "./functionComponents/MaxInterval";
 import ScaleData from "./functionComponents/ScaleData";
 import { type Dispatch, type SetStateAction } from "react";
 import { Button } from "components/primitives/Button";
+import { ScrollArea } from "components/primitives/ScrollArea";
+import ExecutionAlert from "components/dashboard/ExecutionAlert";
+import EliminationAlert from "../EliminationAlert";
 
 const FunctionInitialState: deviceFunctionFormType = {
   id: "",
@@ -121,15 +124,13 @@ export default function FunctionForm(props: {
         <SendaData control={form.control} />
         <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-center gap-8 border-t border-t-lightText/60 bg-white drop-shadow lg:absolute lg:justify-end lg:px-12 dark:border-t-darkText dark:bg-dark">
           {props.functionData && (
-            <Button
-              className="rounded border border-danger bg-transparent px-8 py-2 text-sm text-danger"
-              type="button"
-              onClick={() =>
-                props.deleteHandler(props.functionData?.id as string)
-              }
-            >
-              Eliminar
-            </Button>
+            <EliminationAlert
+              onSubmitAction={() => {
+                props.deleteHandler(props.functionData?.id as string);
+              }}
+              isDevice={false}
+              name={props.functionData.name}
+            />
           )}
           <Button
             className="rounded border border-danger bg-transparent px-8 py-2 text-sm text-danger"

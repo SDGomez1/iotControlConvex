@@ -25,7 +25,7 @@ export const deviceFunctionForm = z
     format: zodTypeOfFormat,
     maxInterval: z.number(),
     minInterval: z.number(),
-    scaleData: z.array(z.number()),
+    scaleData: z.array(z.union([z.number(), z.string()])),
     message: z.string().optional(),
     sendData: z.boolean(),
   })

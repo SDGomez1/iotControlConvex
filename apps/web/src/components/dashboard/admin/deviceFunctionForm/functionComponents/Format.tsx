@@ -33,7 +33,6 @@ export default function Format(props: {
                 <SelectItem
                   className="focus:bg-black/10 dark:focus:bg-white/10"
                   value="SCALE"
-                  disabled
                 >
                   Escala
                 </SelectItem>

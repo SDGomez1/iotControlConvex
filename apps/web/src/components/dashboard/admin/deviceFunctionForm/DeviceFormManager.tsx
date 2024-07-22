@@ -104,18 +104,6 @@ export default function DeviceFormManager(props: {
                   onSubmitAction={props.deviceDeleteHandler}
                   isDevice={true}
                 />
-
-                // <Button
-                //   className="rounded border border-danger bg-transparent px-8 py-2 text-sm text-danger"
-                //   type="button"
-                //   onClick={() => {
-                //     if (props.deviceCancelHandler !== undefined) {
-                //       props.deviceCancelHandler();
-                //     }
-                //   }}
-                // >
-                //   Eliminar
-                // </Button>
               )}
               <Button
                 className="rounded border border-danger bg-transparent px-8 py-2 text-sm text-danger transition hover:bg-red-50 dark:hover:bg-danger/10"

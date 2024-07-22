@@ -1,6 +1,6 @@
 "use client";
 import { Form } from "components/primitives/Form";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import {
   deviceFunctionForm,
   type deviceFunctionFormType,
@@ -19,10 +19,8 @@ import Unit from "./functionComponents/Unit";
 import MinInterval from "./functionComponents/MinInterval";
 import MaxInterval from "./functionComponents/MaxInterval";
 import ScaleData from "./functionComponents/ScaleData";
-import { type Dispatch, type SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { Button } from "components/primitives/Button";
-import { ScrollArea } from "components/primitives/ScrollArea";
-import ExecutionAlert from "components/dashboard/ExecutionAlert";
 import EliminationAlert from "../EliminationAlert";
 
 const FunctionInitialState: deviceFunctionFormType = {
@@ -51,23 +49,29 @@ export default function FunctionForm(props: {
   const initialState = props.functionData
     ? props.functionData
     : FunctionInitialState;
+  const [scaleError, setScaleError] = useState(false);
 
   const form = useForm<deviceFunctionFormType>({
     resolver: zodResolver(deviceFunctionForm),
     defaultValues: initialState,
   });
-
   const watchTypeOfFunction = form.watch("typeOfFunction");
   const watchUserInfo = form.watch("userInfo");
   const watchTypeOfEntry = form.watch("userTypeOfEntry");
   const watchFormat = form.watch("format");
   const watchScale = form.watch("scaleData");
 
+  const isScaleDataDisabled = watchScale.some(
+    (element) => typeof element === "object",
+  );
   return (
     <Form {...form}>
       <form
         className="flex flex-col gap-2 rounded border border-lightText/60 bg-white px-4 py-4 dark:border-darkText dark:bg-dark"
-        onSubmit={form.handleSubmit(props.submitHandler, (e) => console.log(e))}
+        onSubmit={form.handleSubmit(props.submitHandler, (e) => {
+          e.scaleData ? setScaleError(true) : setScaleError(false);
+          console.log(e);
+        })}
       >
         <Name control={form.control} />
         <Description control={form.control} />
@@ -85,7 +89,12 @@ export default function FunctionForm(props: {
                     {watchFormat === "SCALE" && (
                       <>
                         <Unit control={form.control} />
-                        <ScaleData control={form.control} />
+                        <ScaleData
+                          typeOfEntry={watchTypeOfEntry}
+                          setValue={form.setValue}
+                          isError={scaleError}
+                          isDisabled={isScaleDataDisabled}
+                        />
                       </>
                     )}
                     <Message control={form.control} />
@@ -105,6 +114,12 @@ export default function FunctionForm(props: {
                     {watchFormat === "SCALE" && (
                       <>
                         <Unit control={form.control} />
+                        <ScaleData
+                          setValue={form.setValue}
+                          typeOfEntry={watchTypeOfEntry}
+                          isError={scaleError}
+                          isDisabled={isScaleDataDisabled}
+                        />
                       </>
                     )}
                     <Message control={form.control} />

@@ -135,46 +135,38 @@ function filterAndFormatData(data: string) {
  * //   variableNames: ["time", "temp"]
  * // }
  */
+// helper data structure
+type DataPoint = {
+  label: string;
+  data: number[];
+};
 
-function getGraphData(data: string[]) {
-  let filteredData = data.filter((data) => data.includes(">"));
-  let variableNames: string[] = [];
+function getGraphData(rawData: string[]) {
+  let filteredData = rawData.filter((data) => data.includes(">"));
+  const dataPoints: { [key: string]: DataPoint } = {};
+  let labels: string[] = [];
+  filteredData.forEach((item) => {
+    const trimmedItem = item.trim();
+    const [label, value] = trimmedItem.split(":");
 
-  filteredData.forEach((line, index) => {
-    variableNames.push(line.split(":")[0].replace(">", ""));
-  });
-  variableNames = [...new Set(variableNames)];
-  let joinFormatedData = [];
+    const cleanLabel = label.replace(">", "").trim();
+    const numericValue = parseFloat(value.trim());
 
-  for (let i = 0; i < filteredData.length; i++) {
-    let group = [];
-    for (let j = 0; j < variableNames.length; j++) {
-      if (i + j < filteredData.length) {
-        group.push(filteredData[i + j]);
-      }
+    labels.push(cleanLabel);
+    if (!dataPoints[cleanLabel]) {
+      dataPoints[cleanLabel] = {
+        label: cleanLabel,
+        data: [],
+      };
     }
-    if (group.length === variableNames.length) {
-      joinFormatedData.push(group.join(";"));
-    }
-    i += variableNames.length - 1;
-  }
 
-  let jsonResult: GraphItem[] = [];
-
-  joinFormatedData.forEach((item, index) => {
-    let obj: GraphItem = { index: index + 1 };
-    let pairs = item.split(";");
-    pairs.forEach((pair) => {
-      let match = pair.match(/>([^:]+):(.+)/);
-      if (match && variableNames.includes(match[1])) {
-        obj[match[1]] = Number(match[2]);
-      }
-    });
-    jsonResult.push(obj);
+    dataPoints[cleanLabel].data.push(numericValue);
   });
-
-  return { jsonResult, variableNames };
+  const cleanLabels = [...new Set(labels)];
+  return { dataPoints, cleanLabels };
 }
+
+export type graphData = ReturnType<typeof getGraphData>;
 
 /**
  * Parses a structured text input into a CSV formatted string. This function first identifies

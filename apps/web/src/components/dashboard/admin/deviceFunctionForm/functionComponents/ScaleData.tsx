@@ -1,6 +1,7 @@
 import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
 import { Input } from "components/primitives/Input";
 import { Label } from "components/primitives/Label";
+import { Dispatch, SetStateAction } from "react";
 import { useFieldArray, UseFormSetValue } from "react-hook-form";
 import {
   deviceFunctionFormType,
@@ -12,11 +13,12 @@ export default function ScaleData(props: {
   typeOfEntry: typeOfEntry;
   isError: boolean;
   isDisabled: boolean;
+  setError: Dispatch<SetStateAction<boolean>>;
+  currentValues: { value: string | number }[];
 }) {
   const { fields, append, remove } = useFieldArray({
     name: "scaleData",
   });
-
   return (
     <>
       <h4 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 lg:text-base">
@@ -34,14 +36,20 @@ export default function ScaleData(props: {
             >
               <Input
                 placeholder="valor"
+                defaultValue={props.currentValues[index].value}
                 onChange={(value) => {
                   let realValue: string | number = "";
                   if (props.typeOfEntry === "STRING") {
                     realValue = value.target.value;
                   } else {
-                    realValue = Number(value.target.value);
+                    if (value.target.value === "") {
+                      realValue = "";
+                    } else {
+                      realValue = Number(value.target.value);
+                    }
                   }
-                  props.setValue(`scaleData.${index}`, realValue);
+                  realValue !== "" && props.setError(false);
+                  props.setValue(`scaleData.${index}`, { value: realValue });
                 }}
                 className="mb-2 block w-4/5 rounded-none border-0 border-b border-lightText/60 bg-transparent px-1 text-xs focus:border-accent focus:ring-0 lg:text-sm dark:border-darkText dark:focus:border-white"
                 type={props.typeOfEntry === "STRING" ? "text" : "number"}
@@ -59,7 +67,7 @@ export default function ScaleData(props: {
       <button
         type="button"
         onClick={() => {
-          append({});
+          append({ value: "" });
         }}
         className={`flex items-center justify-center gap-2 rounded border p-2 text-sm text-lightText 2xl:w-1/4 dark:text-darkText ${props.isError && "border-danger !text-danger"}`}
         disabled={props.isDisabled}

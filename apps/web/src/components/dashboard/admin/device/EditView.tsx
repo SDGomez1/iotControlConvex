@@ -46,6 +46,7 @@ export default function EditView(props: {
   function functionSubmitHandler(data: deviceFunctionFormType) {
     if (data.id === "") {
       data.id = generateUUID();
+      const scaleData = data.scaleData.map((data) => data.value);
       addDeviceFunction({
         deviceId: props.deviceId as Id<"device">,
         name: data.name,
@@ -60,12 +61,13 @@ export default function EditView(props: {
         format: data.format,
         maxInterval: data.maxInterval,
         minInterval: data.minInterval,
-        scaleData: data.scaleData,
+        scaleData: scaleData,
         message: data.message,
         sendData: data.sendData,
         streaming: false,
       });
     } else {
+      const scaleData = data.scaleData.map((data) => data.value);
       updateDeviceFunction({
         functionId: data.id as Id<"deviceFunction">,
         name: data.name,
@@ -80,7 +82,7 @@ export default function EditView(props: {
         format: data.format,
         maxInterval: data.maxInterval,
         minInterval: data.minInterval,
-        scaleData: data.scaleData,
+        scaleData: scaleData,
         message: data.message,
         sendData: data.sendData,
         streaming: false,
@@ -137,6 +139,9 @@ function createDeviceFunctionData(data: Doc<"deviceFunction">[] | undefined) {
     ) {
       return;
     }
+    const scaleData = functionData.scaleData.map((data) => {
+      return { value: data };
+    });
     const initialState: deviceFunctionFormType = {
       id: functionData._id,
       name: functionData.name,
@@ -149,7 +154,7 @@ function createDeviceFunctionData(data: Doc<"deviceFunction">[] | undefined) {
       format: functionData.format as typeOfFormat,
       maxInterval: functionData.maxInterval,
       minInterval: functionData.minInterval,
-      scaleData: functionData.scaleData,
+      scaleData: scaleData,
       message: functionData.message,
       sendData: functionData.sendData,
     };

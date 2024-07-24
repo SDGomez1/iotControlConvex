@@ -25,7 +25,7 @@ export const deviceFunctionForm = z
     format: zodTypeOfFormat,
     maxInterval: z.number(),
     minInterval: z.number(),
-    scaleData: z.array(z.union([z.number(), z.string()])),
+    scaleData: z.array(z.object({ value: z.union([z.number(), z.string()]) })),
     message: z.string().optional(),
     sendData: z.boolean(),
   })
@@ -68,6 +68,18 @@ export const deviceFunctionForm = z
         });
       }
     }
+    values.scaleData.forEach((data) => {
+      if (data.value.toString().length < 1) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.too_small,
+          minimum: 1,
+          type: "string",
+          message: "Debe haber un valor",
+          inclusive: true,
+          path: ["scaleData"],
+        });
+      }
+    });
   });
 
 export type deviceFunctionFormType = z.infer<typeof deviceFunctionForm>;

@@ -41,7 +41,7 @@ export default defineSchema({
     format: v.optional(v.string()),
     maxInterval: v.optional(v.number()),
     minInterval: v.optional(v.number()),
-    scaleData: v.optional(v.array(v.number())),
+    scaleData: v.optional(v.array(v.union(v.number(), v.string()))),
     sendData: v.boolean(),
     message: v.optional(v.string()),
     streaming: v.boolean(),

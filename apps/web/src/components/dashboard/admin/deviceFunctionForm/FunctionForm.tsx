@@ -32,7 +32,7 @@ const FunctionInitialState: deviceFunctionFormType = {
   userInfo: false,
   userTypeOfEntry: "NUMBER",
   unit: "",
-  format: "INTERVAL",
+  format: "SCALE",
   maxInterval: 0,
   minInterval: 0,
   scaleData: [],
@@ -60,9 +60,8 @@ export default function FunctionForm(props: {
   const watchTypeOfEntry = form.watch("userTypeOfEntry");
   const watchFormat = form.watch("format");
   const watchScale = form.watch("scaleData");
-
   const isScaleDataDisabled = watchScale.some(
-    (element) => typeof element === "object",
+    (element) => element.value.toString() === "",
   );
   return (
     <Form {...form}>
@@ -94,6 +93,8 @@ export default function FunctionForm(props: {
                           setValue={form.setValue}
                           isError={scaleError}
                           isDisabled={isScaleDataDisabled}
+                          setError={setScaleError}
+                          currentValues={watchScale}
                         />
                       </>
                     )}
@@ -119,6 +120,8 @@ export default function FunctionForm(props: {
                           typeOfEntry={watchTypeOfEntry}
                           isError={scaleError}
                           isDisabled={isScaleDataDisabled}
+                          setError={setScaleError}
+                          currentValues={watchScale}
                         />
                       </>
                     )}

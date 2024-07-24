@@ -108,7 +108,6 @@ export default function Device() {
       }
     }
   }, [devicesList]);
-
   useEffect(() => {
     if (selectedPort !== undefined) {
       const data: conectedDeviceData = {

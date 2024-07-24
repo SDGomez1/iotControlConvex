@@ -59,6 +59,9 @@ export default function NewDevice() {
     });
 
     currentFunctions.forEach((functionData) => {
+      const scaleData = functionData.scaleData.map((data) => {
+        return data.value;
+      });
       createNewFunction({
         deviceId: deviceId,
         name: functionData.name,
@@ -73,7 +76,7 @@ export default function NewDevice() {
         format: functionData.format,
         maxInterval: functionData.maxInterval,
         minInterval: functionData.minInterval,
-        scaleData: functionData.scaleData,
+        scaleData: scaleData,
         message: functionData.message,
         sendData: functionData.sendData,
         streaming: false,
@@ -100,16 +103,18 @@ export default function NewDevice() {
     deviceDescription: "",
   };
   return (
-    <DeviceFormManager
-      submitHandler={submitHandler}
-      functionData={currentFunctions}
-      functionSubmitHandler={functionSubmitHandler}
-      setIsCreating={setIsCreating}
-      isCreating={isCreating}
-      functionDeleteHandler={functionDeleteHandler}
-      cancelHandler={deviceCancelHandler}
-      deviceInitialState={deviceInitialState}
-      deviceDeleteHandler={undefined}
-    />
+    <section className="h-full overflow-y-scroll px-4 pb-40">
+      <DeviceFormManager
+        submitHandler={submitHandler}
+        functionData={currentFunctions}
+        functionSubmitHandler={functionSubmitHandler}
+        setIsCreating={setIsCreating}
+        isCreating={isCreating}
+        functionDeleteHandler={functionDeleteHandler}
+        cancelHandler={deviceCancelHandler}
+        deviceInitialState={deviceInitialState}
+        deviceDeleteHandler={undefined}
+      />
+    </section>
   );
 }

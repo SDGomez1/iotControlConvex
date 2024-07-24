@@ -1,5 +1,6 @@
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { Input } from "components/primitives/Input";
+import { useToast } from "components/primitives/useToast";
 import { api } from "convex/_generated/api";
 import { Doc, Id } from "convex/_generated/dataModel";
 import { useMutation } from "convex/react";
@@ -12,6 +13,7 @@ export default function ExecutionAlert(props: {
   serialPort: SerialPort | undefined;
   isAdmin: boolean;
 }) {
+  const { toast } = useToast();
   const createCommand = useMutation(api.command.createCommand);
   const [value, setValue] = useState(props.functionData.minInterval); // Initialize state with the default value
   const [payload, setPayload] = useState<number | string | undefined>(
@@ -114,20 +116,41 @@ export default function ExecutionAlert(props: {
           onSubmit={(e) => {
             e.preventDefault();
             if (props.isAdmin) {
-              writeToPort(
-                props.serialPort,
-
-                `${props.functionData.typeOfFunction === "FREE" ? "" : props.functionData.command}${payload}`,
-              );
-              props.setSendConfirmation(false);
+              try {
+                writeToPort(
+                  props.serialPort,
+                  `${props.functionData.typeOfFunction === "FREE" ? "" : props.functionData.command}${payload}`,
+                );
+                props.setSendConfirmation(false);
+                toast({
+                  variant: "success",
+                  description: "Funcion enviada con exito",
+                });
+              } catch (e: any) {
+                toast({
+                  variant: "destructive",
+                  description: e.message,
+                });
+              }
             } else {
-              createCommand({
-                deviceId: props.functionData.deviceId,
-                deviceFunctionId: props.functionData
-                  ._id as Id<"deviceFunction">,
-                payload: payload?.toString(),
-              });
-              props.setSendConfirmation(false);
+              try {
+                createCommand({
+                  deviceId: props.functionData.deviceId,
+                  deviceFunctionId: props.functionData
+                    ._id as Id<"deviceFunction">,
+                  payload: payload?.toString(),
+                });
+                props.setSendConfirmation(false);
+                toast({
+                  variant: "success",
+                  description: "Funcion enviada con exito",
+                });
+              } catch (e: any) {
+                toast({
+                  variant: "destructive",
+                  description: e.message,
+                });
+              }
             }
           }}
         >
